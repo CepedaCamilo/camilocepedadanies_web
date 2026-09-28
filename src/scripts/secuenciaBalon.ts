@@ -2,7 +2,9 @@
 // Cada fotograma es un ángulo de una vuelta completa: enseñamos el que toca según el giro.
 // Fotogramas: public/3d/balon/000.webp … (se generan con `npm run fotogramas`)
 
-export function iniciarSecuencia(canvas: HTMLCanvasElement, total = 120, ruta = '/3d/balon/') {
+// inicio: el fotograma que se ve cuando el balón termina de entrar (7 = "WE ARE THE CHAMPIONS" de frente)
+// entrada: en qué punto del scroll (0 → 1) el balón ya está entero en pantalla
+export function iniciarSecuencia(canvas: HTMLCanvasElement, { total = 120, ruta = '/3d/balon/', inicio = 7, entrada = 0.38 } = {}) {
   const ctx = canvas.getContext('2d')
   if (!ctx) return null
   const fotos: (HTMLImageElement | undefined)[] = new Array(total)
@@ -16,16 +18,18 @@ export function iniciarSecuencia(canvas: HTMLCanvasElement, total = 120, ruta = 
       img.src = `${ruta}${String(i).padStart(3, '0')}.webp`
     })
 
-  // Primero uno de cada 8 (para poder girar enseguida) y luego el resto
+  // Primero la vista inicial, luego uno de cada 8 (para poder girar enseguida) y luego el resto
   ;(async () => {
-    await cargar(0)
-    const orden = [...Array(total).keys()].sort((a, b) => (a % 8) - (b % 8) || a - b)
+    await cargar(inicio)
+    const paso = (i: number) => (((i - inicio) % 8) + 8) % 8
+    const orden = [...Array(total).keys()].sort((a, b) => paso(a) - paso(b) || a - b)
     for (let i = 0; i < orden.length; i += 6) await Promise.all(orden.slice(i, i + 6).map(cargar))
   })()
 
   // Estado del giro, en vueltas (1 = 360°)
-  let giroScroll = 0, giroLibre = 0, velocidad = 0.0012, arrastrando = false, ultimoX = 0
-  const REPOSO = 0.0012
+  const base = inicio / total
+  let giroScroll = 0, giroLibre = 0, velocidad = 0, arrastrando = false, ultimoX = 0, activo = false
+  const REPOSO = 0.0004 // giro muy lento: una vuelta cada ~40 s
 
   window.addEventListener('pointermove', (e) => {
     if (!arrastrando) return
@@ -55,9 +59,9 @@ export function iniciarSecuencia(canvas: HTMLCanvasElement, total = 120, ruta = 
     const dt = Math.min(ahora - anterior, 50) / 16.7
     anterior = ahora
     if (!visible) return
-    if (!arrastrando) velocidad += (REPOSO - velocidad) * 0.03 * dt
+    if (!arrastrando) velocidad += ((activo ? REPOSO : 0) - velocidad) * 0.03 * dt
     giroLibre += velocidad * dt
-    const vuelta = (((giroLibre + giroScroll) % 1) + 1) % 1
+    const vuelta = (((base + giroLibre + giroScroll) % 1) + 1) % 1
     let i = Math.floor(vuelta * total) % total
     // si ese fotograma aún no ha llegado, usamos el cargado más cercano
     for (let d = 0; d < total && !fotos[i]; d++) i = (i + 1) % total
@@ -69,7 +73,12 @@ export function iniciarSecuencia(canvas: HTMLCanvasElement, total = 120, ruta = 
   requestAnimationFrame(bucle)
 
   return {
-    // progreso del scroll (0 → 1): una vuelta y media extra al bajar
-    setScroll(progreso: number) { giroScroll = progreso * 1.5 },
+    // progreso del scroll (0 → 1). Antes de "entrada" el balón gira hasta aterrizar en la vista inicial;
+    // después apenas se mueve con el scroll, para que el texto se lea bien.
+    setScroll(progreso: number) {
+      const d = progreso - entrada
+      giroScroll = d < 0 ? d * 1.6 : d * 0.25
+      activo = progreso > entrada - 0.05 && progreso < 0.62
+    },
   }
 }
