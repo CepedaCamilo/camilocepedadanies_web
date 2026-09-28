@@ -3,8 +3,8 @@ import { getCollection } from 'astro:content'
 import { Image } from 'astro:assets'
 import Base from '../layouts/Base.astro'
 import TarjetaProyecto from '../components/TarjetaProyecto.astro'
+import Hero from '../components/Hero.astro'
 import { sitio } from '../sitio'
-import retrato from '../assets/marca/retrato.png'
 import escaladores from '../assets/marca/escaladores.png'
 import logoInpsicon from '../assets/marca/logo-inpsicon.png'
 import logoHaveagoodone from '../assets/marca/logo-haveagoodone.png'
@@ -55,26 +55,7 @@ const preguntas = [
 ---
 
 <Base>
-  <!-- HERO -->
-  <section class="hero contenedor">
-    <div class="hero-texto">
-      <p class="etiqueta">~/camilo · {sitio.ciudad}</p>
-      <h1>Designer,<br />now building software.</h1>
-      <p class="entradilla">
-        8+ years of brand, product and campaign design. Now I also build my own web apps — from the
-        interface to the server.
-      </p>
-      <div class="acciones">
-        <a class="pildora pildora--llena" href="#work">See design work</a>
-        <a class="pildora" href="#building">What I'm building ↓</a>
-      </div>
-    </div>
-    <div class="hero-figura" aria-hidden="true">
-      <span class="forma forma--circulo"></span>
-      <span class="forma forma--cuadro"></span>
-      <Image class="retrato" src={retrato} alt="" loading="eager" fetchpriority="high" widths={[320, 520]} sizes="(max-width: 720px) 60vw, 26rem" />
-    </div>
-  </section>
+  <Hero />
 
   <!-- CLIENTES -->
   <section class="clientes contenedor" aria-label="Clients">
@@ -149,29 +130,6 @@ const preguntas = [
 </Base>
 
 <style>
-  /* HERO */
-  .hero {
-    display: grid;
-    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-    align-items: center;
-    gap: var(--espacio-6);
-    padding-block: var(--espacio-7) var(--espacio-8);
-  }
-  .hero-texto { display: flex; flex-direction: column; gap: var(--espacio-5); }
-  .acciones { display: flex; flex-wrap: wrap; gap: var(--espacio-3); padding-top: var(--espacio-2); }
-
-  .hero-figura { position: relative; aspect-ratio: 1; }
-  .forma { position: absolute; }
-  .forma--circulo { width: 100%; aspect-ratio: 1; top: 0; left: 12%; border-radius: 50%; background: var(--color-acento); }
-  .forma--cuadro {
-    width: 38%; aspect-ratio: 1; left: -10%; bottom: -6%;
-    border-radius: 48px; background: var(--color-forma); transform: rotate(-12deg);
-  }
-  .retrato {
-    position: absolute; width: 72%; left: 8%; top: 14%;
-    border-radius: 50%; aspect-ratio: 1; object-fit: cover;
-  }
-
   /* CLIENTES */
   .clientes { display: flex; flex-direction: column; gap: var(--espacio-5); }
   .clientes ul {
@@ -210,8 +168,6 @@ const preguntas = [
   .pildora--grande { font-size: var(--titulo-3); padding: var(--espacio-4) var(--espacio-6); min-height: 60px; }
 
   @media (max-width: 900px) {
-    .hero { grid-template-columns: minmax(0, 1fr); }
-    .hero-figura { width: min(80%, 26rem); margin-inline: auto; order: -1; }
     .sobre-mi { grid-template-columns: minmax(0, 1fr); }
     .clientes ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }

@@ -1,0 +1,63 @@
+---
+// Una vista de la app de chat, hecha en HTML (no es una imagen): usa los tokens,
+// así que cambia sola con Light / Dark.
+---
+
+<div class="telefono" aria-hidden="true">
+  <div class="barra">
+    <span class="etiqueta">chat.danies.trade</span>
+    <span class="etiqueta en-linea">● 2 online</span>
+  </div>
+  <p class="titulo-app">Chat</p>
+  <div class="mensajes">
+    <p class="burbuja"><span class="etiqueta">guest · 18:51</span>How is the new site going?</p>
+    <p class="burbuja burbuja--mia"><span class="etiqueta">you · 18:52</span>Deployed it from the terminal.</p>
+    <p class="burbuja"><span class="etiqueta">guest · 18:53</span>Designer and developer, then.</p>
+  </div>
+  <div class="escribir">
+    <span>Write a message…</span>
+    <span class="enviar">Send</span>
+  </div>
+</div>
+
+<style>
+  .telefono {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 3%;
+    padding: 7% 6%;
+    border-radius: 12%/8%;
+    background: var(--color-superficie);
+    border: var(--linea-fina) solid var(--color-linea);
+    box-shadow: 0 40px 80px -30px rgb(35 26 21 / 0.35);
+    font-size: clamp(0.62rem, 0.45rem + 0.45vw, 0.9rem);
+    overflow: hidden;
+  }
+  .barra { display: flex; justify-content: space-between; }
+  .barra .etiqueta { font-size: 0.85em; }
+  .en-linea { color: var(--color-acento); }
+  .titulo-app { font-size: 2.6em; font-weight: var(--peso-fino); letter-spacing: var(--tracking-titulo); line-height: 1; }
+  .mensajes {
+    flex-grow: 1; display: flex; flex-direction: column; justify-content: flex-end; gap: 0.7em;
+    padding: 0.9em; border-radius: 1.6em; background: var(--color-fondo);
+  }
+  .burbuja {
+    display: flex; flex-direction: column; gap: 0.2em; max-width: 82%;
+    padding: 0.75em 1em; border-radius: 1.3em 1.3em 1.3em 0.4em; background: var(--color-superficie-2);
+    line-height: 1.3;
+  }
+  .burbuja .etiqueta { font-size: 0.8em; }
+  .burbuja--mia {
+    align-self: flex-end; border-radius: 1.3em 1.3em 0.4em 1.3em;
+    background: var(--color-acento); color: var(--color-sobre-acento);
+  }
+  .burbuja--mia .etiqueta { color: var(--color-sobre-acento); opacity: 0.75; }
+  .escribir {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.35em 0.35em 0.35em 1.1em; border-radius: 999px;
+    background: var(--color-invertido); color: var(--color-sobre-invertido);
+  }
+  .enviar { padding: 0.6em 1.1em; border-radius: 999px; background: var(--color-acento); color: var(--color-sobre-acento); font-weight: var(--peso-medio); }
+</style>
