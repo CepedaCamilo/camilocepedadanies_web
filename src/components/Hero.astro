@@ -63,6 +63,7 @@ const pasos = [
   import { gsap } from 'gsap'
   import { ScrollTrigger } from 'gsap/ScrollTrigger'
   import { iniciarSecuencia } from '../scripts/secuenciaBalon'
+  import { crearLineaChat } from '../scripts/chatHero'
 
   gsap.registerPlugin(ScrollTrigger)
   const hero = document.querySelector<HTMLElement>('[data-hero]')!
@@ -72,7 +73,6 @@ const pasos = [
   const mm = gsap.matchMedia()
   mm.add('(prefers-reduced-motion: no-preference)', () => {
     hero.classList.add('hero--animado')
-    let chatVisibleAntes = false
     const balon3d = iniciarSecuencia(hero.querySelector<HTMLCanvasElement>('[data-balon]')!)
 
     // Posición inicial de cada objeto
@@ -91,15 +91,7 @@ const pasos = [
       defaults: { ease: 'power2.inOut', duration: 1 },
       scrollTrigger: {
         trigger: hero, start: 'top top', end: 'bottom bottom', scrub: 0.8,
-        onUpdate: (st) => {
-          balon3d?.setScroll(st.progress)
-          // Avisar al chat (paso 03) de si está en pantalla, para que empiece o pare su "vídeo"
-          const chatVisible = st.progress > 0.7
-          if (chatVisible !== chatVisibleAntes) {
-            chatVisibleAntes = chatVisible
-            window.dispatchEvent(new CustomEvent('hero:app', { detail: chatVisible }))
-          }
-        },
+        onUpdate: (st) => balon3d?.setTiempo(st.progress * tl.duration()),
       },
     })
 
@@ -113,8 +105,11 @@ const pasos = [
       .to(capa('app'), { autoAlpha: 1, yPercent: 0, scale: 1, rotate: 0 }, 1.95)
     cambiarLeyenda(1, 2, 2.1)
 
-    // Pausa al final para ver la app, y barra de progreso durante todo el recorrido
-    tl.to({}, { duration: 0.6 }, 2.95)
+    // 03: la conversación del chat avanza con el scroll (mensajes, tecleo y Send)
+    tl.add(crearLineaChat(hero.querySelector<HTMLElement>('[data-chat]')!), 3.05)
+
+    // Pausa al final para ver la conversación completa, y barra de progreso durante todo el recorrido
+    tl.to({}, { duration: 0.6 })
     tl.fromTo(hero.querySelector('[data-progreso]'), { scaleX: 0 }, { scaleX: 1, ease: 'none', duration: tl.duration() }, 0)
 
     return () => hero.classList.remove('hero--animado')
@@ -131,8 +126,8 @@ const pasos = [
     gap: var(--espacio-7);
     padding-block: var(--espacio-5) var(--espacio-8);
   }
-  /* Con animación: el hero mide 3 pantallas y la escena se queda fija mientras tanto */
-  .hero--animado { height: calc(300svh - var(--alto-cabecera)); }
+  /* Con animación: el hero es largo (foto, balón y la conversación del chat) y la escena se queda fija mientras tanto */
+  .hero--animado { height: calc(560svh - var(--alto-cabecera)); } /* ~50 svh de scroll por cada unidad de la línea de tiempo */
   /* Queda fija justo debajo de la cabecera: el primer scroll no mueve nada, solo anima el hero.
      Centrado en vertical, pero con más aire abajo que arriba (queda un poco por encima del centro). */
   .hero--animado .escena {

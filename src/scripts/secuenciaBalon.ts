@@ -3,8 +3,8 @@
 // Fotogramas: public/3d/balon/000.webp … (se generan con `npm run fotogramas`)
 
 // inicio: el fotograma que se ve cuando el balón termina de entrar (7 = "WE ARE THE CHAMPIONS" de frente)
-// entrada: en qué punto del scroll (0 → 1) el balón ya está entero en pantalla
-export function iniciarSecuencia(canvas: HTMLCanvasElement, { total = 120, ruta = '/3d/balon/', inicio = 7, entrada = 0.38 } = {}) {
+// entrada / salida: en qué momento de la línea de tiempo del hero el balón está entero / se va
+export function iniciarSecuencia(canvas: HTMLCanvasElement, { total = 120, ruta = '/3d/balon/', inicio = 7, entrada = 1.35, salida = 2.2 } = {}) {
   const ctx = canvas.getContext('2d')
   if (!ctx) return null
   const fotos: (HTMLImageElement | undefined)[] = new Array(total)
@@ -77,12 +77,12 @@ export function iniciarSecuencia(canvas: HTMLCanvasElement, { total = 120, ruta 
   requestAnimationFrame(bucle)
 
   return {
-    // progreso del scroll (0 → 1). Antes de "entrada" el balón gira hasta aterrizar en la vista inicial;
-    // después apenas se mueve con el scroll, para que el texto se lea bien.
-    setScroll(progreso: number) {
-      const d = progreso - entrada
-      giroScroll = d < 0 ? d * 1.6 : d * 0.25
-      activo = progreso > entrada - 0.05 && progreso < 0.62
+    // tiempo de la línea de tiempo del hero. Antes de "entrada" el balón gira hasta aterrizar en la
+    // vista inicial; después apenas se mueve con el scroll, para que el texto se lea bien.
+    setTiempo(t: number) {
+      const d = t - entrada
+      giroScroll = d < 0 ? d * 0.45 : d * 0.07
+      activo = t > entrada - 0.2 && t < salida
     },
   }
 }
