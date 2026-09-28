@@ -10,11 +10,7 @@ import retrato from '../assets/marca/retrato.png'
 // Los textos que acompañan a cada paso. Para añadir o cambiar un paso, empieza aquí.
 const pasos = [
   { num: '01', texto: `Designer & builder · ${sitio.ciudad}` },
-  {
-    num: '02',
-    texto: 'Football design · Trade Con GmbH · 2025',
-    nota: 'Portfolio work at Trade Con. Design © Trade Con GmbH. UEFA, Champions League and all related marks belong to their owners.',
-  },
+  { num: '02', texto: 'Football design', linea: 'Trade Con GmbH · 2025', nota: 'Created at Trade Con GmbH.' },
   { num: '03', texto: 'Web app · designed, coded & hosted by me' },
 ]
 ---
@@ -51,7 +47,8 @@ const pasos = [
         <div class="leyenda-textos">
           {pasos.map((p, i) => (
             <p class="etiqueta paso" data-paso={i}>
-              <span>{p.num}</span> {p.texto}
+              <span>{p.num}</span> — {p.texto}
+              {p.linea && <span class="linea">{p.linea}</span>}
               {p.nota && <small class="nota">{p.nota}</small>}
             </p>
           ))}
@@ -163,7 +160,8 @@ const pasos = [
   .leyenda { width: min(100%, 26rem); display: flex; flex-direction: column; gap: var(--espacio-3); }
   .leyenda-textos { display: grid; }
   .paso { grid-area: 1 / 1; margin: 0; text-align: center; }
-  .paso span { color: var(--color-acento); }
+  .paso > span:first-child { color: var(--color-acento); }
+  .linea { display: block; margin-top: var(--espacio-1); }
   .nota { display: block; margin-top: var(--espacio-2); font-family: var(--fuente-texto); font-size: var(--texto-xs); line-height: 1.45; text-wrap: balance; }
   .hero:not(.hero--animado) .paso:not(:first-child) { display: none; }
   .progreso { height: 2px; border-radius: 2px; background: var(--color-linea); overflow: hidden; }

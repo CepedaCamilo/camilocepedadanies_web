@@ -1,7 +1,7 @@
 ---
 // "THE BRIDGE": vídeo en bucle justo debajo del hero.
-// Al llegar, la página entera pasa a oscuro ("modo cine", como apple.com) y el vídeo crece
-// desde una tarjeta hasta ocupar toda la pantalla. Al salir, todo vuelve a su color.
+// Siempre a pantalla completa. Al llegar, la página entera pasa a oscuro ("modo cine", como apple.com)
+// y el título aparece encima con el scroll. Al salir, todo vuelve a su color.
 ---
 
 <section class="cine" data-cine aria-label="The Bridge — AI storytelling film">
@@ -55,14 +55,10 @@
       defaults: { ease: 'none' },
       scrollTrigger: { trigger: cine, start: 'top top', end: 'bottom bottom', scrub: 0.6 },
     })
-    // 1. La tarjeta crece hasta pantalla completa
-    tl.fromTo(cine.querySelector('[data-marco]'),
-      { clipPath: 'inset(14% 16% 14% 16% round 28px)' },
-      { clipPath: 'inset(0% 0% 0% 0% round 0px)', duration: 1, ease: 'power2.inOut' })
-    // 2. Aparece el título encima
-      .fromTo(cine.querySelector('[data-velo]'), { opacity: 0 }, { opacity: 1, duration: 0.4 }, 0.8)
-      .fromTo(cine.querySelector('[data-texto]'), { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.4, ease: 'power2.out' }, 0.9)
-    // 3. Pausa para verlo
+    // 1. Primero solo el vídeo, limpio. 2. Luego aparece el título encima. 3. Pausa para verlo
+    tl.to({}, { duration: 0.5 })
+      .fromTo(cine.querySelector('[data-velo]'), { opacity: 0 }, { opacity: 1, duration: 0.4 }, 0.5)
+      .fromTo(cine.querySelector('[data-texto]'), { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.4, ease: 'power2.out' }, 0.6)
       .to({}, { duration: 0.6 })
     return () => cine.classList.remove('cine--animado')
   })
@@ -71,11 +67,11 @@
 <style>
   /* Sin animación: el vídeo a todo el ancho con el texto encima */
   .escena { position: relative; height: calc(100svh - var(--alto-cabecera)); overflow: hidden; }
-  /* Con animación: 2,5 pantallas de recorrido con la escena fija */
-  .cine--animado { height: 250svh; }
+  /* Con animación: 2 pantallas de recorrido con la escena fija */
+  .cine--animado { height: 200svh; }
   .cine--animado .escena { position: sticky; top: var(--alto-cabecera); }
 
-  .marco { position: absolute; inset: 0; will-change: clip-path; }
+  .marco { position: absolute; inset: 0; }
   video { width: 100%; height: 100%; object-fit: cover; display: block; background: #000; }
   .velo { position: absolute; inset: 0; background: rgb(0 0 0 / 0.38); }
 

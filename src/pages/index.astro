@@ -7,10 +7,6 @@ import Hero from '../components/Hero.astro'
 import Cine from '../components/Cine.astro'
 import { sitio } from '../sitio'
 import escaladores from '../assets/marca/escaladores.png'
-import logoInpsicon from '../assets/marca/logo-inpsicon.png'
-import logoHaveagoodone from '../assets/marca/logo-haveagoodone.png'
-import logoYaku from '../assets/marca/logo-yaku.png'
-import logoTradecon from '../assets/marca/logo-tradecon.png'
 
 // Todos los proyectos visibles, ordenados por el campo "orden"
 const proyectos = (await getCollection('proyectos', (p) => !p.data.oculto)).sort(
@@ -18,13 +14,6 @@ const proyectos = (await getCollection('proyectos', (p) => !p.data.oculto)).sort
 )
 const diseño = proyectos.filter((p) => p.data.tipo === 'design')
 const software = proyectos.filter((p) => p.data.tipo === 'software')
-
-const logos = [
-  { src: logoInpsicon, alt: 'Inpsicon' },
-  { src: logoHaveagoodone, alt: 'Have a Good One' },
-  { src: logoYaku, alt: 'Yaku' },
-  { src: logoTradecon, alt: 'Trade Con' },
-]
 
 // Preguntas de "Core expertise" (texto original de la web anterior)
 const preguntas = [
@@ -58,14 +47,6 @@ const preguntas = [
 <Base>
   <Hero />
   <Cine />
-
-  <!-- CLIENTES -->
-  <section class="clientes contenedor" aria-label="Clients">
-    <p class="etiqueta">Trusted across licensed retail, branding and international visual production.</p>
-    <ul>
-      {logos.map((l) => <li><Image class="logo-cliente" src={l.src} alt={l.alt} width={180} /></li>)}
-    </ul>
-  </section>
 
   <!-- DISEÑO -->
   <section id="work" class="seccion contenedor">
@@ -132,15 +113,6 @@ const preguntas = [
 </Base>
 
 <style>
-  /* CLIENTES */
-  .clientes { display: flex; flex-direction: column; gap: var(--espacio-5); }
-  .clientes ul {
-    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--espacio-6);
-    align-items: center; list-style: none; margin: 0; padding: var(--espacio-5) 0;
-    border-block: var(--linea-fina) solid var(--color-linea);
-  }
-  .logo-cliente { width: 100%; max-width: 150px; height: auto; margin-inline: auto; filter: var(--filtro-logos); opacity: 0.85; }
-
   /* SECCIONES */
   .cabecera-seccion { display: flex; flex-direction: column; gap: var(--espacio-4); margin-bottom: var(--espacio-7); }
   .seccion--software { background: var(--color-superficie); border-radius: var(--radio-l); }
@@ -171,6 +143,5 @@ const preguntas = [
 
   @media (max-width: 900px) {
     .sobre-mi { grid-template-columns: minmax(0, 1fr); }
-    .clientes ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
 </style>
