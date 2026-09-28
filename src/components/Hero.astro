@@ -10,7 +10,11 @@ import retrato from '../assets/marca/retrato.png'
 // Los textos que acompañan a cada paso. Para añadir o cambiar un paso, empieza aquí.
 const pasos = [
   { num: '01', texto: `Designer & builder · ${sitio.ciudad}` },
-  { num: '02', texto: 'Football design · Trade Con · 2025' },
+  {
+    num: '02',
+    texto: 'Football design · Trade Con GmbH · 2025',
+    nota: 'Portfolio work at Trade Con. Design © Trade Con GmbH. UEFA, Champions League and all related marks belong to their owners.',
+  },
   { num: '03', texto: 'Web app · designed, coded & hosted by me' },
 ]
 ---
@@ -46,7 +50,10 @@ const pasos = [
       <div class="leyenda" aria-live="off">
         <div class="leyenda-textos">
           {pasos.map((p, i) => (
-            <p class="etiqueta paso" data-paso={i}><span>{p.num}</span> {p.texto}</p>
+            <p class="etiqueta paso" data-paso={i}>
+              <span>{p.num}</span> {p.texto}
+              {p.nota && <small class="nota">{p.nota}</small>}
+            </p>
           ))}
         </div>
         <div class="progreso"><span data-progreso></span></div>
@@ -116,11 +123,15 @@ const pasos = [
     grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
     align-items: center;
     gap: var(--espacio-7);
-    padding-block: var(--espacio-7) var(--espacio-8);
+    padding-block: var(--espacio-5) var(--espacio-8);
   }
   /* Con animación: el hero mide 3 pantallas y la escena se queda fija mientras tanto */
   .hero--animado { height: 300svh; }
-  .hero--animado .escena { position: sticky; top: 0; height: 100svh; padding-block: var(--espacio-6); }
+  .hero--animado .escena {
+    position: sticky; top: 0; height: 100svh;
+    align-content: start; /* arriba, no centrado: sin hueco grande en pantallas altas */
+    padding-block: clamp(var(--espacio-4), 4svh, var(--espacio-7)) var(--espacio-6);
+  }
 
   .texto { display: flex; flex-direction: column; gap: var(--espacio-5); }
   h1 { font-size: clamp(2.5rem, 1.5rem + 3.6vw, 4.25rem); text-wrap: balance; }
@@ -138,7 +149,8 @@ const pasos = [
   .capa { position: absolute; inset: 0; display: grid; place-items: center; will-change: transform, opacity; }
   .capa :global(img) { width: 100%; height: 100%; object-fit: contain; }
   .capa--foto :global(img) { border-radius: 50%; object-fit: cover; }
-  .capa--balon canvas { width: 100%; height: 100%; display: block; cursor: grab; touch-action: pan-y; }
+  /* absoluto: el lienzo mide exactamente su capa cuadrada (si no, su propio contenido lo estira) */
+  .capa--balon canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; cursor: grab; touch-action: pan-y; }
   .capa--balon canvas:active { cursor: grabbing; }
   .capa--app { inset: 0 22%; }
 
@@ -149,6 +161,7 @@ const pasos = [
   .leyenda-textos { display: grid; }
   .paso { grid-area: 1 / 1; margin: 0; text-align: center; }
   .paso span { color: var(--color-acento); }
+  .nota { display: block; margin-top: var(--espacio-2); font-family: var(--fuente-texto); font-size: var(--texto-xs); line-height: 1.45; text-wrap: balance; }
   .hero:not(.hero--animado) .paso:not(:first-child) { display: none; }
   .progreso { height: 2px; border-radius: 2px; background: var(--color-linea); overflow: hidden; }
   .progreso span { display: block; height: 100%; background: var(--color-acento); transform-origin: left; transform: scaleX(0); }
@@ -157,7 +170,7 @@ const pasos = [
   @media (prefers-reduced-motion: reduce) { .flotar { animation: none; } }
 
   @media (max-width: 900px) {
-    .escena { grid-template-columns: minmax(0, 1fr); gap: var(--espacio-5); align-content: center; }
+    .escena { grid-template-columns: minmax(0, 1fr); gap: var(--espacio-5); align-content: start; }
     .escenario { order: -1; }
     .flotar { width: min(78vw, 40svh); }
     .hero--animado .texto .entradilla, .hero--animado .acciones { display: none; }

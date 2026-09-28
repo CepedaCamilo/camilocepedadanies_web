@@ -3,5 +3,5 @@ dist/
 .astro/
 .DS_Store
 
-# Fotogramas del balón con logos de UEFA: no se suben hasta tener el permiso de Trade Con
+# Fotogramas del balón (14 MB, se generan con `npm run fotogramas` desde el render de Cinema 4D)
 public/3d/balon/

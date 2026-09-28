@@ -9,6 +9,10 @@ portada: ./product-design/portada.jpg
 orden: 20
 ---
 
+<img src="/3d/balon/007.webp" alt="UEFA Champions League football UCL_2025008, rendered in Cinema 4D" width="900" height="900" loading="lazy">
+
+*UCL_2025008 "We are the Champions" — 30-panel football I designed at Trade Con (2025), rendered in Cinema 4D. The same render spins in the hero of this site.*
+
 ![Licensed sports products](./product-design/productos.jpg)
 *50+ commercial SKUs developed across sports, fitness and retail sectors. Official licensed collections for FIFA, UEFA Champions League and DFB.*
 
@@ -16,4 +20,4 @@ orden: 20
 *Developed during my role at Trade Con GmbH, Hamburg. Selected visuals displayed for portfolio presentation purposes.*
 
 ![Retail packaging](./product-design/packaging.jpg)
-*All trademarks and copyrights belong to their respective owners.*
+*Portfolio work created during my employment at Trade Con GmbH. All designs © Trade Con GmbH. UEFA, UEFA Champions League, FIFA, DFB and all related names, logos and marks are the property of their respective owners and are shown for portfolio presentation purposes only.*
