@@ -7,8 +7,8 @@ import { join } from 'node:path'
 
 const ENTRADA = process.argv[2] ?? '/Users/camilodanies/Documents/8000_CREATIVITY/Trade Con/render'
 const SALIDA = 'public/3d/balon'
-const TAM = 900      // px: suficiente para el hero en pantallas retina
-const CALIDAD = 80
+const TAM = 900      // px: el tamaño del render (el hero mide hasta 544 px → 1088 en Retina)
+const CALIDAD = 90
 
 const pngs = readdirSync(ENTRADA).filter((f) => /^balon_\d+\.png$/.test(f)).sort()
 if (pngs.length === 0) throw new Error(`No hay fotogramas balon_XXXX.png en ${ENTRADA}`)

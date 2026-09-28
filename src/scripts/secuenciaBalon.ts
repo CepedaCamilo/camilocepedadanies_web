@@ -41,11 +41,14 @@ export function iniciarSecuencia(canvas: HTMLCanvasElement, { total = 120, ruta 
   canvas.addEventListener('pointerup', soltar)
   canvas.addEventListener('pointercancel', soltar)
 
+  let dibujado = -1
+  // Tamaño real del lienzo (clientWidth ignora el zoom y el giro de la animación de GSAP;
+  // getBoundingClientRect los incluiría y el balón se vería pixelado)
   const ajustar = () => {
-    const { width, height } = canvas.getBoundingClientRect()
     const dpr = Math.min(window.devicePixelRatio, 2)
-    canvas.width = Math.round(width * dpr)
-    canvas.height = Math.round(height * dpr)
+    canvas.width = Math.round(canvas.clientWidth * dpr)
+    canvas.height = Math.round(canvas.clientHeight * dpr)
+    dibujado = -1 // al cambiar de tamaño hay que volver a dibujar
   }
   new ResizeObserver(ajustar).observe(canvas)
   ajustar()
@@ -53,7 +56,7 @@ export function iniciarSecuencia(canvas: HTMLCanvasElement, { total = 120, ruta 
   let visible = true
   new IntersectionObserver(([e]) => { visible = e.isIntersecting }).observe(canvas)
 
-  let anterior = performance.now(), dibujado = -1
+  let anterior = performance.now()
   const bucle = (ahora: number) => {
     requestAnimationFrame(bucle)
     const dt = Math.min(ahora - anterior, 50) / 16.7
@@ -66,6 +69,7 @@ export function iniciarSecuencia(canvas: HTMLCanvasElement, { total = 120, ruta 
     // si ese fotograma aún no ha llegado, usamos el cargado más cercano
     for (let d = 0; d < total && !fotos[i]; d++) i = (i + 1) % total
     if (i === dibujado || !fotos[i]) return
+    ctx.imageSmoothingQuality = 'high'
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     ctx.drawImage(fotos[i]!, 0, 0, canvas.width, canvas.height)
     dibujado = i
