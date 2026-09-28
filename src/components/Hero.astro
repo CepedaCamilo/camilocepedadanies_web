@@ -58,7 +58,7 @@ const pasos = [
 <script>
   import { gsap } from 'gsap'
   import { ScrollTrigger } from 'gsap/ScrollTrigger'
-  import { iniciarBalon } from '../scripts/balon3d'
+  import { iniciarSecuencia } from '../scripts/secuenciaBalon'
 
   gsap.registerPlugin(ScrollTrigger)
   const hero = document.querySelector<HTMLElement>('[data-hero]')!
@@ -68,7 +68,7 @@ const pasos = [
   const mm = gsap.matchMedia()
   mm.add('(prefers-reduced-motion: no-preference)', () => {
     hero.classList.add('hero--animado')
-    const balon3d = iniciarBalon(hero.querySelector<HTMLCanvasElement>('[data-balon]')!)
+    const balon3d = iniciarSecuencia(hero.querySelector<HTMLCanvasElement>('[data-balon]')!)
 
     // Posición inicial de cada objeto
     gsap.set(capa('balon'), { autoAlpha: 0, scale: 0.4, rotate: -140 })

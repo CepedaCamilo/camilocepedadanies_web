@@ -2,3 +2,6 @@ node_modules/
 dist/
 .astro/
 .DS_Store
+
+# Fotogramas del balón con logos de UEFA: no se suben hasta tener el permiso de Trade Con
+public/3d/balon/
