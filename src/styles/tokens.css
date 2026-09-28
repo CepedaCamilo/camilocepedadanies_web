@@ -1,0 +1,115 @@
+/* =========================================================================
+   Design system de Camilo — tokens
+   Capa 1: primitivos (la paleta en bruto, nunca se usan directamente en componentes)
+   Capa 2: semánticos (para qué sirve cada valor; cambian entre Light y Dark)
+   Capa 3: componentes (en global.css, solo usan tokens semánticos)
+   ========================================================================= */
+
+:root {
+  /* --- 1. Primitivos: color --- */
+  --hueso-100: #f7f3ec;
+  --hueso-200: #ece6dc;
+  --hueso-300: #e4dccf;
+  --hueso-400: #d8cec0;
+  --tinta-900: #231a15;
+  --tinta-600: #5e5249;
+  --cacao-900: #17120f;
+  --cacao-800: #231c18;
+  --cacao-700: #2e2520;
+  --cacao-600: #342a24;
+  --cacao-500: #3a302a;
+  --crema-100: #f1eae0;
+  --crema-400: #b3a596;
+  --cobalto-500: #2e46f0;
+  --cobalto-400: #4a5cf5;
+  --blanco: #ffffff;
+
+  /* --- 1. Primitivos: tipografía --- */
+  --fuente-texto: 'Geist Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --fuente-mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --texto-xs: 0.75rem;   /* 12px — etiquetas mono */
+  --texto-s: 0.875rem;   /* 14px */
+  --texto-m: 1rem;       /* 16px — texto base */
+  --texto-l: 1.1875rem;  /* 19px — entradillas */
+  --titulo-3: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --titulo-2: clamp(2rem, 1.5rem + 2vw, 3rem);
+  --titulo-1: clamp(2.75rem, 1.6rem + 4.4vw, 4.75rem); /* hasta 76px, como la dirección B */
+
+  --peso-fino: 300;
+  --peso-normal: 400;
+  --peso-medio: 500;
+  --tracking-titulo: -0.04em;
+
+  /* --- 1. Primitivos: espacio y forma --- */
+  --espacio-1: 0.25rem;
+  --espacio-2: 0.5rem;
+  --espacio-3: 0.75rem;
+  --espacio-4: 1rem;
+  --espacio-5: 1.5rem;
+  --espacio-6: 2rem;
+  --espacio-7: 3rem;
+  --espacio-8: clamp(4rem, 3rem + 4vw, 7rem); /* separación entre secciones */
+  --margen-lateral: clamp(1rem, 0.5rem + 3vw, 3.5rem);
+  --ancho-max: 1240px;
+
+  --radio-s: 8px;
+  --radio-m: 16px;
+  --radio-l: 28px;
+  --radio-pildora: 999px;
+  --linea-fina: 1px;
+}
+
+/* --- 2. Semánticos: modo Light (por defecto) --- */
+:root {
+  --color-fondo: var(--hueso-200);
+  --color-superficie: var(--hueso-100);
+  --color-superficie-2: var(--hueso-300);
+  --color-forma: var(--hueso-400);
+  --color-texto: var(--tinta-900);
+  --color-texto-suave: var(--tinta-600);
+  --color-linea: var(--hueso-400);
+  --color-acento: var(--cobalto-500);
+  --color-sobre-acento: var(--blanco);
+  --color-invertido: var(--tinta-900);       /* botones rellenos */
+  --color-sobre-invertido: var(--hueso-200);
+  --filtro-logos: none;
+  color-scheme: light;
+}
+
+/* --- 2. Semánticos: modo Dark --- */
+/* a) si el sistema está en oscuro y la persona no eligió Light a mano */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --color-fondo: var(--cacao-900);
+    --color-superficie: var(--cacao-800);
+    --color-superficie-2: var(--cacao-600);
+    --color-forma: var(--cacao-700);
+    --color-texto: var(--crema-100);
+    --color-texto-suave: var(--crema-400);
+    --color-linea: var(--cacao-500);
+    --color-acento: var(--cobalto-400);
+    --color-sobre-acento: var(--blanco);
+    --color-invertido: var(--crema-100);
+    --color-sobre-invertido: var(--cacao-900);
+    --filtro-logos: invert(1) brightness(1.4);
+    color-scheme: dark;
+  }
+}
+
+/* b) si la persona eligió Dark con el interruptor */
+:root[data-theme='dark'] {
+  --color-fondo: var(--cacao-900);
+  --color-superficie: var(--cacao-800);
+  --color-superficie-2: var(--cacao-600);
+  --color-forma: var(--cacao-700);
+  --color-texto: var(--crema-100);
+  --color-texto-suave: var(--crema-400);
+  --color-linea: var(--cacao-500);
+  --color-acento: var(--cobalto-400);
+  --color-sobre-acento: var(--blanco);
+  --color-invertido: var(--crema-100);
+  --color-sobre-invertido: var(--cacao-900);
+  --filtro-logos: invert(1) brightness(1.4);
+  color-scheme: dark;
+}

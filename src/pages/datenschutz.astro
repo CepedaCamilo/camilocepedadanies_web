@@ -1,0 +1,72 @@
+---
+import Base from '../layouts/Base.astro'
+import { sitio } from '../sitio'
+---
+
+<Base titulo="Datenschutz" idioma="de">
+  <article class="contenedor seccion legal">
+    <h1>Datenschutzerklärung</h1>
+    <p class="etiqueta">Stand: September 2026</p>
+
+    <h2>1. Verantwortlicher</h2>
+    <p>
+      Camilo Cepeda Danies<br />
+      Thadenstraße 22, 22767 Hamburg<br />
+      E-Mail: <a href={`mailto:${sitio.email}`}>{sitio.email}</a>
+    </p>
+
+    <h2>2. Hosting und Server-Logs</h2>
+    <p>
+      Diese Website läuft auf einem eigenen Server bei der Hetzner Online GmbH, Industriestr. 25,
+      91710 Gunzenhausen, Deutschland (Standort Nürnberg). Mit Hetzner besteht ein Vertrag zur
+      Auftragsverarbeitung (Art. 28 DSGVO).
+    </p>
+    <p>
+      Beim Aufruf werden technisch notwendige Daten verarbeitet: IP-Adresse, Datum und Uhrzeit,
+      aufgerufene Adresse und Browser-Kennung. Das dient dem sicheren Betrieb
+      (Art. 6 Abs. 1 lit. f DSGVO). Die Protokolle haben eine feste Größengrenze und werden danach
+      automatisch überschrieben.
+    </p>
+
+    <h2>3. Kontakt per E-Mail</h2>
+    <p>
+      Wenn Sie mir schreiben, verarbeite ich Ihre E-Mail-Adresse und Ihre Nachricht, um Ihre Anfrage zu
+      beantworten (Art. 6 Abs. 1 lit. b bzw. f DSGVO). Mein Postfach wird von Google Ireland Limited
+      (Gordon House, Barrow Street, Dublin 4, Irland) betrieben. Nachrichten lösche ich, sobald sie für
+      die Anfrage nicht mehr benötigt werden, soweit keine gesetzlichen Aufbewahrungspflichten bestehen.
+    </p>
+
+    <h2>4. Cookies, Schriften und externe Inhalte</h2>
+    <p>
+      Diese Website setzt keine Cookies und verwendet keine Analyse- oder Tracking-Dienste. Wenn Sie das
+      Farbschema (Light/Dark) wählen, wird diese Einstellung im lokalen Speicher Ihres Browsers abgelegt;
+      das ist für die von Ihnen gewünschte Funktion erforderlich (§ 25 Abs. 2 Nr. 2 TDDDG) und wird
+      nicht an mich übertragen. Schriften und Videos werden von meinem eigenen Server geladen.
+    </p>
+    <p>
+      Einige Links führen zu externen Seiten (z. B. YouTube oder Kundenwebsites). Erst wenn Sie einen
+      solchen Link anklicken, werden Daten an den jeweiligen Anbieter übertragen; dort gelten dessen
+      Datenschutzbestimmungen.
+    </p>
+
+    <h2>5. Meine Web-Apps</h2>
+    <p>
+      Die im Bereich „Now building“ gezeigten Apps laufen unter danies.trade. Für sie gilt eine eigene
+      <a href="https://danies.trade/datenschutz/">Datenschutzerklärung</a>.
+    </p>
+
+    <h2>6. Ihre Rechte</h2>
+    <p>
+      Sie haben das Recht auf Auskunft (Art. 15), Berichtigung (Art. 16), Löschung (Art. 17),
+      Einschränkung der Verarbeitung (Art. 18), Datenübertragbarkeit (Art. 20) und Widerspruch (Art. 21
+      DSGVO). Schreiben Sie dazu an die oben genannte E-Mail-Adresse. Sie können sich außerdem bei einer
+      Aufsichtsbehörde beschweren (Art. 77 DSGVO), zum Beispiel beim Hamburgischen Beauftragten für
+      Datenschutz und Informationsfreiheit, Ludwig-Erhard-Str. 22, 20459 Hamburg.
+    </p>
+  </article>
+</Base>
+
+<style>
+  .legal { display: flex; flex-direction: column; gap: var(--espacio-4); max-width: 46rem; }
+  .legal h2 { font-size: var(--titulo-3); font-weight: var(--peso-normal); letter-spacing: -0.02em; margin-top: var(--espacio-5); }
+</style>

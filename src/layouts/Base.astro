@@ -1,0 +1,47 @@
+---
+// La plantilla que envuelve todas las páginas: <head>, cabecera y pie.
+import '@fontsource-variable/geist'
+import '@fontsource-variable/geist-mono'
+import '../styles/tokens.css'
+import '../styles/global.css'
+import Cabecera from '../components/Cabecera.astro'
+import Pie from '../components/Pie.astro'
+import { sitio } from '../sitio'
+
+interface Props {
+  titulo?: string
+  descripcion?: string
+  idioma?: string
+}
+const { titulo, descripcion = sitio.descripcion, idioma = 'en' } = Astro.props
+const tituloCompleto = titulo ? `${titulo} — ${sitio.nombre}` : `${sitio.nombre} — Designer building software`
+---
+
+<!doctype html>
+<html lang={idioma}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{tituloCompleto}</title>
+    <meta name="description" content={descripcion} />
+    <link rel="icon" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/webclip.png" />
+    <meta property="og:title" content={tituloCompleto} />
+    <meta property="og:description" content={descripcion} />
+    <!-- Antes de pintar: aplicar el tema guardado, para que no parpadee -->
+    <script is:inline>
+      try {
+        const tema = localStorage.getItem('tema')
+        if (tema === 'light' || tema === 'dark') document.documentElement.dataset.theme = tema
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <a class="solo-lectores" href="#contenido">Skip to content</a>
+    <Cabecera />
+    <main id="contenido">
+      <slot />
+    </main>
+    <Pie />
+  </body>
+</html>

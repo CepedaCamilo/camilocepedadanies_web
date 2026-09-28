@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro'
+import { sitio } from '../sitio'
+---
+
+<Base titulo="Impressum" idioma="de">
+  <article class="contenedor seccion legal">
+    <h1>Impressum</h1>
+
+    <h2>Angaben gemäß § 5 DDG</h2>
+    <p>
+      Camilo Cepeda Danies<br />
+      Thadenstraße 22<br />
+      22767 Hamburg<br />
+      Deutschland
+    </p>
+
+    <h2>Kontakt</h2>
+    <p>
+      E-Mail: <a href={`mailto:${sitio.email}`}>{sitio.email}</a><br />
+      Telefon: +49 177 5898083
+    </p>
+
+    <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
+    <p>Camilo Cepeda Danies, Anschrift wie oben</p>
+
+    <h2>Marken und Rechte Dritter</h2>
+    <p>
+      Gezeigte Marken, Logos und Produktabbildungen dienen ausschließlich der Darstellung eigener Arbeiten
+      im Portfolio. Alle Rechte liegen bei den jeweiligen Inhabern.
+    </p>
+  </article>
+</Base>
+
+<style>
+  .legal { display: flex; flex-direction: column; gap: var(--espacio-4); max-width: 46rem; }
+  .legal h2 { font-size: var(--titulo-3); font-weight: var(--peso-normal); letter-spacing: -0.02em; margin-top: var(--espacio-5); }
+</style>

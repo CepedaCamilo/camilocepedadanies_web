@@ -1,0 +1,38 @@
+---
+import InterruptorTema from './InterruptorTema.astro'
+---
+
+<header class="cabecera contenedor">
+  <a class="logo" href="/">camilocepedadanies</a>
+  <nav aria-label="Main">
+    <a href="/#work">Work</a>
+    <a href="/#building">Building</a>
+    <a href="/#about">About</a>
+    <a class="pildora pildora--llena contacto" href="/#contact">Contact</a>
+  </nav>
+  <InterruptorTema />
+</header>
+
+<style>
+  .cabecera {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-5);
+    padding-block: var(--espacio-5);
+  }
+  .logo {
+    font-family: var(--fuente-mono);
+    font-size: var(--texto-s);
+    font-weight: var(--peso-medio);
+    text-decoration: none;
+    margin-right: auto;
+  }
+  nav { display: flex; align-items: center; gap: var(--espacio-5); font-size: var(--texto-s); }
+  nav a:not(.pildora) { text-decoration: none; }
+  .contacto { min-height: 40px; padding: var(--espacio-2) var(--espacio-4); font-size: var(--texto-s); }
+
+  @media (max-width: 720px) {
+    .cabecera { flex-wrap: wrap; gap: var(--espacio-3) var(--espacio-4); }
+    nav { order: 3; width: 100%; justify-content: space-between; gap: var(--espacio-3); }
+  }
+</style>

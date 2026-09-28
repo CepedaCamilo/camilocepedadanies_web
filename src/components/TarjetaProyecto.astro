@@ -1,0 +1,86 @@
+---
+// Una tarjeta de proyecto. Si el proyecto no tiene portada, dibuja una portada tipográfica.
+import { Image } from 'astro:assets'
+import type { CollectionEntry } from 'astro:content'
+
+interface Props {
+  proyecto: CollectionEntry<'proyectos'>
+}
+const { proyecto } = Astro.props
+const p = proyecto.data
+const dominio = p.enlace ? new URL(p.enlace).host : null
+---
+
+<article class="tarjeta">
+  <a class="enlace" href={`/${proyecto.id}.html`}>
+    {
+      p.portada ? (
+        <Image
+          class="portada"
+          src={p.portada}
+          alt=""
+          widths={[480, 800, 1200]}
+          sizes="(max-width: 720px) 100vw, 50vw"
+        />
+      ) : (
+        <div class="portada portada--tipografica" aria-hidden="true">
+          <span class="circulo" />
+          <span class="etiqueta">{p.disciplinas.slice(0, 3).join(' · ')}</span>
+          <span class="nombre">{dominio ?? p.titulo}</span>
+        </div>
+      )
+    }
+    <div class="texto">
+      <p class="etiqueta">
+        {p.categoria}{p.año && ` · ${p.año}`}
+      </p>
+      <h3>{p.titulo}</h3>
+      {p.cliente && <p class="cliente">{p.cliente}</p>}
+    </div>
+  </a>
+</article>
+
+<style>
+  .enlace { display: flex; flex-direction: column; gap: var(--espacio-4); text-decoration: none; }
+  .portada {
+    width: 100%;
+    aspect-ratio: 11 / 8;
+    object-fit: cover;
+    border-radius: var(--radio-l);
+    background: var(--color-superficie);
+    transition: transform 0.35s ease;
+  }
+  .enlace:hover .portada { transform: scale(0.985); }
+  .enlace:hover h3 { color: var(--color-acento); }
+
+  .portada--tipografica {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: var(--espacio-6);
+    border: var(--linea-fina) solid var(--color-linea);
+  }
+  .circulo {
+    position: absolute;
+    width: 46%;
+    aspect-ratio: 1;
+    right: -10%;
+    top: -18%;
+    border-radius: 50%;
+    background: var(--color-acento);
+  }
+  .portada--tipografica .etiqueta { position: relative; max-width: 60%; }
+  .nombre {
+    position: relative;
+    max-width: 100%;
+    font-size: clamp(1.5rem, 1rem + 1.8vw, 2.5rem);
+    overflow-wrap: anywhere;
+    font-weight: var(--peso-fino);
+    letter-spacing: var(--tracking-titulo);
+    line-height: 1;
+  }
+  .texto { display: flex; flex-direction: column; gap: var(--espacio-1); }
+  .cliente { color: var(--color-texto-suave); font-size: var(--texto-s); }
+</style>

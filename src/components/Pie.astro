@@ -1,0 +1,25 @@
+---
+import { sitio } from '../sitio'
+const año = new Date().getFullYear()
+---
+
+<footer class="pie contenedor">
+  <span class="etiqueta">© {año} {sitio.nombre}</span>
+  <nav aria-label="Legal" class="etiqueta">
+    <a href={`mailto:${sitio.email}`}>{sitio.email}</a>
+    <a href="/impressum.html">Impressum</a>
+    <a href="/datenschutz.html">Datenschutz</a>
+  </nav>
+</footer>
+
+<style>
+  .pie {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--espacio-4);
+    padding-block: var(--espacio-6) var(--espacio-7);
+    border-top: var(--linea-fina) solid var(--color-linea);
+  }
+  nav { display: flex; flex-wrap: wrap; gap: var(--espacio-5); }
+</style>

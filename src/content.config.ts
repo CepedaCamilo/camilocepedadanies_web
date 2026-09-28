@@ -1,0 +1,26 @@
+import { defineCollection } from 'astro:content'
+import { glob } from 'astro/loaders'
+import { z } from 'astro/zod'
+
+// El "molde" de un proyecto. Cada archivo .md de src/content/proyectos/ tiene que rellenarlo.
+// Si falta un campo obligatorio, `npm run build` avisa y no publica nada roto.
+const proyectos = defineCollection({
+  loader: glob({ pattern: '*.md', base: './src/content/proyectos' }),
+  schema: ({ image }) =>
+    z.object({
+      titulo: z.string(),
+      tipo: z.enum(['design', 'software']),
+      categoria: z.string(), // la etiqueta pequeña en mono, p. ej. "Brand identity systems"
+      cliente: z.string().optional(),
+      año: z.number().optional(),
+      resumen: z.string(), // una o dos frases para la tarjeta y la cabecera
+      disciplinas: z.array(z.string()).default([]),
+      portada: image().optional(), // sin portada → portada tipográfica automática
+      enlace: z.url().optional(), // la web o la app en vivo
+      textoEnlace: z.string().optional(),
+      orden: z.number().default(100), // menor = sale antes
+      oculto: z.boolean().default(false),
+    }),
+})
+
+export const collections = { proyectos }

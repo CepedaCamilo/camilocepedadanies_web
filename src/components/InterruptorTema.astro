@@ -1,0 +1,55 @@
+---
+// Interruptor Light / Dark. Recuerda la elección en este navegador (localStorage).
+---
+
+<div class="interruptor" role="group" aria-label="Color theme">
+  <button type="button" data-tema="light" aria-pressed="false">Light</button>
+  <button type="button" data-tema="dark" aria-pressed="false">Dark</button>
+</div>
+
+<script>
+  const raiz = document.documentElement
+  const botones = document.querySelectorAll<HTMLButtonElement>('.interruptor button')
+  const sistemaOscuro = window.matchMedia('(prefers-color-scheme: dark)')
+
+  function temaActual() {
+    return raiz.dataset.theme ?? (sistemaOscuro.matches ? 'dark' : 'light')
+  }
+  function marcar() {
+    const actual = temaActual()
+    botones.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.tema === actual)))
+  }
+
+  botones.forEach((boton) =>
+    boton.addEventListener('click', () => {
+      const tema = boton.dataset.tema!
+      raiz.dataset.theme = tema
+      try { localStorage.setItem('tema', tema) } catch {}
+      marcar()
+    })
+  )
+  sistemaOscuro.addEventListener('change', marcar)
+  marcar()
+</script>
+
+<style>
+  .interruptor {
+    display: flex;
+    padding: 3px;
+    border-radius: var(--radio-pildora);
+    background: var(--color-superficie);
+    border: var(--linea-fina) solid var(--color-linea);
+  }
+  button {
+    min-height: 34px;
+    padding: 0 var(--espacio-3);
+    border: none;
+    border-radius: var(--radio-pildora);
+    background: transparent;
+    color: var(--color-texto-suave);
+    font-family: var(--fuente-mono);
+    font-size: var(--texto-xs);
+    cursor: pointer;
+  }
+  button[aria-pressed='true'] { background: var(--color-invertido); color: var(--color-sobre-invertido); }
+</style>
