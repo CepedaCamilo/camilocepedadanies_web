@@ -1,24 +1,97 @@
 ---
-// Una vista de la app de chat, hecha en HTML (no es una imagen): usa los tokens,
-// así que cambia sola con Light / Dark.
+// La app de chat del hero, animada como un vídeo (HTML real, no una imagen):
+// llegan los mensajes uno a uno, se escribe una respuesta, se pulsa Send y sale como burbuja.
+// Se reproduce en bucle mientras el paso 03 del hero está en pantalla (evento "hero:app").
+// Para cambiar los textos: los mensajes están en el HTML de abajo y la respuesta final en RESPUESTA.
 ---
 
-<div class="telefono" aria-hidden="true">
+<div class="telefono" aria-hidden="true" data-chat>
   <div class="barra">
     <span class="etiqueta">chat.danies.trade</span>
     <span class="etiqueta en-linea">● 2 online</span>
   </div>
   <p class="titulo-app">Chat</p>
   <div class="mensajes">
-    <p class="burbuja"><span class="etiqueta">guest · 18:51</span>How is the new site going?</p>
-    <p class="burbuja burbuja--mia"><span class="etiqueta">you · 18:52</span>Deployed it from the terminal.</p>
-    <p class="burbuja"><span class="etiqueta">guest · 18:53</span>Designer and developer, then.</p>
+    <p class="burbuja" data-msg><span class="etiqueta">guest · 18:51</span>How is the new site going?</p>
+    <p class="burbuja burbuja--mia" data-msg><span class="etiqueta">you · 18:52</span>Deployed it from the terminal.</p>
+    <p class="burbuja" data-msg><span class="etiqueta">guest · 18:53</span>Designer and developer, then.</p>
+    <p class="burbuja burbuja--mia" data-msg data-final><span class="etiqueta">you · 18:53</span><span data-final-texto></span></p>
+    <p class="escribiendo" data-escribiendo><span></span><span></span><span></span></p>
   </div>
   <div class="escribir">
-    <span>Write a message…</span>
-    <span class="enviar">Send</span>
+    <span class="campo"><span data-tecleo></span><span class="cursor" data-cursor></span><span class="placeholder" data-placeholder>Write a message…</span></span>
+    <span class="enviar" data-enviar>Send</span>
   </div>
 </div>
+
+<script>
+  import { gsap } from 'gsap'
+
+  const RESPUESTA = 'Both. Same hands, same care.'
+  const chat = document.querySelector<HTMLElement>('[data-chat]')!
+  const msgs = chat.querySelectorAll<HTMLElement>('[data-msg]')
+  const escribiendo = chat.querySelector<HTMLElement>('[data-escribiendo]')!
+  const tecleo = chat.querySelector<HTMLElement>('[data-tecleo]')!
+  const placeholder = chat.querySelector<HTMLElement>('[data-placeholder]')!
+  const cursor = chat.querySelector<HTMLElement>('[data-cursor]')!
+  const enviar = chat.querySelector<HTMLElement>('[data-enviar]')!
+  chat.querySelector('[data-final-texto]')!.textContent = RESPUESTA
+
+  const mm = gsap.matchMedia()
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    // Estado inicial: chat vacío y campo sin texto
+    const reiniciar = () => {
+      gsap.set(msgs, { display: 'none', autoAlpha: 0, y: 14 })
+      gsap.set(escribiendo, { display: 'none', autoAlpha: 0 })
+      gsap.set(cursor, { autoAlpha: 0 })
+      gsap.set(placeholder, { autoAlpha: 1 })
+      enviar.classList.remove('enviar--pulsado')
+      tecleo.textContent = ''
+    }
+    reiniciar()
+
+    const aparecer = (_el: Element) => ({ display: 'flex', autoAlpha: 1, y: 0, duration: 0.45, ease: 'back.out(1.6)' })
+    let espera: gsap.core.Tween | undefined // la pausa de 3 s entre repeticiones
+    const tl = gsap.timeline({ paused: true, onComplete: () => { espera = gsap.delayedCall(3, () => { reiniciar(); tl.restart() }) } })
+
+    // 1. guest escribe… y llega su mensaje
+    tl.set(escribiendo, { display: 'flex' }).to(escribiendo, { autoAlpha: 1, duration: 0.2 })
+      .to(escribiendo, { autoAlpha: 0, duration: 0.15, delay: 0.9 }).set(escribiendo, { display: 'none' })
+      .to(msgs[0], aparecer(msgs[0]))
+    // 2. tu respuesta
+      .to(msgs[1], aparecer(msgs[1]), '+=0.9')
+    // 3. guest escribe… otra vez
+      .set(escribiendo, { display: 'flex' }, '+=0.5').to(escribiendo, { autoAlpha: 1, duration: 0.2 })
+      .to(escribiendo, { autoAlpha: 0, duration: 0.15, delay: 1 }).set(escribiendo, { display: 'none' })
+      .to(msgs[2], aparecer(msgs[2]))
+    // 4. se escribe la respuesta letra a letra en el campo
+      .to(placeholder, { autoAlpha: 0, duration: 0.15 }, '+=0.8')
+      .set(cursor, { autoAlpha: 1 })
+    const letras = { n: 0 }
+    tl.to(letras, {
+      n: RESPUESTA.length, duration: RESPUESTA.length * 0.055, ease: 'none',
+      onUpdate: () => { tecleo.textContent = RESPUESTA.slice(0, Math.round(letras.n)) },
+    })
+    // 5. se pulsa Send: el botón se hunde y cambia de color
+      .to(enviar, { scale: 0.9, duration: 0.12, ease: 'power2.in' }, '+=0.45')
+      .call(() => enviar.classList.add('enviar--pulsado'))
+      .to(enviar, { scale: 1, duration: 0.35, ease: 'back.out(3)' })
+    // 6. el campo se vacía y el mensaje sale como burbuja
+      .call(() => { tecleo.textContent = '' }, [], '+=0.1')
+      .set(cursor, { autoAlpha: 0 })
+      .to(msgs[3], aparecer(msgs[3]))
+      .to(placeholder, { autoAlpha: 1, duration: 0.3 }, '+=0.3')
+      .call(() => enviar.classList.remove('enviar--pulsado'))
+
+    // El hero avisa cuando el chat (paso 03) está en pantalla
+    const alCambiar = (e: Event) => {
+      if ((e as CustomEvent<boolean>).detail) { if (!tl.isActive() && !espera?.isActive()) { reiniciar(); tl.restart() } }
+      else { espera?.kill(); tl.pause(0); reiniciar() }
+    }
+    window.addEventListener('hero:app', alCambiar)
+    return () => window.removeEventListener('hero:app', alCambiar)
+  })
+</script>
 
 <style>
   .telefono {
@@ -41,10 +114,10 @@
   .titulo-app { font-size: 2.6em; font-weight: var(--peso-fino); letter-spacing: var(--tracking-titulo); line-height: 1; }
   .mensajes {
     flex-grow: 1; display: flex; flex-direction: column; justify-content: flex-end; gap: 0.7em;
-    padding: 0.9em; border-radius: 1.6em; background: var(--color-fondo);
+    padding: 0.9em; border-radius: 1.6em; background: var(--color-fondo); overflow: hidden;
   }
   .burbuja {
-    display: flex; flex-direction: column; gap: 0.2em; max-width: 82%;
+    display: flex; flex-direction: column; gap: 0.2em; max-width: 82%; flex-shrink: 0;
     padding: 0.75em 1em; border-radius: 1.3em 1.3em 1.3em 0.4em; background: var(--color-superficie-2);
     line-height: 1.3;
   }
@@ -54,10 +127,37 @@
     background: var(--color-acento); color: var(--color-sobre-acento);
   }
   .burbuja--mia .etiqueta { color: var(--color-sobre-acento); opacity: 0.75; }
+
+  /* los tres puntitos de "escribiendo…" */
+  .escribiendo {
+    display: none; gap: 0.3em; align-self: flex-start; flex-shrink: 0;
+    padding: 0.9em 1.1em; border-radius: 1.3em 1.3em 1.3em 0.4em; background: var(--color-superficie-2);
+  }
+  .escribiendo span {
+    width: 0.45em; height: 0.45em; border-radius: 50%; background: var(--color-texto-suave);
+    animation: punto 1s ease-in-out infinite;
+  }
+  .escribiendo span:nth-child(2) { animation-delay: 0.15s; }
+  .escribiendo span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes punto { 0%, 60%, 100% { opacity: 0.3; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-0.2em); } }
+
   .escribir {
-    display: flex; justify-content: space-between; align-items: center;
+    display: flex; justify-content: space-between; align-items: center; gap: 0.6em;
     padding: 0.35em 0.35em 0.35em 1.1em; border-radius: 999px;
     background: var(--color-invertido); color: var(--color-sobre-invertido);
   }
-  .enviar { padding: 0.6em 1.1em; border-radius: 999px; background: var(--color-acento); color: var(--color-sobre-acento); font-weight: var(--peso-medio); }
+  .campo { position: relative; flex-grow: 1; min-width: 0; white-space: nowrap; overflow: hidden; }
+  .placeholder { position: absolute; left: 0; top: 0; opacity: 0.7; }
+  .cursor {
+    display: inline-block; width: 1px; height: 1.1em; margin-left: 1px; vertical-align: text-bottom;
+    background: currentColor; animation: parpadeo 1s steps(1) infinite;
+  }
+  @keyframes parpadeo { 50% { opacity: 0; } }
+  .enviar {
+    flex-shrink: 0; padding: 0.6em 1.1em; border-radius: 999px;
+    background: var(--color-acento); color: var(--color-sobre-acento); font-weight: var(--peso-medio);
+    transition: background-color 0.25s, color 0.25s;
+  }
+  /* Send pulsado: cambia de color */
+  .enviar--pulsado { background: var(--color-sobre-invertido); color: var(--color-invertido); }
 </style>
