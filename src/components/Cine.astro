@@ -1,0 +1,91 @@
+---
+// "THE BRIDGE": vídeo en bucle justo debajo del hero.
+// Al llegar, la página entera pasa a oscuro ("modo cine", como apple.com) y el vídeo crece
+// desde una tarjeta hasta ocupar toda la pantalla. Al salir, todo vuelve a su color.
+---
+
+<section class="cine" data-cine aria-label="The Bridge — AI storytelling film">
+  <div class="escena">
+    <div class="marco" data-marco>
+      <video data-video muted loop playsinline preload="metadata" poster="/videos/ai-storytelling-poster.jpg">
+        <source src="/videos/the-bridge.mp4" type="video/mp4" />
+      </video>
+      <div class="velo" data-velo></div>
+    </div>
+    <div class="texto contenedor" data-texto>
+      <p class="etiqueta">AI direction · Storytelling</p>
+      <h2>The Bridge.</h2>
+      <p class="entradilla">
+        AI-supported cinematic production — narrative planning, scene continuity and human editorial control.
+      </p>
+      <a class="pildora" href="/storytelling-production.html">See the project →</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap } from 'gsap'
+  import { ScrollTrigger } from 'gsap/ScrollTrigger'
+  gsap.registerPlugin(ScrollTrigger)
+
+  const cine = document.querySelector<HTMLElement>('[data-cine]')!
+  const video = cine.querySelector<HTMLVideoElement>('[data-video]')!
+  const raiz = document.documentElement
+
+  // El vídeo solo se reproduce mientras la sección está en pantalla (ahorra batería y datos)
+  ScrollTrigger.create({
+    trigger: cine,
+    start: 'top bottom',
+    end: 'bottom top',
+    onToggle: (st) => (st.isActive ? video.play().catch(() => {}) : video.pause()),
+  })
+
+  // Modo cine: la página pasa a oscuro mientras la sección ocupa la pantalla
+  ScrollTrigger.create({
+    trigger: cine,
+    start: 'top 55%',
+    end: 'bottom 45%',
+    onToggle: (st) => raiz.classList.toggle('cine', st.isActive),
+  })
+
+  const mm = gsap.matchMedia()
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    cine.classList.add('cine--animado')
+    const tl = gsap.timeline({
+      defaults: { ease: 'none' },
+      scrollTrigger: { trigger: cine, start: 'top top', end: 'bottom bottom', scrub: 0.6 },
+    })
+    // 1. La tarjeta crece hasta pantalla completa
+    tl.fromTo(cine.querySelector('[data-marco]'),
+      { clipPath: 'inset(14% 16% 14% 16% round 28px)' },
+      { clipPath: 'inset(0% 0% 0% 0% round 0px)', duration: 1, ease: 'power2.inOut' })
+    // 2. Aparece el título encima
+      .fromTo(cine.querySelector('[data-velo]'), { opacity: 0 }, { opacity: 1, duration: 0.4 }, 0.8)
+      .fromTo(cine.querySelector('[data-texto]'), { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.4, ease: 'power2.out' }, 0.9)
+    // 3. Pausa para verlo
+      .to({}, { duration: 0.6 })
+    return () => cine.classList.remove('cine--animado')
+  })
+</script>
+
+<style>
+  /* Sin animación: el vídeo a todo el ancho con el texto encima */
+  .escena { position: relative; height: calc(100svh - var(--alto-cabecera)); overflow: hidden; }
+  /* Con animación: 2,5 pantallas de recorrido con la escena fija */
+  .cine--animado { height: 250svh; }
+  .cine--animado .escena { position: sticky; top: var(--alto-cabecera); }
+
+  .marco { position: absolute; inset: 0; will-change: clip-path; }
+  video { width: 100%; height: 100%; object-fit: cover; display: block; background: #000; }
+  .velo { position: absolute; inset: 0; background: rgb(0 0 0 / 0.38); }
+
+  .texto {
+    position: absolute; left: 0; right: 0; bottom: var(--espacio-7);
+    display: flex; flex-direction: column; align-items: flex-start; gap: var(--espacio-4);
+    color: #fff;
+  }
+  .texto .etiqueta, .texto .entradilla { color: rgb(255 255 255 / 0.78); }
+  h2 { font-size: var(--titulo-1); }
+  .texto .pildora { border-color: #fff; color: #fff; }
+  .texto .pildora:hover { background: #fff; color: #111; }
+</style>

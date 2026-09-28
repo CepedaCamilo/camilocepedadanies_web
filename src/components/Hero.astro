@@ -126,11 +126,14 @@ const pasos = [
     padding-block: var(--espacio-5) var(--espacio-8);
   }
   /* Con animación: el hero mide 3 pantallas y la escena se queda fija mientras tanto */
-  .hero--animado { height: 300svh; }
+  .hero--animado { height: calc(300svh - var(--alto-cabecera)); }
+  /* Queda fija justo debajo de la cabecera: el primer scroll no mueve nada, solo anima el hero.
+     Centrado en vertical, pero con más aire abajo que arriba (queda un poco por encima del centro). */
   .hero--animado .escena {
-    position: sticky; top: 0; height: 100svh;
-    align-content: start; /* arriba, no centrado: sin hueco grande en pantallas altas */
-    padding-block: clamp(var(--espacio-4), 4svh, var(--espacio-7)) var(--espacio-6);
+    position: sticky; top: var(--alto-cabecera);
+    height: calc(100svh - var(--alto-cabecera));
+    align-content: center;
+    padding-block: var(--espacio-4) clamp(var(--espacio-6), 9svh, 6rem);
   }
 
   .texto { display: flex; flex-direction: column; gap: var(--espacio-5); }

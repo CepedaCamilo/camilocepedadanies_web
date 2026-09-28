@@ -52,6 +52,7 @@
   --espacio-8: clamp(4rem, 3rem + 4vw, 7rem); /* separación entre secciones */
   --margen-lateral: clamp(1rem, 0.5rem + 3vw, 3.5rem);
   --ancho-max: 1240px;
+  --alto-cabecera: 5rem; /* la cabecera se queda fija arriba; el hero empieza justo debajo */
 
   --radio-s: 8px;
   --radio-m: 16px;
@@ -97,8 +98,10 @@
   }
 }
 
-/* b) si la persona eligió Dark con el interruptor */
-:root[data-theme='dark'] {
+/* b) si la persona eligió Dark con el interruptor
+   c) "modo cine": mientras se ve el vídeo, toda la página pasa a oscuro (como apple.com) */
+:root[data-theme='dark'],
+:root.cine {
   --color-fondo: var(--cacao-900);
   --color-superficie: var(--cacao-800);
   --color-superficie-2: var(--cacao-600);
@@ -112,4 +115,8 @@
   --color-sobre-invertido: var(--cacao-900);
   --filtro-logos: invert(1) brightness(1.4);
   color-scheme: dark;
+}
+
+@media (max-width: 720px) {
+  :root { --alto-cabecera: 7.25rem; } /* en móvil la cabecera tiene dos filas */
 }

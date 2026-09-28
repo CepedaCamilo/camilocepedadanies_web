@@ -14,11 +14,22 @@ import InterruptorTema from './InterruptorTema.astro'
 </header>
 
 <style>
+  /* Fija arriba en toda la página. Su fondo usa el token, así cambia sola en Dark y en "modo cine" */
   .cabecera {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    height: var(--alto-cabecera);
     display: flex;
     align-items: center;
     gap: var(--espacio-5);
-    padding-block: var(--espacio-5);
+    background: var(--color-fondo);
+    transition: background-color 0.7s ease;
+  }
+  /* la barra ocupa todo el ancho aunque el contenido vaya centrado */
+  .cabecera::before {
+    content: ''; position: absolute; inset: 0 -100vw; z-index: -1;
+    background: var(--color-fondo); transition: background-color 0.7s ease;
   }
   .logo {
     font-family: var(--fuente-mono);
@@ -32,7 +43,7 @@ import InterruptorTema from './InterruptorTema.astro'
   .contacto { min-height: 40px; padding: var(--espacio-2) var(--espacio-4); font-size: var(--texto-s); }
 
   @media (max-width: 720px) {
-    .cabecera { flex-wrap: wrap; gap: var(--espacio-3) var(--espacio-4); }
+    .cabecera { flex-wrap: wrap; align-content: center; gap: var(--espacio-3) var(--espacio-4); }
     nav { order: 3; width: 100%; justify-content: space-between; gap: var(--espacio-3); }
   }
 </style>

@@ -9,6 +9,7 @@ html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 
 body {
   margin: 0;
+  transition: background-color 0.7s ease, color 0.7s ease; /* el paso suave a "modo cine" */
   background: var(--color-fondo);
   color: var(--color-texto);
   font-family: var(--fuente-texto);
@@ -46,6 +47,9 @@ p { margin: 0; }
 }
 
 .seccion { padding-block: var(--espacio-8); }
+
+/* Los enlaces a #secciones no quedan escondidos debajo de la cabecera fija */
+[id] { scroll-margin-top: var(--alto-cabecera); }
 
 /* --- Etiqueta técnica en mono (≈ "~/camilo · Hamburg") --- */
 .etiqueta {
