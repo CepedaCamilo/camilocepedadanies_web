@@ -7,12 +7,17 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "publicar": "astro build && rsync -a --delete --stats dist/ danies:~/whoami/sites/portfolio/ | grep -E \"files transferred|Total file size\""
+    "publicar": "astro build && rsync -a --delete --stats dist/ danies:~/whoami/sites/portfolio/ | grep -E \"files transferred|Total file size\"",
+    "balon": "node scripts/generar-balon.mjs && sips -s format jpeg -s formatOptions 88 public/3d/balon-color.png --out public/3d/balon-color.jpg >/dev/null && sips -Z 2048 -s format jpeg -s formatOptions 85 public/3d/balon-costuras.png --out public/3d/balon-costuras.jpg >/dev/null && rm public/3d/*.png && ls -la public/3d"
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.3.0",
     "@fontsource-variable/geist-mono": "^5.3.0",
     "astro": "^7.3.5",
-    "gsap": "^3.15.0"
+    "gsap": "^3.15.0",
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "pngjs": "^7.0.0"
   }
 }
