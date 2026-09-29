@@ -203,3 +203,13 @@ p { margin: 0; }
   /* después de los balones (no tienen "paso") el texto sube un poco */
   #work .licencias--animado + .detalle-movil { padding-top: var(--espacio-4); }
 }
+
+/* ---------- Móviles bajitos (iPhone SE, mini, Android pequeños): todo se adapta a la altura ----------
+   Títulos algo más pequeños y márgenes más ajustados: ese espacio pasa al aire entre piezas y a las animaciones. */
+@media (max-width: 900px) and (max-height: 700px) {
+  #work section[class*='--animado'] > .escena {
+    padding-top: var(--espacio-5) !important;
+    padding-bottom: var(--espacio-5) !important;
+  }
+  #work section[class*='--animado'] > .escena > .texto > .titulo { font-size: clamp(1.55rem, 0.9rem + 3.2vw, 2rem) !important; }
+}

@@ -182,4 +182,9 @@ const texto = {
     .pista { width: min(84vw, 46svh); }
     .escenario { gap: var(--espacio-5); } /* el nombre y FIFA · DFB · UEFA, un poco más separados del balón */
   }
+  /* móviles bajitos: balón algo más pequeño y todo un poco más junto */
+  @media (max-width: 900px) and (max-height: 700px) {
+    .pista { width: min(76vw, 40svh); }
+    .escenario { gap: var(--espacio-4); }
+  }
 </style>
