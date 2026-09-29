@@ -17,9 +17,11 @@ export function idiomaDe(url: URL): Idioma {
 }
 
 // La misma página sin el idioma delante: /de/app-yaku.html → /app-yaku.html ; /de → /
+// Al compilar, la portada inglesa se llama /index.html y la de error /404.html: las dos cuentan como la portada (/),
+// si no el selector fabricaría /de/index.html o /de/404.html, que no existen.
 export function sinIdioma(url: URL): string {
   const camino = url.pathname.replace(/^\/(de|es)(\.html|\/|$)/, '/')
-  return camino === '' ? '/' : camino
+  return camino === '' || /^\/(index|404)\.html$/.test(camino) ? '/' : camino
 }
 
 // Dirección de una página en un idioma: enlace('de', '/app-yaku.html') → /de/app-yaku.html ;
