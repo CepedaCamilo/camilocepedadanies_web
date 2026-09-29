@@ -3,13 +3,45 @@
 // Mismo formato que Yaku: textos a la izquierda, balones a la derecha que pasan RODANDO con el scroll.
 // Los balones y su orden salen de `npm run balones` (scripts/balones-licencias.mjs → src/data/balones.json).
 import balones from '../data/balones.json'
-import LicenciasTexto from './LicenciasTexto.astro'
 
 const grupos = [
   { id: 'fifa', nombre: 'FIFA' },
   { id: 'dfb', nombre: 'DFB' },
   { id: 'uefa', nombre: 'UEFA' },
 ]
+import CasoTexto from './CasoTexto.astro'
+// El texto largo del caso (se usa junto a la animación y, en el móvil, debajo de ella)
+const texto = {
+  "entradilla": "Officially licensed football products developed during my time at Trade Con GmbH — spanning product design, packaging and retail execution for major international football properties and European markets.",
+  "suave": "From concept and visual development to production-ready artwork, I worked across footballs, textiles and packaging, translating global brand guidelines into physical products made for retail.",
+  "ficha": [
+    [
+      "Role",
+      "Product Design · Art Direction · Packaging"
+    ],
+    [
+      "Context",
+      "Trade Con GmbH · Officially licensed products"
+    ],
+    [
+      "Scope",
+      "Footballs · Textiles · Retail Packaging"
+    ]
+  ],
+  "acciones": [
+    {
+      "texto": "Read the case study →",
+      "href": "/product-design.html",
+      "llena": true
+    },
+    {
+      "texto": "Next project ↓",
+      "href": "#caso-transalp",
+      "siguiente": true
+    }
+  ],
+  "aviso": "Selected work created as part of my role at Trade Con GmbH and shown for portfolio purposes only. FIFA, UEFA and DFB names, trademarks, logos and licensed assets belong to their respective owners. Associated product and project rights remain with Trade Con GmbH and/or the respective rights holders."
+}
 ---
 
 <section class="licencias" data-licencias aria-label="Licensed product design · FIFA, UEFA, DFB">
@@ -17,7 +49,7 @@ const grupos = [
     <div class="texto">
       <p class="etiqueta">Case 01 · FIFA · UEFA · DFB</p>
       <h3 class="titulo">Licensed product design.</h3>
-      <div class="detalle"><LicenciasTexto /></div>
+      <CasoTexto {...texto} enEscena />
     </div>
 
     <div class="escenario" aria-hidden="true">
@@ -40,7 +72,7 @@ const grupos = [
   </div>
 </section>
 <!-- En móvil la escena fija solo tiene sitio para el título y los balones: el resto del texto va aquí debajo -->
-<div class="texto detalle-movil contenedor"><LicenciasTexto /></div>
+<div class="contenedor detalle-movil"><CasoTexto {...texto} /></div>
 
 <script define:vars={{ balones }}>
   window.__balones = balones
@@ -117,8 +149,7 @@ const grupos = [
     align-content: center; padding-block: var(--espacio-5);
   }
 
-  .texto, .detalle { display: flex; flex-direction: column; gap: var(--espacio-4); }
-  .detalle-movil { display: none; padding-block: var(--espacio-6) var(--espacio-2); }
+  .texto { display: flex; flex-direction: column; gap: var(--espacio-4); }
   .titulo { font-size: var(--titulo-2); font-weight: var(--peso-fino); letter-spacing: var(--tracking-titulo); line-height: 1.02; }
 
   /* ---------- Los balones ---------- */
@@ -126,7 +157,7 @@ const grupos = [
   .pista { position: relative; width: min(100%, 62svh, 36rem); aspect-ratio: 1; overflow: visible; }
   .balon {
     position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
-    filter: drop-shadow(0 40px 40px rgb(0 0 0 / 0.28)); will-change: transform, opacity;
+    filter: drop-shadow(0 22px 26px rgb(0 0 0 / 0.13)); will-change: transform, opacity;
   }
   .licencias:not(.licencias--animado) .balon:not(:first-child) { display: none; }
 
@@ -148,8 +179,6 @@ const grupos = [
   @media (max-width: 900px) {
     .escena { grid-template-columns: minmax(0, 1fr); row-gap: var(--espacio-5); }
     .licencias--animado .escena { align-content: start; overflow: hidden; }
-    .licencias--animado .detalle { display: none; }
-    .licencias--animado + .detalle-movil { display: flex; }
     .pista { width: min(78vw, 42svh); }
   }
 </style>

@@ -13,6 +13,20 @@ import InterruptorTema from './InterruptorTema.astro'
   <InterruptorTema />
 </header>
 
+<script>
+  // En el móvil el header se esconde al bajar (para leer los casos sin distracciones) y vuelve al subir.
+  // Solo pone/quita la clase "cabecera-oculta" en <html>; el CSS decide que solo afecte a pantallas pequeñas.
+  const html = document.documentElement
+  let anterior = scrollY
+  addEventListener('scroll', () => {
+    const y = scrollY
+    if (y < 120) html.classList.remove('cabecera-oculta')
+    else if (y > anterior + 6) html.classList.add('cabecera-oculta')
+    else if (y < anterior - 6) html.classList.remove('cabecera-oculta')
+    anterior = y
+  }, { passive: true })
+</script>
+
 <style>
   /* Fija arriba en toda la página. Su fondo usa el token, así cambia sola en Dark y en "modo cine" */
   .cabecera {
@@ -47,6 +61,10 @@ import InterruptorTema from './InterruptorTema.astro'
   nav a:not(.pildora) { text-decoration: none; }
   .contacto { min-height: 40px; padding: var(--espacio-2) var(--espacio-4); font-size: var(--texto-s); }
 
+  @media (max-width: 900px) {
+    .cabecera { transition: transform 0.35s ease, background-color 0.7s ease; }
+    :global(html.cabecera-oculta) .cabecera { transform: translateY(-100%); }
+  }
   @media (max-width: 720px) {
     .cabecera { flex-wrap: wrap; align-content: center; gap: var(--espacio-3) var(--espacio-4); }
     nav { order: 3; width: 100%; justify-content: space-between; gap: var(--espacio-3); }

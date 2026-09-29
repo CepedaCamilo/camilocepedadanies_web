@@ -167,3 +167,23 @@ p { margin: 0; }
 .prosa p:has(> img + img) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--espacio-4); max-width: 36rem; }
 .prosa p:has(> img + img) img { border-radius: var(--radio-l); }
 .prosa p:has(> img + img) em { grid-column: 1 / -1; }
+
+/* ---------- Casos en el móvil ("Selected work") ----------
+   - El texto largo de cada caso (CasoTexto) sale de la escena fija y va DEBAJO de la animación (.detalle-movil).
+   - Las escenas fijas ocupan toda la pantalla visible (dvh: cuenta con las barras de Safari que aparecen y desaparecen).
+     El header + la barra "Selected work" se esconden al bajar; si reaparecen (al subir), se ponen ENCIMA del caso
+     sin empujarlo: así el caso nunca salta ni se corta por abajo. */
+.detalle-movil { display: none; }
+@media (max-width: 900px) {
+  #work section[class*='--animado'] .caso-texto--escena { display: none; }
+  #work section[class*='--animado'] + .detalle-movil { display: block; padding-block: var(--espacio-6) var(--espacio-8); }
+  #work section[class*='--animado'] > .escena {
+    top: 0 !important;
+    height: 100svh !important;
+    height: 100dvh !important;
+    padding-top: var(--espacio-6) !important;
+    padding-bottom: var(--espacio-6) !important;
+    row-gap: var(--espacio-5) !important;
+    align-content: safe center !important; /* centrado en la pantalla (y si no cabe, desde arriba) */
+  }
+}

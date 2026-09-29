@@ -37,6 +37,42 @@ const pasos = [
   'The kitchen gets it — live',
   'Status updates on the phone',
 ]
+import CasoTexto from './CasoTexto.astro'
+// El texto largo del caso (se usa junto a la animación y, en el móvil, debajo de ella)
+const texto = {
+  "entradilla": "A QR code on every table, a menu that sells with photography and a kitchen screen that updates in real time. For a Peruvian–Mexican restaurant in Hamburg — designed, built and hosted by me.",
+  "ficha": [
+    [
+      "Role",
+      "Product design · Front-end · Back-end"
+    ],
+    [
+      "Stack",
+      "React · Supabase Realtime · Postgres RLS"
+    ],
+    [
+      "Scope",
+      "Guest app · Kitchen screen · QR system"
+    ]
+  ],
+  "acciones": [
+    {
+      "texto": "Read the case study →",
+      "href": "/app-yaku.html",
+      "llena": true
+    },
+    {
+      "texto": "Try it live ↗",
+      "href": "https://yaku.danies.trade/?mesa=demo",
+      "externo": true
+    },
+    {
+      "texto": "Next project ↓",
+      "href": "#caso-chat",
+      "siguiente": true
+    }
+  ]
+}
 ---
 
 <section class="yaku" data-yaku aria-label="Case 01 · Yaku">
@@ -44,20 +80,7 @@ const pasos = [
     <div class="texto">
       <p class="etiqueta">Case 01 · Design + development · <span class="en-vivo">● Live</span></p>
       <h3 class="titulo">Yaku<span class="titulo-2">order from the table.</span></h3>
-      <p class="entradilla">
-        A QR code on every table, a menu that sells with photography and a kitchen screen that updates in
-        real time. For a Peruvian–Mexican restaurant in Hamburg — designed, built and hosted by me.
-      </p>
-      <dl class="ficha">
-        <div><dt>Role</dt><dd>Product design · Front-end · Back-end</dd></div>
-        <div><dt>Stack</dt><dd>React · Supabase Realtime · Postgres RLS</dd></div>
-        <div><dt>Scope</dt><dd>Guest app · Kitchen screen · QR system</dd></div>
-      </dl>
-      <div class="acciones">
-        <a class="pildora pildora--llena" href="/app-yaku.html">Read the case study →</a>
-        <a class="pildora" href="https://yaku.danies.trade/?mesa=demo" rel="noopener">Try it live ↗</a>
-        <a class="pildora" href="#caso-chat" data-siguiente>Next project ↓</a>
-      </div>
+      <CasoTexto {...texto} enEscena />
     </div>
 
     <div class="dispositivos" aria-hidden="true">
@@ -100,6 +123,8 @@ const pasos = [
     </div>
   </div>
 </section>
+<!-- En el móvil, el texto completo del caso va aquí, justo debajo de la animación -->
+<div class="contenedor detalle-movil"><CasoTexto {...texto} /></div>
 
 <script define:vars={{ bajadaCarta }}>
   window.__yakuBajada = bajadaCarta
@@ -200,12 +225,6 @@ const pasos = [
   .en-vivo { color: var(--color-acento); }
   .titulo-2 { display: block; color: var(--color-texto-suave); }
   .titulo { font-size: var(--titulo-2); font-weight: var(--peso-fino); letter-spacing: var(--tracking-titulo); line-height: 1.02; }
-  .ficha { margin: var(--espacio-2) 0 0; display: flex; flex-direction: column; border-top: var(--linea-fina) solid var(--color-linea); }
-  .ficha div { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: var(--espacio-3); padding-block: var(--espacio-2); border-bottom: var(--linea-fina) solid var(--color-linea); font-size: var(--texto-s); }
-  .ficha dt { font-family: var(--fuente-mono); font-size: var(--texto-xs); color: var(--color-texto-suave); }
-  .ficha dd { margin: 0; }
-  .acciones { display: flex; flex-wrap: wrap; gap: var(--espacio-2); padding-top: var(--espacio-2); }
-  .acciones .pildora { padding-inline: 1.25rem; } /* los tres botones caben en una fila */
 
   /* ---------- Dispositivos ---------- */
   .dispositivos { grid-area: dispositivos; position: relative; aspect-ratio: 1.15; width: 100%; max-height: 74svh; justify-self: center; }
@@ -275,8 +294,7 @@ const pasos = [
   @media (max-width: 900px) {
     .escena { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'texto' 'dispositivos' 'leyenda'; row-gap: var(--espacio-5); }
     .yaku--animado .escena { align-content: start; overflow: hidden; }
-    .yaku--animado .texto .entradilla, .yaku--animado .ficha { display: none; }
-    .dispositivos { max-height: 56svh; aspect-ratio: 1; }
+    .dispositivos { max-height: 50svh; aspect-ratio: 1; }
     .telefono { right: 2%; }
     .tablet { width: 80%; top: 6%; }
   }

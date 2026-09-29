@@ -176,8 +176,14 @@ const pasos = [
 
   @media (max-width: 900px) {
     .escena { grid-template-columns: minmax(0, 1fr); gap: var(--espacio-5); align-content: start; }
+    .hero--animado .escena {
+      top: 0; height: 100svh; height: 100dvh;
+      padding: calc(var(--alto-cabecera) + var(--espacio-5)) var(--espacio-4) var(--espacio-5); /* la foto empieza debajo del header */
+      align-content: start; transition: padding-top 0.35s ease;
+    }
+    :global(html.cabecera-oculta) .hero--animado .escena { padding-top: var(--espacio-6); }
     .escenario { order: -1; }
-    .flotar { width: min(78vw, 40svh); }
+    .flotar { width: min(70vw, 36svh); }
     .hero--animado .texto .entradilla, .hero--animado .acciones { display: none; }
     .hero--animado h1 { font-size: clamp(2rem, 1.4rem + 3vw, 2.75rem); }
   }

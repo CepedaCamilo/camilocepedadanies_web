@@ -12,6 +12,38 @@ const notas = [
   { fase: 'Final edit', texto: 'Scene 23 · 6 s · locked.' },
 ]
 const pasos = ['Narrative & script', 'AI generation', 'Scene continuity', 'Final edit']
+import CasoTexto from './CasoTexto.astro'
+// El texto largo del caso (se usa junto a la animación y, en el móvil, debajo de ella)
+const texto = {
+  "entradilla": "An independent storytelling project exploring how narrative, art direction and generative tools can work together as one production system.",
+  "suave": "From concept and narrative structure to visual generation, scene continuity and final edit, I direct the complete process — using AI as a production tool while keeping storytelling, visual decisions and editorial control human.",
+  "ficha": [
+    [
+      "Role",
+      "Creative Direction · Storytelling · AI Production"
+    ],
+    [
+      "Context",
+      "Independent Project · Created & Directed by me"
+    ],
+    [
+      "Scope",
+      "Narrative · AI Visuals · Motion · Editorial"
+    ]
+  ],
+  "acciones": [
+    {
+      "texto": "Read the case study →",
+      "href": "/storytelling-production.html",
+      "llena": true
+    },
+    {
+      "texto": "About me ↓",
+      "href": "#about",
+      "siguiente": true
+    }
+  ]
+}
 ---
 
 <section class="bridge" id="caso-bridge" data-bridge data-total={TOTAL} data-duracion={DURACION} aria-label="Case 03 · THE BRIDGE">
@@ -19,24 +51,7 @@ const pasos = ['Narrative & script', 'AI generation', 'Scene continuity', 'Final
     <div class="texto">
       <p class="etiqueta">Case 03 · THE BRIDGE</p>
       <h3 class="titulo">THE BRIDGE<span class="titulo-2">Storytelling by design, directed with AI.</span></h3>
-      <p class="entradilla">
-        An independent storytelling project exploring how narrative, art direction and generative tools can work
-        together as one production system.
-      </p>
-      <p class="texto-suave">
-        From concept and narrative structure to visual generation, scene continuity and final edit, I direct the
-        complete process — using AI as a production tool while keeping storytelling, visual decisions and editorial
-        control human.
-      </p>
-      <dl class="ficha">
-        <div><dt>Role</dt><dd>Creative Direction · Storytelling · AI Production</dd></div>
-        <div><dt>Context</dt><dd>Independent Project · Created & Directed by me</dd></div>
-        <div><dt>Scope</dt><dd>Narrative · AI Visuals · Motion · Editorial</dd></div>
-      </dl>
-      <div class="acciones">
-        <a class="pildora pildora--llena" href="/storytelling-production.html">Read the case study →</a>
-        <a class="pildora" href="#about" data-siguiente>About me ↓</a>
-      </div>
+      <CasoTexto {...texto} enEscena />
     </div>
 
     <div class="sala" aria-hidden="true">
@@ -73,10 +88,7 @@ const pasos = ['Narrative & script', 'AI generation', 'Scene continuity', 'Final
   </div>
 </section>
 <!-- En móvil la escena fija no tiene sitio para los botones: van aquí, justo debajo de la animación -->
-<div class="contenedor acciones-movil">
-  <a class="pildora pildora--llena" href="/storytelling-production.html">Read the case study →</a>
-  <a class="pildora" href="#about" data-siguiente>About me ↓</a>
-</div>
+<div class="contenedor detalle-movil"><CasoTexto {...texto} /></div>
 
 <script>
   import { gsap } from 'gsap'
@@ -195,14 +207,6 @@ const pasos = ['Narrative & script', 'AI generation', 'Scene continuity', 'Final
   .texto { grid-area: texto; display: flex; flex-direction: column; gap: var(--espacio-4); }
   .titulo-2 { display: block; color: var(--color-texto-suave); }
   .titulo { font-size: var(--titulo-2); font-weight: var(--peso-fino); letter-spacing: var(--tracking-titulo); line-height: 1.02; }
-  .texto-suave { margin: 0; color: var(--color-texto-suave); font-size: var(--texto-s); }
-  .ficha { margin: var(--espacio-2) 0 0; display: flex; flex-direction: column; border-top: var(--linea-fina) solid var(--color-linea); }
-  .ficha div { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: var(--espacio-3); padding-block: var(--espacio-2); border-bottom: var(--linea-fina) solid var(--color-linea); font-size: var(--texto-s); }
-  .ficha dt { font-family: var(--fuente-mono); font-size: var(--texto-xs); color: var(--color-texto-suave); }
-  .ficha dd { margin: 0; }
-  .acciones { display: flex; flex-wrap: wrap; gap: var(--espacio-2); padding-top: var(--espacio-2); }
-  .acciones .pildora, .acciones-movil .pildora { padding-inline: 1.25rem; }
-  .acciones-movil { display: none; flex-wrap: wrap; gap: var(--espacio-2); padding-block: var(--espacio-5) var(--espacio-2); }
 
   /* ---------- La sala de montaje ---------- */
   .sala { grid-area: sala; display: flex; flex-direction: column; gap: var(--espacio-3); width: 100%; min-width: 0; }
@@ -259,8 +263,5 @@ const pasos = ['Narrative & script', 'AI generation', 'Scene continuity', 'Final
   @media (max-width: 900px) {
     .escena { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'texto' 'sala' 'leyenda'; row-gap: var(--espacio-5); }
     .bridge--animado .escena { align-content: start; overflow: hidden; }
-    .bridge--animado .texto .entradilla, .bridge--animado .texto-suave, .bridge--animado .ficha,
-    .bridge--animado .acciones { display: none; }
-    .bridge--animado + .acciones-movil { display: flex; }
   }
 </style>

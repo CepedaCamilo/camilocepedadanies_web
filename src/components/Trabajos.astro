@@ -156,6 +156,11 @@ const { diseño, software } = Astro.props
   @media (max-width: 720px) {
     .titulo-panel { display: none; }
   }
+  /* en el móvil se esconde junto con el header al bajar, y vuelve al subir */
+  @media (max-width: 900px) {
+    .cabecera-trabajos { transition: transform 0.35s ease, background-color 0.7s ease; }
+    :global(html.cabecera-oculta) .cabecera-trabajos { transform: translateY(calc(-100% - var(--alto-cabecera))); }
+  }
 
   /* El interruptor: misma familia que Light/Dark, pero más grande */
   .interruptor { display: flex; padding: 4px; border-radius: var(--radio-pildora); background: var(--color-superficie); border: var(--linea-fina) solid var(--color-linea); }
