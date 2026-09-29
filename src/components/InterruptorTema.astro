@@ -1,15 +1,26 @@
 ---
-// Interruptor Light / Dark. Recuerda la elección en este navegador (localStorage).
+// Interruptor Light / Dark con iconos (sol / luna). Recuerda la elección en este navegador (localStorage).
+// Ojo: sus botones se buscan por [data-tema] (no por la clase), para no confundirlos con otros interruptores
+// de la página (p. ej. Software | Design, que también usa la clase .interruptor).
 ---
 
-<div class="interruptor" role="group" aria-label="Color theme">
-  <button type="button" data-tema="light" aria-pressed="false">Light</button>
-  <button type="button" data-tema="dark" aria-pressed="false">Dark</button>
+<div class="interruptor-tema" role="group" aria-label="Color theme" data-interruptor-tema>
+  <button type="button" data-tema="light" aria-pressed="false" aria-label="Light mode" title="Light">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="4.2" />
+      <path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6" />
+    </svg>
+  </button>
+  <button type="button" data-tema="dark" aria-pressed="false" aria-label="Dark mode" title="Dark">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M20.2 14.6A8.3 8.3 0 0 1 9.4 3.8a8.3 8.3 0 1 0 10.8 10.8z" />
+    </svg>
+  </button>
 </div>
 
 <script>
   const raiz = document.documentElement
-  const botones = document.querySelectorAll<HTMLButtonElement>('.interruptor button')
+  const botones = document.querySelectorAll<HTMLButtonElement>('[data-interruptor-tema] [data-tema]')
   const sistemaOscuro = window.matchMedia('(prefers-color-scheme: dark)')
 
   function temaActual() {
@@ -22,7 +33,8 @@
 
   botones.forEach((boton) =>
     boton.addEventListener('click', () => {
-      const tema = boton.dataset.tema!
+      const tema = boton.dataset.tema
+      if (tema !== 'light' && tema !== 'dark') return
       raiz.dataset.theme = tema
       try { localStorage.setItem('tema', tema) } catch {}
       marcar()
@@ -33,7 +45,7 @@
 </script>
 
 <style>
-  .interruptor {
+  .interruptor-tema {
     display: flex;
     padding: 3px;
     border-radius: var(--radio-pildora);
@@ -41,15 +53,16 @@
     border: var(--linea-fina) solid var(--color-linea);
   }
   button {
-    min-height: 34px;
-    padding: 0 var(--espacio-3);
+    display: grid; place-items: center;
+    width: 34px; height: 34px; padding: 0;
     border: none;
     border-radius: var(--radio-pildora);
     background: transparent;
     color: var(--color-texto-suave);
-    font-family: var(--fuente-mono);
-    font-size: var(--texto-xs);
     cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
   }
+  button:hover { color: var(--color-texto); }
+  svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
   button[aria-pressed='true'] { background: var(--color-invertido); color: var(--color-sobre-invertido); }
 </style>
