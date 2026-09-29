@@ -4,6 +4,7 @@
 // Enlaces: /#software y /#design abren la sección con ese panel ya elegido.
 import TarjetaProyecto from './TarjetaProyecto.astro'
 import YakuEscaparate from './YakuEscaparate.astro'
+import ChatEscaparate from './ChatEscaparate.astro'
 import LicenciasEscaparate from './LicenciasEscaparate.astro'
 import type { CollectionEntry } from 'astro:content'
 
@@ -12,7 +13,7 @@ interface Props {
   software: CollectionEntry<'proyectos'>[]
 }
 const { diseño, software } = Astro.props
-const otrasApps = software.filter((p) => p.id !== 'app-yaku') // Yaku va arriba, en grande
+const otrasApps = software.filter((p) => p.id !== 'app-yaku' && p.id !== 'app-chat') // Yaku y el chat van arriba, en grande
 const otrosDiseños = diseño.filter((p) => p.id !== 'product-design') // las licencias van arriba, en grande
 ---
 
@@ -32,6 +33,7 @@ const otrosDiseños = diseño.filter((p) => p.id !== 'product-design') // las li
 
   <div id="panel-software" role="tabpanel" aria-labelledby="pestana-software" data-panel-contenido="software">
     <YakuEscaparate />
+    <ChatEscaparate />
     <div class="contenedor mas-apps" id="mas-software">
       <p class="etiqueta">More apps · all live on my own server</p>
       <div class="rejilla">
@@ -104,10 +106,15 @@ const otrosDiseños = diseño.filter((p) => p.id !== 'product-design') // las li
     display: flex; justify-content: space-between; align-items: center; gap: var(--espacio-5);
     background: var(--color-fondo); transition: background-color 0.7s ease;
   }
-  .cabecera-trabajos::before {
-    content: ''; position: absolute; inset: 0 -100vw; z-index: -1;
-    background: var(--color-fondo); border-bottom: var(--linea-fina) solid var(--color-linea);
-    transition: background-color 0.7s ease;
+  /* fondo y línea de lado a lado, pintados con sombra (no ensanchan la página en el móvil) */
+  .cabecera-trabajos::before, .cabecera-trabajos::after {
+    content: ''; position: absolute; inset: 0; z-index: -1;
+    background: var(--color-fondo); box-shadow: 0 0 0 100vmax var(--color-fondo); clip-path: inset(0 -100vmax);
+    transition: background-color 0.7s ease, box-shadow 0.7s ease;
+  }
+  .cabecera-trabajos::after {
+    top: auto; height: var(--linea-fina); z-index: 0;
+    background: var(--color-linea); box-shadow: 0 0 0 100vmax var(--color-linea);
   }
   .barra-titulo { display: flex; align-items: baseline; gap: var(--espacio-4); min-width: 0; }
   .titulo-panel { font-size: var(--titulo-3); font-weight: var(--peso-fino); letter-spacing: -0.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

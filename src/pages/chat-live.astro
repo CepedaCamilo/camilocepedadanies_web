@@ -1,0 +1,231 @@
+---
+// "Try it live" del caso 02: el chat del hero, pero de verdad.
+// Es una DEMO de diseño de interacción: nada sale del navegador y nada se guarda.
+// Al recargar la página vuelve a empezar (solo con el mensaje de bienvenida).
+// Los textos de Camilo están abajo, en el <script> (BIENVENIDA y RESPUESTAS).
+import '@fontsource-variable/geist'
+import '@fontsource-variable/geist-mono'
+import '../styles/tokens.css'
+import '../styles/global.css'
+import { sitio } from '../sitio'
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Realtime Chat · live demo — {sitio.nombre}</title>
+    <meta name="description" content="Try the chat: write a message and hit Send. A demo — nothing is sent or stored." />
+    <link rel="icon" href="/favicon.png" />
+    <script is:inline>
+      try {
+        const tema = localStorage.getItem('tema')
+        if (tema === 'light' || tema === 'dark') document.documentElement.dataset.theme = tema
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <header class="arriba">
+      <a class="etiqueta volver" href="/#caso-chat">← Back to the case</a>
+      <a class="logo" href="/" aria-label="Camilo Cepeda Danies — home"><b>camilo</b><span>cepeda</span><b>danies</b></a>
+    </header>
+
+    <main class="lienzo">
+      <div class="telefono">
+        <div class="barra">
+          <span class="etiqueta">chat.danies.trade · demo</span>
+          <span class="etiqueta en-linea">● 2 online</span>
+        </div>
+        <h1 class="titulo-app">Chat</h1>
+        <div class="mensajes" data-mensajes role="log" aria-live="polite" aria-label="Messages">
+          <p class="escribiendo" data-escribiendo aria-label="Camilo is typing"><span></span><span></span><span></span></p>
+        </div>
+        <form class="escribir" data-form autocomplete="off">
+          <label class="solo-lectores" for="mensaje">Message</label>
+          <input id="mensaje" data-campo type="text" maxlength="500" placeholder="Write a message…" enterkeyhint="send" />
+          <button class="enviar" data-enviar type="submit" disabled>Send</button>
+        </form>
+      </div>
+      <p class="etiqueta nota">Demo — your message stays in this browser. Nothing is sent or stored; reload to start again.</p>
+    </main>
+
+    <footer class="abajo etiqueta">
+      <a href="/impressum.html">Impressum</a>
+      <a href="/datenschutz.html">Datenschutz</a>
+    </footer>
+
+    <script>
+      // Textos de Camilo (se pueden cambiar aquí)
+      const BIENVENIDA = 'Hi! You can leave your message here and then click Send.'
+      const RESPUESTAS = [
+        'Got it — thank you! This is a live demo of my realtime chat: what you write stays in your browser and disappears when you reload.',
+        'The real version runs on my own server in Germany, with sign-in and private rooms — made for teams, not for the public.',
+      ]
+
+      const mensajes = document.querySelector<HTMLElement>('[data-mensajes]')!
+      const escribiendo = document.querySelector<HTMLElement>('[data-escribiendo]')!
+      const form = document.querySelector<HTMLFormElement>('[data-form]')!
+      const campo = document.querySelector<HTMLInputElement>('[data-campo]')!
+      const enviar = document.querySelector<HTMLButtonElement>('[data-enviar]')!
+      let respondidas = 0
+
+      const hora = () => new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
+      const bajar = () => mensajes.scrollTo({ top: mensajes.scrollHeight, behavior: 'smooth' })
+
+      // Una burbuja nueva (textContent: lo que escribe el visitante nunca se interpreta como HTML)
+      function burbuja(texto: string, mia: boolean) {
+        const p = document.createElement('p')
+        p.className = mia ? 'burbuja burbuja--mia' : 'burbuja'
+        const quien = document.createElement('span')
+        quien.className = 'etiqueta'
+        quien.textContent = `${mia ? 'you' : 'camilo'} · ${hora()}`
+        const cuerpo = document.createElement('span')
+        cuerpo.textContent = texto
+        p.append(quien, cuerpo)
+        mensajes.insertBefore(p, escribiendo)
+        bajar()
+        return p
+      }
+
+      // Camilo "escribe…" un momento y luego llega su mensaje
+      function camiloDice(texto: string, espera = 700) {
+        setTimeout(() => {
+          escribiendo.classList.add('visible'); bajar()
+          setTimeout(() => {
+            escribiendo.classList.remove('visible')
+            burbuja(texto, false)
+          }, 900 + Math.min(texto.length * 12, 1300))
+        }, espera)
+      }
+
+      campo.addEventListener('input', () => { enviar.disabled = campo.value.trim() === '' })
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault()
+        const texto = campo.value.trim()
+        if (!texto) return
+        // Send se hunde y cambia de color, como en la animación del hero
+        enviar.classList.remove('pulsado'); void enviar.offsetWidth; enviar.classList.add('pulsado')
+        const mia = burbuja(texto, true)
+        campo.value = ''; enviar.disabled = true
+        // "Delivered" bajo tu mensaje, como en un chat real
+        setTimeout(() => {
+          const ok = document.createElement('span')
+          ok.className = 'entregado'
+          ok.textContent = 'Delivered ✓'
+          mia.after(ok)
+          bajar()
+        }, 350)
+        if (respondidas < RESPUESTAS.length) camiloDice(RESPUESTAS[respondidas++], 900)
+      })
+
+      // Al entrar: Camilo saluda
+      camiloDice(BIENVENIDA, 500)
+      if (matchMedia('(pointer: fine)').matches) campo.focus({ preventScroll: true })
+    </script>
+
+    <style>
+      body { min-height: 100svh; display: flex; flex-direction: column; background: var(--color-fondo); }
+      .arriba, .abajo {
+        display: flex; justify-content: space-between; align-items: center; gap: var(--espacio-4);
+        padding: var(--espacio-4) max(var(--espacio-4), env(safe-area-inset-left));
+      }
+      .volver { text-decoration: none; }
+      .logo { font-family: var(--fuente-mono); font-size: var(--texto-s); text-decoration: none; color: var(--color-texto); }
+      .logo b { font-weight: 700; }
+      .logo span { font-weight: 300; }
+      .abajo { justify-content: center; gap: var(--espacio-5); }
+      .abajo a { color: var(--color-texto-suave); }
+
+      .lienzo { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--espacio-4); padding-inline: var(--espacio-4); }
+      .nota { max-width: 26rem; text-align: center; color: var(--color-texto-suave); }
+
+      /* El mismo "móvil" que el chat del hero (HeroApp.astro), pero con campo de texto real */
+      .telefono {
+        width: min(100%, 26rem); height: min(78svh, 46rem);
+        display: flex; flex-direction: column; gap: 0.9rem;
+        padding: 1.6rem 1.3rem 1.3rem; border-radius: 2.6rem;
+        background: var(--color-superficie); border: var(--linea-fina) solid var(--color-linea);
+        box-shadow: 0 40px 80px -30px rgb(35 26 21 / 0.35);
+        font-size: 0.95rem;
+      }
+      .barra { display: flex; justify-content: space-between; }
+      .barra .etiqueta { font-size: 0.8em; }
+      .en-linea { color: var(--color-acento); }
+      .titulo-app { font-size: 2.6em; font-weight: var(--peso-fino); letter-spacing: var(--tracking-titulo); line-height: 1; margin: 0; }
+      .mensajes {
+        flex-grow: 1; min-height: 0; display: flex; flex-direction: column; gap: 0.7em;
+        padding: 0.9em; border-radius: 1.6em; background: var(--color-fondo);
+        overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none;
+      }
+      .mensajes::before { content: ''; margin-top: auto; } /* un "muelle" invisible: los mensajes se apilan desde abajo */
+      .mensajes :global(.burbuja) {
+        display: flex; flex-direction: column; gap: 0.2em; max-width: 82%; flex-shrink: 0; margin: 0;
+        padding: 0.75em 1em; border-radius: 1.3em 1.3em 1.3em 0.4em; background: var(--color-superficie-2);
+        line-height: 1.35; overflow-wrap: anywhere;
+        animation: llega 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .mensajes :global(.burbuja .etiqueta) { font-size: 0.78em; }
+      .mensajes :global(.burbuja--mia) {
+        align-self: flex-end; border-radius: 1.3em 1.3em 0.4em 1.3em;
+        background: var(--color-acento); color: var(--color-sobre-acento);
+      }
+      .mensajes :global(.burbuja--mia .etiqueta) { color: var(--color-sobre-acento); opacity: 0.75; }
+      .mensajes :global(.entregado) {
+        align-self: flex-end; margin-top: -0.4em; font-family: var(--fuente-mono); font-size: 0.7em; color: var(--color-texto-suave);
+        animation: aparece 0.3s ease;
+      }
+      @keyframes llega { from { opacity: 0; transform: translateY(14px) scale(0.96); } }
+      @keyframes aparece { from { opacity: 0; } }
+
+      .escribiendo {
+        display: none; gap: 0.3em; align-self: flex-start; flex-shrink: 0; margin: 0;
+        padding: 0.9em 1.1em; border-radius: 1.3em 1.3em 1.3em 0.4em; background: var(--color-superficie-2);
+      }
+      .escribiendo.visible { display: flex; animation: aparece 0.2s ease; }
+      .escribiendo span {
+        width: 0.45em; height: 0.45em; border-radius: 50%; background: var(--color-texto-suave);
+        animation: punto 1s ease-in-out infinite;
+      }
+      .escribiendo span:nth-child(2) { animation-delay: 0.15s; }
+      .escribiendo span:nth-child(3) { animation-delay: 0.3s; }
+      @keyframes punto { 0%, 60%, 100% { opacity: 0.3; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-0.2em); } }
+
+      .escribir {
+        display: flex; align-items: center; gap: 0.6em;
+        padding: 0.35em 0.35em 0.35em 1.1em; border-radius: 999px;
+        background: var(--color-invertido); color: var(--color-sobre-invertido);
+      }
+      .escribir input {
+        flex-grow: 1; min-width: 0; border: 0; outline: 0; background: transparent; color: inherit;
+        font: inherit; font-size: max(16px, 1em); /* 16px: el iPhone no hace zoom al escribir */
+      }
+      .escribir input::placeholder { color: inherit; opacity: 0.7; }
+      .escribir:focus-within { box-shadow: 0 0 0 2px var(--color-acento); }
+      .enviar {
+        flex-shrink: 0; padding: 0.6em 1.1em; border: 0; border-radius: 999px; cursor: pointer;
+        font: var(--peso-medio) 1em / 1 var(--fuente-texto);
+        background: var(--color-acento); color: var(--color-sobre-acento);
+        transition: opacity 0.2s;
+      }
+      .enviar:disabled { opacity: 0.45; cursor: default; }
+      /* al pulsar: se hunde y pasa un instante al color claro, como en el hero */
+      .enviar.pulsado { animation: pulsar 0.5s ease; }
+      @keyframes pulsar {
+        0% { transform: scale(1); }
+        25% { transform: scale(0.9); background: var(--color-sobre-invertido); color: var(--color-invertido); }
+        60% { transform: scale(1.04); background: var(--color-sobre-invertido); color: var(--color-invertido); }
+        100% { transform: scale(1); }
+      }
+
+      @media (max-width: 520px) {
+        .lienzo { padding-inline: var(--espacio-3); }
+        .telefono { height: calc(100svh - 9.5rem); border-radius: 2rem; padding: 1.2rem 1rem 1rem; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .mensajes :global(.burbuja), .enviar.pulsado, .escribiendo span { animation: none; }
+      }
+    </style>
+  </body>
+</html>

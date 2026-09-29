@@ -26,10 +26,12 @@ import InterruptorTema from './InterruptorTema.astro'
     background: var(--color-fondo);
     transition: background-color 0.7s ease;
   }
-  /* la barra ocupa todo el ancho aunque el contenido vaya centrado */
+  /* la barra ocupa todo el ancho aunque el contenido vaya centrado.
+     Se pinta con una sombra (no con un bloque más ancho): así la página no se vuelve más ancha que el móvil */
   .cabecera::before {
-    content: ''; position: absolute; inset: 0 -100vw; z-index: -1;
-    background: var(--color-fondo); transition: background-color 0.7s ease;
+    content: ''; position: absolute; inset: 0; z-index: -1;
+    background: var(--color-fondo); box-shadow: 0 0 0 100vmax var(--color-fondo); clip-path: inset(0 -100vmax);
+    transition: background-color 0.7s ease, box-shadow 0.7s ease;
   }
   /* Firma: camilo y danies gruesos, cepeda fino (el estilo del logo de siempre) */
   .logo b { font-weight: 700; }

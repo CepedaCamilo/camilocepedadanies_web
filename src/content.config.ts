@@ -16,7 +16,7 @@ const proyectos = defineCollection({
       resumen: z.string(), // una o dos frases para la tarjeta y la cabecera
       disciplinas: z.array(z.string()).default([]),
       portada: image().optional(), // sin portada → portada tipográfica automática
-      enlace: z.url().optional(), // la web o la app en vivo
+      enlace: z.union([z.url(), z.string().startsWith('/')]).optional(), // la web o la app en vivo (o una página de esta web: /chat-live.html)
       textoEnlace: z.string().optional(),
       orden: z.number().default(100), // menor = sale antes
       oculto: z.boolean().default(false),
