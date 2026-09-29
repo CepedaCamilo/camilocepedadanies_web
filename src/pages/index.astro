@@ -17,26 +17,26 @@ const software = proyectos.filter((p) => p.data.tipo === 'software')
 
 // "Core expertise": las tres áreas y las preguntas (textos de Camilo, sep 2026)
 const areas = [
-  { t: 'Brand & Product', d: 'Identity systems, licensed products, packaging and retail experiences designed to work across real-world markets.' },
-  { t: 'Digital Product', d: 'Interfaces, prototypes and working web applications — from product thinking and visual design to front-end and back-end implementation.' },
-  { t: 'Creative Direction', d: 'Campaigns, storytelling, motion, photography and AI-supported production shaped into coherent visual systems.' },
+  { t: 'Brand & Product', d: 'Identity systems, licensed products, packaging and retail experiences built for real-world markets.' },
+  { t: 'Digital Product', d: 'Interfaces and working web applications — from product thinking and design to front-end and back-end.' },
+  { t: 'Creative Direction', d: 'Campaigns, storytelling, motion, photography and AI-supported visual production.' },
 ]
 const preguntas = [
-  {
-    q: 'What kind of work do I specialize in?',
-    a: 'I work across brand, product and digital experiences — from identity systems, packaging and licensed products to interfaces, campaigns and working web applications.',
-  },
   {
     q: 'Do I only design, or do I also build?',
     a: 'Both. My background is in design and creative direction, and I now build digital products as well — working across interface design, front-end, back-end and deployment.',
   },
   {
-    q: 'How do I approach a new project?',
-    a: 'I start with the problem, not the medium. The goal is to understand what needs to work, what needs to communicate and what the user should experience — then choose the right combination of design, technology and production.',
+    q: 'How do I turn an idea into a finished product?',
+    a: 'Step by step, from understanding to making. I define the problem and the audience, shape the concept and the visual system, prototype early — then build, test and refine until it works in the real world, whether that is a product on a shelf or an application on a server.',
   },
   {
     q: 'What connects such different disciplines?',
     a: 'Systems thinking. Whether it is a brand, a physical product, a campaign or an application, I look for consistency between concept, function, visual language and execution.',
+  },
+  {
+    q: 'How do I approach a new project?',
+    a: 'I start with the problem, not the medium. The goal is to understand what needs to work, what needs to communicate and what the user should experience — then choose the right combination of design, technology and production.',
   },
   {
     q: 'Where does AI fit into my work?',
@@ -54,31 +54,31 @@ const preguntas = [
 
   <!-- SOBRE MÍ -->
   <section id="about" class="seccion contenedor sobre-mi">
-    <div class="sobre-mi-texto">
-      <p class="etiqueta">Core expertise</p>
+    <header class="sobre-mi-cabecera">
+      <p class="etiqueta">Practice</p>
       <h2>What I bring</h2>
-      <p class="entradilla">
-        A multidisciplinary practice built around three connected areas: brand, product and digital experiences.
-      </p>
+      <p class="entradilla">A multidisciplinary practice across three connected areas: brand, product and digital experiences.</p>
+    </header>
+    <div class="sobre-mi-columnas">
       <dl class="areas">
         {areas.map((a) => <div><dt>{a.t}</dt><dd>{a.d}</dd></div>)}
       </dl>
-      <p class="lema">From concept to production.<br />From visual system to working product.</p>
-      <Image class="ilustracion" src={escaladores} alt="" widths={[600, 1000]} sizes="(max-width: 900px) 90vw, 36vw" />
+      <div class="preguntas">
+        {
+          preguntas.map((p, i) => (
+            <details>
+              <summary>
+                <span class="etiqueta">{String(i + 1).padStart(2, '0')}</span>
+                <span>{p.q}</span>
+              </summary>
+              <p>{p.a}</p>
+            </details>
+          ))
+        }
+      </div>
     </div>
-    <div class="preguntas">
-      {
-        preguntas.map((p, i) => (
-          <details>
-            <summary>
-              <span class="etiqueta">{String(i + 1).padStart(2, '0')}</span>
-              <span>{p.q}</span>
-            </summary>
-            <p>{p.a}</p>
-          </details>
-        ))
-      }
-    </div>
+    <p class="lema">From concept to production.<br />From visual system to working product.</p>
+    <Image class="ilustracion" src={escaladores} alt="" widths={[800, 1400]} sizes="(max-width: 900px) 92vw, 760px" />
   </section>
 
   <!-- CONTACTO -->
@@ -106,18 +106,19 @@ const preguntas = [
   /* SECCIONES */
   .cabecera-seccion { display: flex; flex-direction: column; gap: var(--espacio-4); margin-bottom: var(--espacio-7); }
 
-  /* SOBRE MÍ */
-  .sobre-mi { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--espacio-7); }
-  .sobre-mi-texto { display: flex; flex-direction: column; gap: var(--espacio-5); }
-  /* un poco más pequeña: la línea que sube a la derecha no pasa del ancho del texto de arriba */
-  .ilustracion { width: 86%; margin-top: var(--espacio-4); filter: var(--filtro-dibujo); }
+  /* SOBRE MÍ ("Practice"): cabecera centrada → dos columnas a la misma altura → lema centrado → dibujo centrado */
+  .sobre-mi { display: flex; flex-direction: column; align-items: center; gap: var(--espacio-7); }
+  .sobre-mi-cabecera { display: flex; flex-direction: column; align-items: center; gap: var(--espacio-4); max-width: 38rem; text-align: center; }
+  .sobre-mi-columnas { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--espacio-7); align-items: stretch; } /* las dos columnas empiezan y terminan en la misma línea */
+  /* un poco más grande que antes, centrado en la página, debajo de todo */
+  .ilustracion { width: min(100%, 760px); margin-top: calc(-1 * var(--espacio-4)); filter: var(--filtro-dibujo); }
 
-  /* las tres áreas: filas con línea fina, como la ficha de los casos */
+  /* las tres áreas: filas con línea fina, como la ficha de los casos (misma altura de fila que las preguntas) */
   .areas { margin: 0; display: flex; flex-direction: column; border-top: var(--linea-fina) solid var(--color-linea); }
-  .areas div { display: grid; grid-template-columns: 11rem minmax(0, 1fr); gap: var(--espacio-4); padding-block: var(--espacio-3); border-bottom: var(--linea-fina) solid var(--color-linea); }
-  .areas dt { font-weight: var(--peso-medio); }
-  .areas dd { margin: 0; color: var(--color-texto-suave); font-size: var(--texto-s); }
-  .lema { margin: 0; font-size: var(--titulo-3); font-weight: var(--peso-fino); letter-spacing: -0.02em; line-height: 1.25; }
+  .areas div { flex: 1; display: grid; grid-template-columns: 11rem minmax(0, 1fr); align-content: start; gap: var(--espacio-4); padding-block: var(--espacio-4); border-bottom: var(--linea-fina) solid var(--color-linea); }
+  .areas dt { font-size: var(--texto-l); letter-spacing: -0.01em; }
+  .areas dd { margin: 0; color: var(--color-texto-suave); }
+  .lema { margin: 0; text-align: center; font-size: var(--titulo-3); font-weight: var(--peso-fino); letter-spacing: -0.02em; line-height: 1.3; }
   @media (max-width: 600px) { .areas div { grid-template-columns: minmax(0, 1fr); gap: var(--espacio-1); } }
 
   .preguntas { border-top: var(--linea-fina) solid var(--color-linea); align-self: start; }
@@ -137,6 +138,6 @@ const preguntas = [
   .pildora--grande { font-size: var(--titulo-3); padding: var(--espacio-4) var(--espacio-6); min-height: 60px; }
 
   @media (max-width: 900px) {
-    .sobre-mi { grid-template-columns: minmax(0, 1fr); }
+    .sobre-mi-columnas { grid-template-columns: minmax(0, 1fr); }
   }
 </style>
