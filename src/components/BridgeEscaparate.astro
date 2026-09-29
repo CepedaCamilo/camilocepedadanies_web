@@ -1,6 +1,6 @@
 ---
 // Design · Caso 03: THE BRIDGE. La escena 23 (vídeo de IA) se reproduce con el scroll: el scroll es la cámara.
-// Se ve como una sala de montaje: el plano se abre desde una rendija de cine, código de tiempo real,
+// Se ve como una sala de montaje: el plano completo desde el primer fotograma, código de tiempo real,
 // línea de tiempo con miniaturas y cabezal, y una nota que cambia en cada fase del proceso.
 // Fotogramas: public/bridge/000.webp … (se generan con `npm run bridge` desde Scene_23.mp4)
 const TOTAL = 60
@@ -143,7 +143,7 @@ const pasos = ['Narrative & script', 'AI generation', 'Scene continuity', 'Final
     }
     gsap.set(pasos, { autoAlpha: 0, y: 10 }); gsap.set(pasos[0], { autoAlpha: 1, y: 0 })
     gsap.set(notas, { autoAlpha: 0, y: 8 })
-    gsap.set(raiz.querySelector('[data-visor]'), { clipPath: 'inset(41% 0% 41% 0% round 12px)' })
+    gsap.set(raiz.querySelector('[data-visor]'), { scale: 0.96 })
     gsap.set(raiz.querySelector('[data-barrido]'), { xPercent: -100, autoAlpha: 0 })
     pintar()
 
@@ -155,9 +155,9 @@ const pasos = ['Narrative & script', 'AI generation', 'Scene continuity', 'Final
       tl.to(pasos[i - 1], { autoAlpha: 0, y: -10, duration: 0.2 }, t).to(pasos[i], { autoAlpha: 1, y: 0, duration: 0.2 }, t + 0.15)
       tl.to(notas[i - 1], { autoAlpha: 0, y: -8, duration: 0.2 }, t).to(notas[i], { autoAlpha: 1, y: 0, duration: 0.25 }, t + 0.15)
     }
-    // La rendija de cine se abre hasta el plano completo
-    tl.to(raiz.querySelector('[data-visor]'), { clipPath: 'inset(0% 0% 0% 0% round 12px)', duration: 0.9, ease: 'power3.inOut' }, 0)
-      .to(notas[0], { autoAlpha: 1, y: 0, duration: 0.25 }, 0.6)
+    // El plano se ve completo desde el principio; solo se acerca un poco al empezar
+    tl.to(raiz.querySelector('[data-visor]'), { scale: 1, duration: 0.6, ease: 'power2.out' }, 0)
+      .to(notas[0], { autoAlpha: 1, y: 0, duration: 0.25 }, 0.2)
     // El travelling: todo el recorrido del scroll mueve la cámara (fotograma a fotograma)
     tl.to(estado, { p: 1, duration: 4.6, ease: 'none', onUpdate: pintar }, 0.5)
     tl.to(raiz.querySelector('[data-cabezal]'), { left: '100%', duration: 4.6, ease: 'none' }, 0.5)
