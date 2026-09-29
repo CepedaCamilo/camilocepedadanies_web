@@ -190,7 +190,8 @@ const pasos = [
   }
   .yaku--animado { height: calc(460svh - var(--alto-cabecera)); }
   .yaku--animado .escena {
-    position: sticky; top: var(--alto-cabecera); height: calc(100svh - var(--alto-cabecera));
+    position: sticky; top: calc(var(--alto-cabecera) + var(--alto-barra-trabajos));
+    height: calc(100svh - var(--alto-cabecera) - var(--alto-barra-trabajos));
     align-content: center; padding-block: var(--espacio-5);
   }
 

@@ -53,6 +53,7 @@
   --margen-lateral: clamp(1rem, 0.5rem + 3vw, 3.5rem);
   --ancho-max: 1240px;
   --alto-cabecera: 5rem; /* la cabecera se queda fija arriba; el hero empieza justo debajo */
+  --alto-barra-trabajos: 4.5rem; /* la barra "Selected work · Software | Design", fija en la sección de trabajos */
 
   --radio-s: 8px;
   --radio-m: 16px;
@@ -118,5 +119,5 @@
 }
 
 @media (max-width: 720px) {
-  :root { --alto-cabecera: 7.25rem; } /* en móvil la cabecera tiene dos filas */
+  :root { --alto-cabecera: 7.25rem; --alto-barra-trabajos: 4rem; } /* en móvil la cabecera tiene dos filas */
 }

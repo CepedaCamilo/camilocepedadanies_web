@@ -17,7 +17,7 @@ const otrasApps = software.filter((p) => p.id !== 'app-yaku') // Yaku va arriba,
 <section id="work" class="trabajos" data-trabajos>
   <span id="software" class="ancla"></span><span id="design" class="ancla"></span>
   <header class="cabecera-trabajos contenedor">
-    <div>
+    <div class="barra-titulo">
       <p class="etiqueta">Selected work</p>
       <h2 class="titulo-panel" data-titulo-software>Software I design and build.</h2>
       <h2 class="titulo-panel" data-titulo-design hidden>Brands, products and campaigns.</h2>
@@ -64,6 +64,9 @@ const otrasApps = software.filter((p) => p.id !== 'app-yaku') // Yaku va arriba,
   botones.forEach((b) => b.addEventListener('click', () => {
     mostrar(b.dataset.panel!)
     history.replaceState(null, '', `#${b.dataset.panel}`)
+    // Si ya estabas dentro de la sección (p. ej. a mitad de Yaku), vuelve al principio del panel nuevo
+    const inicio = raiz.getBoundingClientRect().top + scrollY
+    if (scrollY > inicio) window.scrollTo({ top: inicio, behavior: 'instant' })
   }))
   // Flechas del teclado entre las dos pestañas
   raiz.querySelector('[role="tablist"]')!.addEventListener('keydown', (e) => {
@@ -79,16 +82,32 @@ const otrasApps = software.filter((p) => p.id !== 'app-yaku') // Yaku va arriba,
 </script>
 
 <style>
-  .trabajos { position: relative; padding-top: var(--espacio-8); }
+  .trabajos { position: relative; padding-top: var(--espacio-7); }
   .ancla { position: absolute; top: 0; }
-  .cabecera-trabajos { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: var(--espacio-5); }
-  .cabecera-trabajos > div:first-child { display: flex; flex-direction: column; gap: var(--espacio-3); }
-  .titulo-panel { font-size: var(--titulo-2); }
+
+  /* Barra fija bajo la cabecera principal mientras se está en "Selected work":
+     siempre se ve en qué pestaña estás y se puede cambiar en cualquier momento */
+  .cabecera-trabajos {
+    position: sticky; top: var(--alto-cabecera); z-index: 40;
+    height: var(--alto-barra-trabajos);
+    display: flex; justify-content: space-between; align-items: center; gap: var(--espacio-5);
+    background: var(--color-fondo); transition: background-color 0.7s ease;
+  }
+  .cabecera-trabajos::before {
+    content: ''; position: absolute; inset: 0 -100vw; z-index: -1;
+    background: var(--color-fondo); border-bottom: var(--linea-fina) solid var(--color-linea);
+    transition: background-color 0.7s ease;
+  }
+  .barra-titulo { display: flex; align-items: baseline; gap: var(--espacio-4); min-width: 0; }
+  .titulo-panel { font-size: var(--titulo-3); font-weight: var(--peso-fino); letter-spacing: -0.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  @media (max-width: 720px) {
+    .titulo-panel { display: none; }
+  }
 
   /* El interruptor: misma familia que Light/Dark, pero más grande */
   .interruptor { display: flex; padding: 4px; border-radius: var(--radio-pildora); background: var(--color-superficie); border: var(--linea-fina) solid var(--color-linea); }
   .interruptor button {
-    min-height: 44px; padding: 0 var(--espacio-5); border: none; border-radius: var(--radio-pildora);
+    min-height: 40px; padding: 0 var(--espacio-5); border: none; border-radius: var(--radio-pildora);
     background: transparent; color: var(--color-texto-suave); font: var(--peso-medio) var(--texto-m) / 1 var(--fuente-texto); cursor: pointer;
     transition: background-color 0.25s, color 0.25s;
   }
