@@ -3,7 +3,7 @@ import { idiomaDe, enlace, t } from '../i18n'
 // Caso 01 · Yaku: la app EN USO, guiada por el scroll (como el chat del hero).
 // El móvil enseña capturas REALES de yaku.danies.trade (npm run capturas-yaku) y la tablet
 // de cocina recibe el pedido al mismo tiempo: así se entiende el tiempo real en segundos.
-import { Image } from 'astro:assets'
+import { Image, getImage } from 'astro:assets'
 import cartaLargaOscuro from '../assets/yaku/oscuro-carta-larga.png'
 import cartaLargaClaro from '../assets/yaku/claro-carta-larga.png'
 import platoOscuro from '../assets/yaku/oscuro-plato.png'
@@ -27,6 +27,11 @@ const pantallas = [
   { id: 'recibido', claro: recibidoClaro, oscuro: recibidoOscuro },
   { id: 'preparando', claro: preparandoClaro, oscuro: preparandoOscuro },
 ]
+// Las capturas se preparan aquí (WebP de 390 y 780 px, como <Image>), pero la dirección va en data-src/data-srcset:
+// el script las descarga cuando Yaku está cerca (ver abajo), no nada más entrar en la web.
+const TAMANOS = '(max-width: 900px) 70vw, 300px'
+const preparar = (src: ImageMetadata) => getImage({ src, widths: [390, 780], sizes: TAMANOS })
+const capturas = await Promise.all(pantallas.map(async (p) => ({ ...p, claro: await preparar(p.claro), oscuro: await preparar(p.oscuro) })))
 // Cuánto baja la carta larga para enseñar la rejilla (en % de su propia altura)
 const bajadaCarta = Math.round(((cartaLargaOscuro.height - 1688) / cartaLargaOscuro.height) * 45)
 
@@ -88,10 +93,12 @@ const texto = t(idioma, {
       <!-- Móvil con la app real -->
       <div class="telefono">
         <div class="pantalla-app">
-          {pantallas.map((p, i) => (
+          {capturas.map((p, i) => (
             <div class={`capa${p.larga ? ' capa--larga' : ''}`} data-pantalla={p.id} style={i === 0 ? '' : 'visibility:hidden'}>
-              <Image src={p.claro} alt="" class="solo-claro" widths={[390, 780]} sizes="(max-width: 900px) 70vw, 300px" loading="eager" />
-              <Image src={p.oscuro} alt="" class="solo-oscuro" widths={[390, 780]} sizes="(max-width: 900px) 70vw, 300px" loading="eager" />
+              {(['claro', 'oscuro'] as const).map((modo) => (
+                <img class={`solo-${modo}`} alt="" data-src={p[modo].src} data-srcset={p[modo].srcSet.attribute} sizes={TAMANOS}
+                  width={p[modo].attributes.width} height={p[modo].attributes.height} decoding="async" />
+              ))}
             </div>
           ))}
           <span class="toque" data-toque></span>
@@ -120,6 +127,20 @@ const texto = t(idioma, {
   gsap.registerPlugin(ScrollTrigger)
 
   const yaku = document.querySelector<HTMLElement>('[data-yaku]')!
+
+  // Las capturas (modo claro y oscuro) no se descargan al entrar en la web, sino cuando Yaku está
+  // a unas dos pantallas: así no compiten con el hero y aun así están listas antes de verse.
+  // (El vigía empieza a mirar cuando la página ya tiene su altura real: antes del JavaScript el hero es corto
+  // y Yaku parecería estar cerca.)
+  const vigia = new IntersectionObserver(([e]) => {
+    if (!e.isIntersecting) return
+    yaku.querySelectorAll<HTMLImageElement>('img[data-src]').forEach((img) => {
+      img.srcset = img.dataset.srcset!
+      img.src = img.dataset.src!
+    })
+    vigia.disconnect()
+  }, { rootMargin: '200% 0px' })
+  addEventListener('DOMContentLoaded', () => requestAnimationFrame(() => vigia.observe(yaku)))
   const capa = (id: string) => yaku.querySelector(`[data-pantalla="${id}"]`)
   const toque = yaku.querySelector('[data-toque]')
   const pasos = yaku.querySelectorAll('[data-paso]')

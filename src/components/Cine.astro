@@ -14,7 +14,9 @@ const textos = t(idiomaDe(Astro.url), {
   <div class="escena">
     <div class="marco" data-marco>
       <video data-video muted loop playsinline preload="metadata" poster="/videos/ai-storytelling-poster.jpg">
-        <source src="/videos/the-bridge.mp4" type="video/mp4" />
+        <!-- Versiones ligeras sin sonido (`npm run video`). Móvil en vertical: solo el centro, que es lo que se ve -->
+        <source src="/videos/the-bridge-movil.mp4" type="video/mp4" media="(max-width: 900px) and (orientation: portrait)" />
+        <source src="/videos/the-bridge-1080.mp4" type="video/mp4" />
       </video>
       <div class="velo" data-velo></div>
     </div>
@@ -41,6 +43,13 @@ const textos = t(idiomaDe(Astro.url), {
     start: 'top bottom',
     end: 'bottom top',
     onToggle: (st) => (st.isActive ? video.play().catch(() => {}) : video.pause()),
+  })
+
+  // Si el móvil gira (vertical ↔ horizontal), volver a elegir la versión del vídeo que toca
+  matchMedia('(max-width: 900px) and (orientation: portrait)').addEventListener('change', () => {
+    const seguia = !video.paused
+    video.load()
+    if (seguia) video.play().catch(() => {})
   })
 
   // Modo cine: la página pasa a oscuro mientras la sección ocupa la pantalla

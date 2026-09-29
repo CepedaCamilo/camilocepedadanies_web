@@ -1,6 +1,8 @@
 // El balón del hero como secuencia de fotogramas renderizados en Cinema 4D.
 // Cada fotograma es un ángulo de una vuelta completa: enseñamos el que toca según el giro.
-// Fotogramas: public/3d/balon/000.webp … (se generan con `npm run fotogramas`)
+// Fotogramas: public/3d/balon/{900,720,webp}/000.avif … (se generan con `npm run fotogramas`)
+//   900 = escritorio · 720 = móvil (se elige según el tamaño real del balón en la pantalla)
+//   webp = plan B para navegadores sin AVIF (solo 1 de cada 4 fotogramas)
 
 // inicio: el fotograma que se ve cuando el balón termina de entrar (7 = "WE ARE THE CHAMPIONS" de frente)
 // entrada / salida: en qué momento de la línea de tiempo del hero el balón está entero / se va
@@ -9,20 +11,28 @@ export function iniciarSecuencia(canvas: HTMLCanvasElement, { total = 120, ruta 
   if (!ctx) return null
   const fotos: (HTMLImageElement | undefined)[] = new Array(total)
 
+  // Qué juego de fotogramas pedir: los píxeles que necesita el lienzo (con Retina, máx. 2×)
+  const necesarios = canvas.clientWidth * Math.min(window.devicePixelRatio, 2)
+  let carpeta = necesarios > 760 ? '900' : '720', ext = 'avif', cada = 1
+
   const cargar = (i: number) =>
-    new Promise<void>((listo) => {
+    new Promise<boolean>((listo) => {
       const img = new Image()
       img.decoding = 'async'
-      img.onload = () => { fotos[i] = img; listo() }
-      img.onerror = () => listo()
-      img.src = `${ruta}${String(i).padStart(3, '0')}.webp`
+      img.onload = () => { fotos[i] = img; listo(true) }
+      img.onerror = () => listo(false)
+      img.src = `${ruta}${carpeta}/${String(i).padStart(3, '0')}.${ext}`
     })
 
   // Primero la vista inicial, luego uno de cada 8 (para poder girar enseguida) y luego el resto
   ;(async () => {
-    await cargar(inicio)
+    if (!(await cargar(inicio))) {
+      // el navegador no entiende AVIF → plan B en WebP (solo existen 000, 004, 008…)
+      carpeta = 'webp'; ext = 'webp'; cada = 4
+      await cargar(inicio - (inicio % cada))
+    }
     const paso = (i: number) => (((i - inicio) % 8) + 8) % 8
-    const orden = [...Array(total).keys()].sort((a, b) => paso(a) - paso(b) || a - b)
+    const orden = [...Array(total).keys()].filter((i) => i % cada === 0 && !fotos[i]).sort((a, b) => paso(a) - paso(b) || a - b)
     for (let i = 0; i < orden.length; i += 6) await Promise.all(orden.slice(i, i + 6).map(cargar))
   })()
 

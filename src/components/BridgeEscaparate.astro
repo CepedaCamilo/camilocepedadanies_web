@@ -103,18 +103,25 @@ const texto = t(idioma, {
   const notas = raiz.querySelectorAll<HTMLElement>('[data-nota]')
 
   // ---------- Los fotogramas: se cargan solo cuando la escena está cerca (y primero 1 de cada 6) ----------
+  // Pantallas pequeñas (el visor necesita ≤ 900 px): versión AVIF de 800 px en /bridge/movil/; si no, WebP de 1120 px
   const fotos: (HTMLImageElement | undefined)[] = new Array(TOTAL)
-  const cargar = (i: number) => new Promise<void>((listo) => {
+  let carpeta = '/bridge/', ext = 'webp'
+  const cargar = (i: number) => new Promise<boolean>((listo) => {
     const img = new Image(); img.decoding = 'async'
-    img.onload = () => { fotos[i] = img; listo(); if (Math.abs(i - actual) < 6) dibujar(true) }
-    img.onerror = () => listo()
-    img.src = `/bridge/${String(i).padStart(3, '0')}.webp`
+    img.onload = () => { fotos[i] = img; listo(true); if (Math.abs(i - actual) < 6) dibujar(true) }
+    img.onerror = () => listo(false)
+    img.src = `${carpeta}${String(i).padStart(3, '0')}.${ext}`
   })
   let cargando = false
   new IntersectionObserver(async ([e]) => {
     if (!e.isIntersecting || cargando) return
     cargando = true
-    const orden = [...Array(TOTAL).keys()].sort((a, b) => (a % 6) - (b % 6) || a - b)
+    if (lienzo.clientWidth * Math.min(window.devicePixelRatio, 2) <= 900) {
+      carpeta = '/bridge/movil/'; ext = 'avif'
+      // el navegador no entiende AVIF → los WebP de siempre
+      if (!(await cargar(0))) { carpeta = '/bridge/'; ext = 'webp' }
+    }
+    const orden = [...Array(TOTAL).keys()].filter((i) => !fotos[i]).sort((a, b) => (a % 6) - (b % 6) || a - b)
     for (let i = 0; i < orden.length; i += 6) await Promise.all(orden.slice(i, i + 6).map(cargar))
   }, { rootMargin: '150% 0px' }).observe(raiz)
 

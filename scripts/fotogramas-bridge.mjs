@@ -2,6 +2,7 @@
 // Uso: npm run bridge
 // 1) macOS (AVFoundation, sin instalar nada) saca los fotogramas del vídeo → scripts/fotogramas-video.swift
 // 2) sharp los convierte en WebP ligeros → public/bridge/000.webp … + miniaturas para la línea de tiempo
+// 3) y una versión para el móvil (el visor mide ~390 px → 800 px en Retina), en AVIF → public/bridge/movil/000.avif …
 import sharp from 'sharp'
 import { execFileSync } from 'node:child_process'
 import { mkdtempSync, mkdirSync, rmSync, readdirSync, statSync } from 'node:fs'
@@ -13,6 +14,7 @@ const SALIDA = 'public/bridge'
 const N = 60          // fotogramas (el vídeo dura 6 s: 10 por segundo, de sobra para un travelling lento)
 const ANCHO = 1120    // px (la escena mide ~560 px de ancho → nítido también en pantallas Retina)
 const MINIATURAS = 8  // para la línea de tiempo
+const ANCHO_MOVIL = 800
 
 const tmp = mkdtempSync(join(tmpdir(), 'bridge-'))
 execFileSync('swift', ['scripts/fotogramas-video.swift', VIDEO, tmp, String(N), String(ANCHO)], { stdio: 'inherit' })
@@ -26,6 +28,13 @@ for (const [i, f] of jpgs.entries()) {
   await sharp(join(tmp, f)).webp({ quality: 62, effort: 6 }).toFile(destino)
   total += statSync(destino).size
 }
+mkdirSync(join(SALIDA, 'movil'))
+let totalMovil = 0
+for (const [i, f] of jpgs.entries()) {
+  const destino = join(SALIDA, 'movil', `${String(i).padStart(3, '0')}.avif`)
+  await sharp(join(tmp, f)).resize({ width: ANCHO_MOVIL }).avif({ quality: 55, effort: 6 }).toFile(destino)
+  totalMovil += statSync(destino).size
+}
 for (let i = 0; i < MINIATURAS; i++) {
   const f = jpgs[Math.round((i * (jpgs.length - 1)) / (MINIATURAS - 1))]
   const destino = join(SALIDA, `mini-${i}.webp`)
@@ -34,3 +43,4 @@ for (let i = 0; i < MINIATURAS; i++) {
 }
 rmSync(tmp, { recursive: true, force: true })
 console.log(`${jpgs.length} fotogramas + ${MINIATURAS} miniaturas → ${SALIDA} (${(total / 1024 / 1024).toFixed(1)} MB)`)
+console.log(`${jpgs.length} fotogramas para el móvil → ${SALIDA}/movil (${(totalMovil / 1024 / 1024).toFixed(1)} MB)`)

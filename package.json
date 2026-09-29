@@ -13,6 +13,7 @@
     "balones": "node scripts/balones-licencias.mjs",
     "transalp": "node scripts/pantallas-transalp.mjs",
     "bridge": "node scripts/fotogramas-bridge.mjs",
+    "video": "node scripts/video-bridge.mjs",
     "capturas-demos": "node scripts/capturas-demos.mjs",
     "imagen-compartir": "node scripts/imagen-compartir.mjs"
   },

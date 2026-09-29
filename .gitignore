@@ -3,5 +3,5 @@ dist/
 .astro/
 .DS_Store
 
-# Fotogramas del balón (14 MB, se generan con `npm run fotogramas` desde el render de Cinema 4D)
+# Fotogramas del balón (AVIF 900 + 720 + WebP de reserva, ~12 MB; se generan con `npm run fotogramas` desde el render de Cinema 4D)
 public/3d/balon/
