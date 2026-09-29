@@ -2,12 +2,12 @@
 // "Selected work" con un interruptor Software | Design (como el de Light/Dark).
 // Empieza en Software: primero el caso Yaku en movimiento, luego el resto de apps.
 // Enlaces: /#software y /#design abren la sección con ese panel ya elegido.
-import TarjetaProyecto from './TarjetaProyecto.astro'
 import YakuEscaparate from './YakuEscaparate.astro'
 import ChatEscaparate from './ChatEscaparate.astro'
 import ArchivosEscaparate from './ArchivosEscaparate.astro'
 import LicenciasEscaparate from './LicenciasEscaparate.astro'
 import TransalpEscaparate from './TransalpEscaparate.astro'
+import BridgeEscaparate from './BridgeEscaparate.astro'
 import type { CollectionEntry } from 'astro:content'
 
 interface Props {
@@ -15,7 +15,6 @@ interface Props {
   software: CollectionEntry<'proyectos'>[]
 }
 const { diseño, software } = Astro.props
-const otrosDiseños = diseño.filter((p) => p.id !== 'product-design' && p.id !== 'integrated-campaign-communication') // licencias y Transalp van arriba, en grande
 ---
 
 <section id="work" class="trabajos" data-trabajos>
@@ -41,12 +40,7 @@ const otrosDiseños = diseño.filter((p) => p.id !== 'product-design' && p.id !=
   <div id="panel-design" role="tabpanel" aria-labelledby="pestana-design" data-panel-contenido="design" hidden>
     <LicenciasEscaparate />
     <TransalpEscaparate />
-    <div class="contenedor mas-apps" id="mas-design">
-      <p class="etiqueta">More design work</p>
-      <div class="rejilla">
-        {otrosDiseños.map((p) => <TarjetaProyecto proyecto={p} />)}
-      </div>
-    </div>
+    <BridgeEscaparate />
   </div>
 </section>
 
@@ -77,7 +71,8 @@ const otrosDiseños = diseño.filter((p) => p.id !== 'product-design' && p.id !=
     // "#design": el siguiente proyecto está en la otra pestaña → se cambia de pestaña (y se va a su inicio)
     if (a.hash === '#design') { raiz.querySelector<HTMLButtonElement>('[data-panel="design"]')!.click(); return }
     const destino = document.querySelector<HTMLElement>(a.hash)!
-    const barras = raiz.querySelector<HTMLElement>('.cabecera-trabajos')!.getBoundingClientRect().bottom
+    // dentro de "Selected work" quedan fijas la cabecera + la barra de trabajos; fuera (p. ej. About), solo la cabecera
+    const barras = (raiz.contains(destino) ? raiz.querySelector<HTMLElement>('.cabecera-trabajos')! : document.querySelector<HTMLElement>('.cabecera')!).getBoundingClientRect().bottom
     window.scrollTo({ top: destino.getBoundingClientRect().top + scrollY - Math.max(barras, 0), behavior: 'smooth' })
   }))
   // Flechas del teclado entre las dos pestañas
@@ -130,5 +125,4 @@ const otrosDiseños = diseño.filter((p) => p.id !== 'product-design' && p.id !=
   }
   .interruptor button[aria-selected='true'] { background: var(--color-invertido); color: var(--color-sobre-invertido); }
 
-  .mas-apps { display: flex; flex-direction: column; gap: var(--espacio-5); padding-block: var(--espacio-7) var(--espacio-8); }
 </style>

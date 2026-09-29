@@ -1,0 +1,266 @@
+---
+// Design · Caso 03: THE BRIDGE. La escena 23 (vídeo de IA) se reproduce con el scroll: el scroll es la cámara.
+// Se ve como una sala de montaje: el plano se abre desde una rendija de cine, código de tiempo real,
+// línea de tiempo con miniaturas y cabezal, y una nota que cambia en cada fase del proceso.
+// Fotogramas: public/bridge/000.webp … (se generan con `npm run bridge` desde Scene_23.mp4)
+const TOTAL = 60
+const DURACION = 6.04 // segundos del plano original
+const notas = [
+  { fase: 'Script', texto: 'Ext. harbour, dawn — the merchants read the map.' },
+  { fase: 'AI generation', texto: 'Image to video · one take, directed by prompt.' },
+  { fase: 'Continuity', texto: 'Same cast · same light · same props.' },
+  { fase: 'Final edit', texto: 'Scene 23 · 6 s · locked.' },
+]
+const pasos = ['Narrative & script', 'AI generation', 'Scene continuity', 'Final edit']
+---
+
+<section class="bridge" id="caso-bridge" data-bridge data-total={TOTAL} data-duracion={DURACION} aria-label="Case 03 · THE BRIDGE">
+  <div class="escena contenedor">
+    <div class="texto">
+      <p class="etiqueta">Case 03 · THE BRIDGE</p>
+      <h3 class="titulo">THE BRIDGE<span class="titulo-2">Storytelling by design, directed with AI.</span></h3>
+      <p class="entradilla">
+        An independent storytelling project exploring how narrative, art direction and generative tools can work
+        together as one production system.
+      </p>
+      <p class="texto-suave">
+        From concept and narrative structure to visual generation, scene continuity and final edit, I direct the
+        complete process — using AI as a production tool while keeping storytelling, visual decisions and editorial
+        control human.
+      </p>
+      <dl class="ficha">
+        <div><dt>Role</dt><dd>Creative Direction · Storytelling · AI Production</dd></div>
+        <div><dt>Context</dt><dd>Independent Project · Created & Directed by me</dd></div>
+        <div><dt>Scope</dt><dd>Narrative · AI Visuals · Motion · Editorial</dd></div>
+      </dl>
+      <div class="acciones">
+        <a class="pildora pildora--llena" href="/storytelling-production.html">Read the case study →</a>
+        <a class="pildora" href="#about" data-siguiente>About me ↓</a>
+      </div>
+    </div>
+
+    <div class="sala" aria-hidden="true">
+      <div class="visor" data-visor>
+        <img class="cartel" src="/bridge/000.webp" alt="" data-cartel decoding="async" loading="lazy" />
+        <canvas data-lienzo></canvas>
+        <span class="barrido" data-barrido></span>
+        <div class="capa-texto">
+          <span class="etiqueta rec"><span class="punto"></span> SC 23 · THE HARBOUR</span>
+          <span class="etiqueta tc" data-tc>00:00:00:00</span>
+          <div class="notas">
+            {notas.map((n, i) => (
+              <p class="nota" data-nota={i}><span class="etiqueta">{n.fase}</span>{n.texto}</p>
+            ))}
+          </div>
+        </div>
+      </div>
+      <!-- La línea de tiempo del montaje: miniaturas + cabezal -->
+      <div class="linea-tiempo">
+        <div class="tira">
+          {Array.from({ length: 8 }, (_, i) => <img src={`/bridge/mini-${i}.webp`} alt="" loading="lazy" decoding="async" />)}
+          <span class="cabezal" data-cabezal></span>
+        </div>
+        <div class="escala etiqueta"><span>00:00</span><span>00:03</span><span>00:06</span></div>
+      </div>
+    </div>
+
+    <div class="leyenda">
+      <div class="leyenda-pasos">
+        {pasos.map((p, i) => <p class="etiqueta paso" data-paso={i}><span>{String(i + 1).padStart(2, '0')}</span> {p}</p>)}
+      </div>
+      <div class="progreso"><span data-progreso></span></div>
+    </div>
+  </div>
+</section>
+<!-- En móvil la escena fija no tiene sitio para los botones: van aquí, justo debajo de la animación -->
+<div class="contenedor acciones-movil">
+  <a class="pildora pildora--llena" href="/storytelling-production.html">Read the case study →</a>
+  <a class="pildora" href="#about" data-siguiente>About me ↓</a>
+</div>
+
+<script>
+  import { gsap } from 'gsap'
+  import { ScrollTrigger } from 'gsap/ScrollTrigger'
+  gsap.registerPlugin(ScrollTrigger)
+
+  const raiz = document.querySelector<HTMLElement>('[data-bridge]')!
+  const TOTAL = Number(raiz.dataset.total)
+  const DURACION = Number(raiz.dataset.duracion)
+  const lienzo = raiz.querySelector<HTMLCanvasElement>('[data-lienzo]')!
+  const ctx = lienzo.getContext('2d')!
+  const tc = raiz.querySelector<HTMLElement>('[data-tc]')!
+  const pasos = raiz.querySelectorAll('[data-paso]')
+  const notas = raiz.querySelectorAll<HTMLElement>('[data-nota]')
+
+  // ---------- Los fotogramas: se cargan solo cuando la escena está cerca (y primero 1 de cada 6) ----------
+  const fotos: (HTMLImageElement | undefined)[] = new Array(TOTAL)
+  const cargar = (i: number) => new Promise<void>((listo) => {
+    const img = new Image(); img.decoding = 'async'
+    img.onload = () => { fotos[i] = img; listo(); if (Math.abs(i - actual) < 6) dibujar(true) }
+    img.onerror = () => listo()
+    img.src = `/bridge/${String(i).padStart(3, '0')}.webp`
+  })
+  let cargando = false
+  new IntersectionObserver(async ([e]) => {
+    if (!e.isIntersecting || cargando) return
+    cargando = true
+    const orden = [...Array(TOTAL).keys()].sort((a, b) => (a % 6) - (b % 6) || a - b)
+    for (let i = 0; i < orden.length; i += 6) await Promise.all(orden.slice(i, i + 6).map(cargar))
+  }, { rootMargin: '150% 0px' }).observe(raiz)
+
+  // ---------- Dibujar el fotograma que toca, a la resolución real del visor ----------
+  let actual = 0, dibujado = -1
+  const ajustar = () => {
+    const dpr = Math.min(window.devicePixelRatio, 2)
+    lienzo.width = Math.round(lienzo.clientWidth * dpr)
+    lienzo.height = Math.round(lienzo.clientHeight * dpr)
+    dibujado = -1; dibujar()
+  }
+  function dibujar(forzar = false) {
+    let i = actual
+    // si ese fotograma aún no ha llegado, el cargado más cercano
+    for (let d = 1; d < TOTAL && !fotos[i]; d++) i = fotos[actual - d] ? actual - d : fotos[actual + d] ? actual + d : i
+    if (!fotos[i] || (i === dibujado && !forzar)) return
+    ctx.imageSmoothingQuality = 'high'
+    ctx.drawImage(fotos[i]!, 0, 0, lienzo.width, lienzo.height)
+    dibujado = i
+  }
+  new ResizeObserver(ajustar).observe(lienzo)
+
+  // Código de tiempo de cine: HH:MM:SS:FF a 24 fotogramas por segundo
+  const pintarTc = (seg: number) => {
+    const f = Math.floor((seg % 1) * 24), s = Math.floor(seg)
+    tc.textContent = `00:00:${String(s).padStart(2, '0')}:${String(f).padStart(2, '0')}`
+  }
+
+  const mm = gsap.matchMedia()
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    raiz.classList.add('bridge--animado')
+    const estado = { p: 0 } // 0 → 1 = del primer al último fotograma
+    const pintar = () => {
+      actual = Math.round(estado.p * (TOTAL - 1)); dibujar()
+      pintarTc(estado.p * DURACION)
+    }
+    gsap.set(pasos, { autoAlpha: 0, y: 10 }); gsap.set(pasos[0], { autoAlpha: 1, y: 0 })
+    gsap.set(notas, { autoAlpha: 0, y: 8 })
+    gsap.set(raiz.querySelector('[data-visor]'), { clipPath: 'inset(41% 0% 41% 0% round 12px)' })
+    gsap.set(raiz.querySelector('[data-barrido]'), { xPercent: -100, autoAlpha: 0 })
+    pintar()
+
+    const tl = gsap.timeline({
+      defaults: { ease: 'power2.inOut', duration: 0.3 },
+      scrollTrigger: { trigger: raiz, start: 'top top', end: 'bottom bottom', scrub: 0.7 },
+    })
+    const paso = (i: number, t: number) => {
+      tl.to(pasos[i - 1], { autoAlpha: 0, y: -10, duration: 0.2 }, t).to(pasos[i], { autoAlpha: 1, y: 0, duration: 0.2 }, t + 0.15)
+      tl.to(notas[i - 1], { autoAlpha: 0, y: -8, duration: 0.2 }, t).to(notas[i], { autoAlpha: 1, y: 0, duration: 0.25 }, t + 0.15)
+    }
+    // La rendija de cine se abre hasta el plano completo
+    tl.to(raiz.querySelector('[data-visor]'), { clipPath: 'inset(0% 0% 0% 0% round 12px)', duration: 0.9, ease: 'power3.inOut' }, 0)
+      .to(notas[0], { autoAlpha: 1, y: 0, duration: 0.25 }, 0.6)
+    // El travelling: todo el recorrido del scroll mueve la cámara (fotograma a fotograma)
+    tl.to(estado, { p: 1, duration: 4.6, ease: 'none', onUpdate: pintar }, 0.5)
+    tl.to(raiz.querySelector('[data-cabezal]'), { left: '100%', duration: 4.6, ease: 'none' }, 0.5)
+    // 02 Generación: una línea de luz recorre el plano, como si se estuviera generando
+    paso(1, 1.6)
+    tl.to(raiz.querySelector('[data-barrido]'), { autoAlpha: 1, duration: 0.1 }, 1.7)
+      .to(raiz.querySelector('[data-barrido]'), { xPercent: 1100, duration: 0.9, ease: 'power1.inOut' }, 1.7)
+      .to(raiz.querySelector('[data-barrido]'), { autoAlpha: 0, duration: 0.1 }, 2.5)
+    paso(2, 2.9)
+    paso(3, 4.1)
+    tl.to({}, { duration: 0.4 })
+    tl.fromTo(raiz.querySelector('[data-progreso]'), { scaleX: 0 }, { scaleX: 1, duration: 5.5, ease: 'none' }, 0)
+    return () => raiz.classList.remove('bridge--animado')
+  })
+  // Sin animación: un fotograma del centro del plano
+  mm.add('(prefers-reduced-motion: reduce)', () => { actual = Math.round(TOTAL / 2); cargar(actual); pintarTc(DURACION / 2) })
+</script>
+
+<style>
+  .escena {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    grid-template-areas: 'texto sala' 'leyenda sala';
+    align-items: center;
+    column-gap: var(--espacio-7);
+    padding-block: var(--espacio-7);
+  }
+  .bridge--animado { height: calc(440svh - var(--alto-cabecera)); }
+  .bridge--animado .escena {
+    position: sticky; top: calc(var(--alto-cabecera) + var(--alto-barra-trabajos));
+    height: calc(100svh - var(--alto-cabecera) - var(--alto-barra-trabajos));
+    align-content: center; padding-block: var(--espacio-5);
+  }
+
+  .texto { grid-area: texto; display: flex; flex-direction: column; gap: var(--espacio-4); }
+  .titulo-2 { display: block; color: var(--color-texto-suave); }
+  .titulo { font-size: var(--titulo-2); font-weight: var(--peso-fino); letter-spacing: var(--tracking-titulo); line-height: 1.02; }
+  .texto-suave { margin: 0; color: var(--color-texto-suave); font-size: var(--texto-s); }
+  .ficha { margin: var(--espacio-2) 0 0; display: flex; flex-direction: column; border-top: var(--linea-fina) solid var(--color-linea); }
+  .ficha div { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: var(--espacio-3); padding-block: var(--espacio-2); border-bottom: var(--linea-fina) solid var(--color-linea); font-size: var(--texto-s); }
+  .ficha dt { font-family: var(--fuente-mono); font-size: var(--texto-xs); color: var(--color-texto-suave); }
+  .ficha dd { margin: 0; }
+  .acciones { display: flex; flex-wrap: wrap; gap: var(--espacio-2); padding-top: var(--espacio-2); }
+  .acciones .pildora, .acciones-movil .pildora { padding-inline: 1.25rem; }
+  .acciones-movil { display: none; flex-wrap: wrap; gap: var(--espacio-2); padding-block: var(--espacio-5) var(--espacio-2); }
+
+  /* ---------- La sala de montaje ---------- */
+  .sala { grid-area: sala; display: flex; flex-direction: column; gap: var(--espacio-3); width: 100%; min-width: 0; }
+  .visor {
+    position: relative; width: 100%; aspect-ratio: 1120 / 622; border-radius: 12px; overflow: hidden; background: #0d0b0a;
+    box-shadow: 0 40px 80px -40px rgb(0 0 0 / 0.6); container-type: inline-size;
+  }
+  .visor canvas, .cartel { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .bridge--animado .cartel { display: none; } /* con animación dibuja el lienzo; sin ella, se ve el cartel */
+  .barrido {
+    position: absolute; top: 0; bottom: 0; left: 0; width: 9%; pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.35), transparent); mix-blend-mode: overlay;
+  }
+  /* Textos sobre la imagen, como en un monitor de montaje */
+  /* sombras suaves arriba y abajo (como en un monitor de montaje): los textos se leen sobre cualquier imagen */
+  .capa-texto {
+    position: absolute; inset: 0; padding: 3cqw 3.2cqw; color: #f4efe6; text-shadow: 0 1px 8px rgb(0 0 0 / 0.5);
+    background: linear-gradient(180deg, rgb(0 0 0 / 0.5) 0%, transparent 20%, transparent 62%, rgb(0 0 0 / 0.55) 100%);
+  }
+  .capa-texto .etiqueta { color: inherit; font-size: max(0.625rem, 1.7cqw); }
+  .rec { position: absolute; top: 3cqw; left: 3.2cqw; display: flex; align-items: center; gap: 0.5em; }
+  .punto { width: 0.6em; height: 0.6em; border-radius: 50%; background: #e5484d; animation: rec 1.6s steps(1) infinite; }
+  @keyframes rec { 50% { opacity: 0.2; } }
+  .tc { position: absolute; top: 3cqw; right: 3.2cqw; font-variant-numeric: tabular-nums; letter-spacing: 0.06em; }
+  .notas { position: absolute; left: 3.2cqw; bottom: 3cqw; right: 30%; display: grid; }
+  .nota {
+    grid-area: 1 / 1; align-self: end; margin: 0; display: flex; flex-direction: column; gap: 0.25em;
+    font-size: max(0.75rem, 2.2cqw); line-height: 1.3;
+  }
+  .nota .etiqueta { opacity: 0.75; }
+  .bridge:not(.bridge--animado) .nota:not(:last-child) { display: none; }
+
+  .linea-tiempo { display: flex; flex-direction: column; gap: var(--espacio-2); }
+  .tira { position: relative; display: grid; grid-template-columns: repeat(8, 1fr); gap: 3px; }
+  .tira img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 4px; opacity: 0.85; }
+  .cabezal {
+    position: absolute; top: -6px; bottom: -6px; left: 0; width: 2px; margin-left: -1px; border-radius: 2px;
+    background: var(--color-acento); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-acento) 25%, transparent);
+  }
+  .cabezal::before { content: ''; position: absolute; top: -4px; left: -4px; width: 10px; height: 10px; border-radius: 50%; background: var(--color-acento); }
+  .bridge:not(.bridge--animado) .cabezal { left: 50%; }
+  .escala { display: flex; justify-content: space-between; font-size: var(--texto-xs); color: var(--color-texto-suave); }
+
+  /* ---------- Leyenda ---------- */
+  .leyenda { grid-area: leyenda; align-self: end; display: flex; flex-direction: column; gap: var(--espacio-3); padding-top: var(--espacio-5); }
+  .leyenda-pasos { display: grid; }
+  .paso { grid-area: 1 / 1; margin: 0; }
+  .paso span { color: var(--color-acento); }
+  .bridge:not(.bridge--animado) .paso:not(:first-child) { display: none; }
+  .progreso { height: 2px; border-radius: 2px; background: var(--color-linea); overflow: hidden; max-width: 22rem; }
+  .progreso span { display: block; height: 100%; background: var(--color-acento); transform-origin: left; transform: scaleX(0); }
+
+  @media (prefers-reduced-motion: reduce) { .punto { animation: none; } }
+  @media (max-width: 900px) {
+    .escena { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'texto' 'sala' 'leyenda'; row-gap: var(--espacio-5); }
+    .bridge--animado .escena { align-content: start; overflow: hidden; }
+    .bridge--animado .texto .entradilla, .bridge--animado .texto-suave, .bridge--animado .ficha,
+    .bridge--animado .acciones { display: none; }
+    .bridge--animado + .acciones-movil { display: flex; }
+  }
+</style>
