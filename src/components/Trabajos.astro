@@ -6,6 +6,7 @@ import TarjetaProyecto from './TarjetaProyecto.astro'
 import YakuEscaparate from './YakuEscaparate.astro'
 import ChatEscaparate from './ChatEscaparate.astro'
 import LicenciasEscaparate from './LicenciasEscaparate.astro'
+import TransalpEscaparate from './TransalpEscaparate.astro'
 import type { CollectionEntry } from 'astro:content'
 
 interface Props {
@@ -14,7 +15,7 @@ interface Props {
 }
 const { diseño, software } = Astro.props
 const otrasApps = software.filter((p) => p.id !== 'app-yaku' && p.id !== 'app-chat') // Yaku y el chat van arriba, en grande
-const otrosDiseños = diseño.filter((p) => p.id !== 'product-design') // las licencias van arriba, en grande
+const otrosDiseños = diseño.filter((p) => p.id !== 'product-design' && p.id !== 'integrated-campaign-communication') // licencias y Transalp van arriba, en grande
 ---
 
 <section id="work" class="trabajos" data-trabajos>
@@ -44,6 +45,7 @@ const otrosDiseños = diseño.filter((p) => p.id !== 'product-design') // las li
 
   <div id="panel-design" role="tabpanel" aria-labelledby="pestana-design" data-panel-contenido="design" hidden>
     <LicenciasEscaparate />
+    <TransalpEscaparate />
     <div class="contenedor mas-apps" id="mas-design">
       <p class="etiqueta">More design work</p>
       <div class="rejilla">

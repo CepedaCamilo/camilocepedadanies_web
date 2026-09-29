@@ -1,0 +1,259 @@
+---
+// Design · Caso 02: BIKE Transalp · TOUR Transalp (campaña integrada, en HAVE A GOOD ONE).
+// Los dispositivos se dibujan en HTML/CSS (nítidos, sin recortes de fondo) y cada uno flota en su propia capa.
+// Con el scroll, el foco pasa de uno a otro y las pantallas cambian de contenido.
+// Las imágenes de dentro de las pantallas salen de `npm run transalp` (scripts/pantallas-transalp.mjs → public/transalp/).
+const posts = ['bruneck', 'regla', 'fecha', 'ciclista', 'ruta']
+const pasos = [
+  'Launch trailer · YouTube & web',
+  'Social campaign · countdown & stories',
+  'Route reveal',
+  'Community & event pages',
+]
+---
+
+<section class="transalp" id="caso-transalp" data-transalp aria-label="Case 02 · BIKE Transalp · TOUR Transalp">
+  <div class="escena contenedor">
+    <div class="texto">
+      <p class="etiqueta">Case 02 · BIKE Transalp · TOUR Transalp</p>
+      <h3 class="titulo">Integrated campaign design.</h3>
+      <p class="entradilla">
+        Campaign work developed during my time at HAVE A GOOD ONE — shaping the visual communication for two major
+        alpine cycling events across digital and promotional touchpoints.
+      </p>
+      <p class="texto-suave">
+        From launch trailers and route reveals to social campaigns and web assets, I worked on communication designed
+        to build anticipation, engage participants and carry each event’s identity consistently throughout the
+        campaign cycle.
+      </p>
+      <dl class="ficha">
+        <div><dt>Role</dt><dd>Graphic Direction · Campaign Design · Motion</dd></div>
+        <div><dt>Context</dt><dd>HAVE A GOOD ONE · Event campaign communication</dd></div>
+        <div><dt>Scope</dt><dd>Social · Motion · Web · Event Promotion</dd></div>
+      </dl>
+      <div class="acciones">
+        <a class="pildora pildora--llena" href="/integrated-campaign-communication.html">Read the case study →</a>
+        <a class="pildora" href="https://www.youtube.com/watch?v=USL3U4n7VhQ" rel="noopener">Trailer ↗</a>
+        <a class="pildora" href="#mas-design" data-siguiente>Next project ↓</a>
+      </div>
+    </div>
+
+    <!-- El "escaparate": 4 dispositivos, cada uno en su capa (la capa la mueve el scroll; .flota respira sola) -->
+    <div class="escenario" aria-hidden="true">
+      <div class="capa-disp capa-pantalla" data-disp="pantalla">
+        <div class="flota" style="--dur: 7s; --retraso: -1s">
+          <div class="monitor">
+            <div class="pantalla"><img src="/transalp/pantalla-trailer.webp" alt="" data-trailer loading="lazy" decoding="async" /></div>
+          </div>
+          <div class="cuello"></div>
+          <div class="base"></div>
+        </div>
+      </div>
+
+      <div class="capa-disp capa-laptop" data-disp="laptop">
+        <div class="flota" style="--dur: 6.2s; --retraso: -3s">
+          <div class="laptop-tapa">
+            <div class="pantalla"><img src="/transalp/laptop-facebook.webp" alt="" loading="lazy" decoding="async" /></div>
+          </div>
+          <div class="laptop-base"></div>
+        </div>
+      </div>
+
+      <div class="capa-disp capa-tablet" data-disp="tablet">
+        <div class="flota" style="--dur: 5.6s; --retraso: -2s">
+          <div class="tablet">
+            <div class="pantalla">
+              {posts.map((p) => <img src={`/transalp/post-${p}.webp`} alt="" data-post={p} loading="lazy" decoding="async" />)}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="capa-disp capa-movil" data-disp="movil">
+        <div class="flota" style="--dur: 6.6s; --retraso: -4s">
+          <div class="movil">
+            <div class="pantalla"><img src="/transalp/movil-instagram.webp" alt="" loading="lazy" decoding="async" /></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="leyenda">
+      <div class="leyenda-pasos">
+        {pasos.map((p, i) => <p class="etiqueta paso" data-paso={i}><span>{String(i + 1).padStart(2, '0')}</span> {p}</p>)}
+      </div>
+      <div class="progreso"><span data-progreso></span></div>
+    </div>
+  </div>
+</section>
+<!-- En móvil la escena fija no tiene sitio para los botones: van aquí, justo debajo de la animación -->
+<div class="contenedor acciones-movil">
+  <a class="pildora pildora--llena" href="/integrated-campaign-communication.html">Read the case study →</a>
+  <a class="pildora" href="https://www.youtube.com/watch?v=USL3U4n7VhQ" rel="noopener">Trailer ↗</a>
+  <a class="pildora" href="#mas-design" data-siguiente>Next project ↓</a>
+</div>
+
+<script>
+  import { gsap } from 'gsap'
+  import { ScrollTrigger } from 'gsap/ScrollTrigger'
+  gsap.registerPlugin(ScrollTrigger)
+
+  const raiz = document.querySelector<HTMLElement>('[data-transalp]')!
+  const disp = (id: string) => raiz.querySelector<HTMLElement>(`[data-disp="${id}"]`)!
+  const post = (id: string) => raiz.querySelector<HTMLElement>(`[data-post="${id}"]`)!
+  const pasos = raiz.querySelectorAll('[data-paso]')
+  const todos = raiz.querySelectorAll<HTMLElement>('[data-disp]')
+
+  const mm = gsap.matchMedia()
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    raiz.classList.add('transalp--animado')
+    gsap.set(pasos, { autoAlpha: 0, y: 10 }); gsap.set(pasos[0], { autoAlpha: 1, y: 0 })
+    gsap.set(raiz.querySelectorAll('[data-post]'), { autoAlpha: 0, yPercent: 8 })
+    gsap.set(post('bruneck'), { autoAlpha: 1, yPercent: 0 })
+
+    // Al llegar: los dispositivos están "abiertos" en el espacio, girados y separados; el scroll los junta
+    gsap.set(disp('pantalla'), { yPercent: -6, scale: 0.94, rotateX: 8 })
+    gsap.set(disp('laptop'), { xPercent: 14, yPercent: 10, rotateY: -22, rotateZ: 2 })
+    gsap.set(disp('tablet'), { xPercent: -18, yPercent: -8, rotateY: 24, rotateZ: -4 })
+    gsap.set(disp('movil'), { xPercent: -30, yPercent: 18, rotateY: 28, rotateZ: -8 })
+
+    const tl = gsap.timeline({
+      defaults: { ease: 'power2.inOut', duration: 0.6 },
+      scrollTrigger: { trigger: raiz, start: 'top top', end: 'bottom bottom', scrub: 0.8 },
+    })
+    // Foco, como una cámara: el protagonista se acerca y se ve nítido; el resto se aleja, gris y desenfocado (pero sólido)
+    gsap.set(todos, { filter: 'grayscale(0) blur(0px)' })
+    const foco = (ids: string[], t: number) => {
+      todos.forEach((d) => {
+        const activo = ids.includes(d.dataset.disp!)
+        tl.to(d, { scale: activo ? 1.06 : 0.96, filter: activo ? 'grayscale(0) blur(0px)' : 'grayscale(1) blur(1.5px)', duration: 0.5 }, t)
+      })
+    }
+    const paso = (i: number, t: number) => {
+      tl.to(pasos[i - 1], { autoAlpha: 0, y: -10, duration: 0.2 }, t)
+        .to(pasos[i], { autoAlpha: 1, y: 0, duration: 0.2 }, t + 0.15)
+    }
+    const cambiarPost = (de: string, a: string, t: number) => {
+      tl.to(post(de), { autoAlpha: 0, yPercent: -8, duration: 0.3 }, t)
+        .to(post(a), { autoAlpha: 1, yPercent: 0, duration: 0.3 }, t + 0.1)
+    }
+
+    // 0 → 1: todo gravita hasta la composición
+    tl.to(todos, { xPercent: 0, yPercent: 0, rotateX: 0, rotateY: 0, rotateZ: 0, scale: 1, duration: 1, stagger: 0.08, ease: 'power3.out' }, 0)
+    // 01 Tráiler: la pantalla grande al frente; la imagen se acerca despacio (como una cámara)
+    foco(['pantalla'], 1.1)
+    tl.fromTo(raiz.querySelector('[data-trailer]'), { scale: 1.14, xPercent: 3 }, { scale: 1, xPercent: 0, duration: 1.6, ease: 'none' }, 1.1)
+    // 02 Campaña social: móvil y tablet al frente; los posts van pasando en la tablet
+    paso(1, 2.3); foco(['movil', 'tablet'], 2.3)
+    cambiarPost('bruneck', 'regla', 2.8)
+    cambiarPost('regla', 'fecha', 3.2)
+    cambiarPost('fecha', 'ciclista', 3.6)
+    // 03 Ruta: la tablet sola, con el mapa de la ruta
+    paso(2, 4.1); foco(['tablet'], 4.1)
+    cambiarPost('ciclista', 'ruta', 4.2)
+    // 04 Comunidad y páginas del evento: el portátil
+    paso(3, 5.0); foco(['laptop'], 5.0)
+    // Final: todos juntos otra vez
+    foco(['pantalla', 'laptop', 'tablet', 'movil'], 5.9)
+    tl.to(todos, { scale: 1, duration: 0.5 }, 5.9)
+    tl.fromTo(raiz.querySelector('[data-progreso]'), { scaleX: 0 }, { scaleX: 1, duration: 6.4, ease: 'none' }, 0)
+    return () => raiz.classList.remove('transalp--animado')
+  })
+</script>
+
+<style>
+  .escena {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    grid-template-areas: 'texto escenario' 'leyenda escenario';
+    align-items: center;
+    column-gap: var(--espacio-7);
+    padding-block: var(--espacio-7);
+  }
+  .transalp--animado { height: calc(460svh - var(--alto-cabecera)); }
+  .transalp--animado .escena {
+    position: sticky; top: calc(var(--alto-cabecera) + var(--alto-barra-trabajos));
+    height: calc(100svh - var(--alto-cabecera) - var(--alto-barra-trabajos));
+    align-content: center; padding-block: var(--espacio-5);
+  }
+
+  .texto { grid-area: texto; display: flex; flex-direction: column; gap: var(--espacio-4); }
+  .titulo { font-size: var(--titulo-2); font-weight: var(--peso-fino); letter-spacing: var(--tracking-titulo); line-height: 1.02; }
+  .texto-suave { margin: 0; color: var(--color-texto-suave); font-size: var(--texto-s); }
+  .ficha { margin: var(--espacio-2) 0 0; display: flex; flex-direction: column; border-top: var(--linea-fina) solid var(--color-linea); }
+  .ficha div { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: var(--espacio-3); padding-block: var(--espacio-2); border-bottom: var(--linea-fina) solid var(--color-linea); font-size: var(--texto-s); }
+  .ficha dt { font-family: var(--fuente-mono); font-size: var(--texto-xs); color: var(--color-texto-suave); }
+  .ficha dd { margin: 0; }
+  .acciones { display: flex; flex-wrap: wrap; gap: var(--espacio-2); padding-top: var(--espacio-2); }
+  .acciones .pildora, .acciones-movil .pildora { padding-inline: 1.25rem; }
+  .acciones-movil { display: none; flex-wrap: wrap; gap: var(--espacio-2); padding-block: var(--espacio-5) var(--espacio-2); }
+
+  /* ---------- El escaparate ---------- */
+  .escenario {
+    grid-area: escenario; position: relative; width: 100%; max-height: 72svh; aspect-ratio: 1.3; justify-self: center;
+    perspective: 1800px; container-type: inline-size;
+    --marco: #0b0a09;
+    --aluminio: linear-gradient(180deg, #e9e8e6, #b9b7b3 60%, #d6d4d0);
+  }
+  .capa-disp { position: absolute; transform-style: preserve-3d; will-change: transform; }
+  /* cada dispositivo "respira": sube y baja despacio, a su ritmo, y su sombra crece y mengua con él */
+  .flota { position: relative; animation: flotar var(--dur) ease-in-out var(--retraso) infinite; }
+  .flota::after {
+    content: ''; position: absolute; left: 12%; right: 12%; bottom: -7%; height: 7%; z-index: -1; border-radius: 50%;
+    background: radial-gradient(closest-side, rgb(0 0 0 / 0.32), transparent); filter: blur(6px);
+    animation: sombra var(--dur) ease-in-out var(--retraso) infinite;
+  }
+  @keyframes flotar { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-1.1cqw); } }
+  @keyframes sombra { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(0.88); opacity: 0.7; } }
+
+  .pantalla { position: relative; width: 100%; height: 100%; overflow: hidden; background: #111; }
+  .pantalla img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+  /* Pantalla grande (tipo Studio Display): marco fino, cuello y base de aluminio */
+  .capa-pantalla { left: 17%; top: 0; width: 66%; z-index: 1; }
+  .monitor { aspect-ratio: 16 / 10; padding: 1.1%; border-radius: 1.4cqw; background: var(--marco); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.08); }
+  .monitor .pantalla { border-radius: 0.6cqw; }
+  .cuello { width: 16%; height: 7cqw; margin: -0.2cqw auto 0; background: var(--aluminio); clip-path: polygon(8% 0, 92% 0, 100% 100%, 0 100%); }
+  .base { width: 30%; height: 1.1cqw; margin: 0 auto; border-radius: 0 0 0.8cqw 0.8cqw; background: var(--aluminio); }
+
+  /* Portátil */
+  .capa-laptop { right: 0; top: 40%; width: 50%; z-index: 3; }
+  .laptop-tapa { width: 86%; margin: 0 auto; aspect-ratio: 16 / 10; padding: 1.8% 1.8% 2.4%; border-radius: 1.2cqw 1.2cqw 0.2cqw 0.2cqw; background: var(--marco); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.08); }
+  .laptop-tapa .pantalla { border-radius: 0.3cqw; }
+  .laptop-base { height: 1.6cqw; border-radius: 0.2cqw 0.2cqw 1.4cqw 1.4cqw; background: var(--aluminio); position: relative; }
+  .laptop-base::before { content: ''; position: absolute; left: 42%; right: 42%; top: 0; height: 30%; border-radius: 0 0 0.6cqw 0.6cqw; background: rgb(0 0 0 / 0.18); }
+
+  /* Tablet */
+  .capa-tablet { left: 7%; top: 30%; width: 25%; z-index: 2; }
+  .tablet { aspect-ratio: 3 / 4; padding: 5%; border-radius: 2.2cqw; background: var(--marco); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.1); }
+  .tablet .pantalla { border-radius: 1cqw; }
+
+  /* Móvil */
+  .capa-movil { left: 0; top: 50%; width: 12.5%; z-index: 4; }
+  .movil { aspect-ratio: 172 / 376; padding: 5%; border-radius: 2.3cqw; background: var(--marco); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12); }
+  .movil .pantalla { border-radius: 1.7cqw; background: #fff; }
+
+  /* Sin animación: solo el primer post en la tablet */
+  .transalp:not(.transalp--animado) [data-post]:not(:first-child) { display: none; }
+
+  /* ---------- Leyenda ---------- */
+  .leyenda { grid-area: leyenda; align-self: end; display: flex; flex-direction: column; gap: var(--espacio-3); padding-top: var(--espacio-5); }
+  .leyenda-pasos { display: grid; }
+  .paso { grid-area: 1 / 1; margin: 0; }
+  .paso span { color: var(--color-acento); }
+  .transalp:not(.transalp--animado) .paso:not(:first-child) { display: none; }
+  .progreso { height: 2px; border-radius: 2px; background: var(--color-linea); overflow: hidden; max-width: 22rem; }
+  .progreso span { display: block; height: 100%; background: var(--color-acento); transform-origin: left; transform: scaleX(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .flota, .flota::after { animation: none; }
+  }
+  @media (max-width: 900px) {
+    .escena { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'texto' 'escenario' 'leyenda'; row-gap: var(--espacio-5); }
+    .transalp--animado .escena { align-content: start; overflow: hidden; }
+    .transalp--animado .texto .entradilla, .transalp--animado .texto-suave, .transalp--animado .ficha,
+    .transalp--animado .acciones { display: none; }
+    .transalp--animado + .acciones-movil { display: flex; }
+    .escenario { aspect-ratio: 1.02; max-height: 50svh; margin-top: var(--espacio-4); }
+  }
+</style>

@@ -10,7 +10,8 @@
     "publicar": "astro build && rsync -a --delete --stats dist/ danies:~/whoami/sites/portfolio/ | grep -E \"files transferred|Total file size\"",
     "fotogramas": "node scripts/fotogramas-balon.mjs",
     "capturas-yaku": "node scripts/capturas-yaku.mjs",
-    "balones": "node scripts/balones-licencias.mjs"
+    "balones": "node scripts/balones-licencias.mjs",
+    "transalp": "node scripts/pantallas-transalp.mjs"
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.3.0",
