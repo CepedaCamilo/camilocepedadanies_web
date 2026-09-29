@@ -17,15 +17,17 @@ export async function getStaticPaths() {
 const { proyecto, siguiente } = Astro.props
 const p = proyecto.data
 const { Content } = await render(proyecto)
+// "Título — subtítulo": el subtítulo va en su propia línea (así el título nunca se corta a mitad de frase)
+const [titulo, subtitulo] = p.titulo.split(' — ')
 ---
 
 <Base titulo={p.titulo} descripcion={p.resumen}>
   <article class="contenedor proyecto">
-    <a class="etiqueta volver" href={p.tipo === 'software' ? '/#building' : '/#work'}>← All projects</a>
+    <a class="etiqueta volver" href={p.tipo === 'software' ? '/#software' : '/#design'}>← All projects</a>
 
     <header class="cabecera-proyecto">
       <p class="etiqueta">{p.categoria}{p.año && ` · ${p.año}`}</p>
-      <h1>{p.titulo}</h1>
+      <h1>{titulo}{subtitulo && <span class="subtitulo">{subtitulo}</span>}</h1>
       <p class="entradilla">{p.resumen}</p>
       <div class="meta">
         {p.cliente && <p class="etiqueta">Client · {p.cliente}</p>}
@@ -48,7 +50,7 @@ const { Content } = await render(proyecto)
 
     <a class="siguiente" href={`/${siguiente.id}.html`}>
       <span class="etiqueta">Next project →</span>
-      <span class="siguiente-titulo">{siguiente.data.titulo}</span>
+      <span class="siguiente-titulo">{siguiente.data.titulo.split(' — ')[0]}</span>
     </a>
   </article>
 </Base>
@@ -57,6 +59,7 @@ const { Content } = await render(proyecto)
   .proyecto { display: flex; flex-direction: column; gap: var(--espacio-7); padding-block: var(--espacio-6) var(--espacio-8); }
   .volver { text-decoration: none; }
   .cabecera-proyecto { display: flex; flex-direction: column; align-items: flex-start; gap: var(--espacio-5); max-width: 56rem; }
+  .subtitulo { display: block; color: var(--color-texto-suave); }
   .meta { display: flex; flex-direction: column; gap: var(--espacio-3); }
   .portada { width: 100%; border-radius: var(--radio-l); }
   .siguiente {

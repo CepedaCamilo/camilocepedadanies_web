@@ -5,7 +5,7 @@ categoria: AI direction
 resumen: AI-supported cinematic production directed through narrative planning, prompt engineering, scene continuity and human editorial sequencing — transforming generated imagery into structured visual storytelling systems.
 disciplinas: [Prompt Direction, Scene Sequencing, AI Narrative Development, Human Visual Supervision]
 portada: ./storytelling-production/portada.jpg
-orden: 40
+orden: 60
 ---
 
 <video controls playsinline preload="none" poster="/videos/ai-storytelling-poster.jpg">

@@ -6,7 +6,7 @@ cliente: Bike & Tour Transalp
 resumen: Multi-platform visual campaigns combining trailer production, social media assets, promotional storytelling and event communication for cohesive audience engagement.
 disciplinas: [Social Media Systems, Motion Campaigns, Paid Ad Visuals, Event Promotion]
 portada: ./integrated-campaign-communication/portada.jpg
-orden: 30
+orden: 50
 ---
 
 ![Bike Transalp promotional rollout](./integrated-campaign-communication/rollout.jpg)

@@ -8,12 +8,22 @@ resumen: QR ordering for a Peruvian–Mexican restaurant in Hamburg — a photo-
 disciplinas: [Product Design, UI Design, React, Supabase Realtime, Postgres RLS, DSGVO]
 enlace: https://yaku.danies.trade/?mesa=demo
 textoEnlace: Try the live demo
-orden: 100
+orden: 10
 ---
 
 ## The brief
 
 Yaku already had a strong brand and a great kitchen. Years ago I designed a *Mobile Ordering Prototype* for them — but it was only visuals. This time the goal was a **working product** the owners can test with real guests, without changing the way they get paid: guests order from the table, and pay the waiter as usual.
+
+## Where it started
+
+![The original Mobile Ordering Prototype — visuals only](./app-yaku/prototipo-2020.jpg)
+*Before the app: the original Mobile Ordering Prototype — still only visuals.*
+
+![Yaku's responsive website](./app-yaku/web-yaku.jpg)
+*The restaurant's responsive website — part of the brand experience I designed for Yaku.*
+
+[Explore Yaku's website ↗](https://www.yaku-restaurante.de)
 
 ## What I built
 

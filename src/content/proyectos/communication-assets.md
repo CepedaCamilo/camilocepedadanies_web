@@ -6,6 +6,7 @@ cliente: Fidelman & Co.
 resumen: Complete brand identity systems — translating strategic positioning into coherent print, packaging and premium communication assets.
 disciplinas: [Brand Strategy, Product Application, Material Expression, Business Stationery, Logo Design, Visual Identity System]
 portada: ./communication-assets/portada.jpg
+oculto: true # el portfolio muestra solo 3 casos de Software + 3 de Design
 orden: 50
 ---
 

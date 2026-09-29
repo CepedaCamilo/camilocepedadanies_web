@@ -6,7 +6,7 @@ cliente: Trade Con GmbH
 resumen: Commercial product collections, licensed sports merchandise and retail packaging systems developed for large-scale European distribution — combining product graphics, structural packaging and print-ready manufacturing assets.
 disciplinas: [Licensed Product Design, Retail Packaging, Print Production, Sports Merchandise]
 portada: ./product-design/portada.jpg
-orden: 20
+orden: 40
 ---
 
 <img src="/3d/balon/007.webp" alt="UEFA Champions League football UCL_2025008, rendered in Cinema 4D" width="900" height="900" loading="lazy">

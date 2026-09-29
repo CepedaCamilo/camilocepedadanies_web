@@ -12,7 +12,8 @@
     "capturas-yaku": "node scripts/capturas-yaku.mjs",
     "balones": "node scripts/balones-licencias.mjs",
     "transalp": "node scripts/pantallas-transalp.mjs",
-    "bridge": "node scripts/fotogramas-bridge.mjs"
+    "bridge": "node scripts/fotogramas-bridge.mjs",
+    "capturas-demos": "node scripts/capturas-demos.mjs"
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.3.0",

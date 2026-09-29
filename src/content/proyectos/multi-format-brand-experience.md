@@ -8,6 +8,7 @@ disciplinas: [UI / UX Prototype, Webflow, Digital Brand Assets, Concept Artwork]
 portada: ./multi-format-brand-experience/portada.jpg
 enlace: https://www.yaku-restaurante.de
 textoEnlace: Explore Yaku's website
+oculto: true # el portfolio muestra solo 3 casos de Software + 3 de Design
 orden: 10
 ---
 
