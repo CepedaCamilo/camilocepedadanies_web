@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content'
 import { Image } from 'astro:assets'
 import Base from '../layouts/Base.astro'
-import TarjetaProyecto from '../components/TarjetaProyecto.astro'
+import Trabajos from '../components/Trabajos.astro'
 import Hero from '../components/Hero.astro'
 import Cine from '../components/Cine.astro'
 import { sitio } from '../sitio'
@@ -49,32 +49,7 @@ const preguntas = [
   <Cine />
 
   <!-- DISEÑO -->
-  <section id="work" class="seccion contenedor">
-    <header class="cabecera-seccion">
-      <p class="etiqueta">01 · Selected design work</p>
-      <h2>Brands, products and campaigns.</h2>
-    </header>
-    <div class="rejilla">
-      {diseño.map((p) => <TarjetaProyecto proyecto={p} />)}
-    </div>
-  </section>
-
-  <!-- SOFTWARE -->
-  <section id="building" class="seccion seccion--software">
-    <div class="contenedor">
-      <header class="cabecera-seccion">
-        <p class="etiqueta">02 · Now building</p>
-        <h2>From designer to software builder.</h2>
-        <p class="entradilla">
-          Since 2026 I design and build my own web apps and run them on my own server in Nürnberg:
-          sign-in, files, realtime chat and an admin panel. Every project below is live.
-        </p>
-      </header>
-      <div class="rejilla">
-        {software.map((p) => <TarjetaProyecto proyecto={p} />)}
-      </div>
-    </div>
-  </section>
+  <Trabajos diseño={diseño} software={software} />
 
   <!-- SOBRE MÍ -->
   <section id="about" class="seccion contenedor sobre-mi">
@@ -115,8 +90,6 @@ const preguntas = [
 <style>
   /* SECCIONES */
   .cabecera-seccion { display: flex; flex-direction: column; gap: var(--espacio-4); margin-bottom: var(--espacio-7); }
-  .seccion--software { background: var(--color-superficie); border-radius: var(--radio-l); }
-  @media (min-width: 1300px) { .seccion--software { margin-inline: var(--margen-lateral); } }
 
   /* SOBRE MÍ */
   .sobre-mi { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--espacio-7); }

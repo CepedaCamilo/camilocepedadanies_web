@@ -1,0 +1,99 @@
+---
+// "Selected work" con un interruptor Software | Design (como el de Light/Dark).
+// Empieza en Software: primero el caso Yaku en movimiento, luego el resto de apps.
+// Enlaces: /#software y /#design abren la sección con ese panel ya elegido.
+import TarjetaProyecto from './TarjetaProyecto.astro'
+import YakuEscaparate from './YakuEscaparate.astro'
+import type { CollectionEntry } from 'astro:content'
+
+interface Props {
+  diseño: CollectionEntry<'proyectos'>[]
+  software: CollectionEntry<'proyectos'>[]
+}
+const { diseño, software } = Astro.props
+const otrasApps = software.filter((p) => p.id !== 'app-yaku') // Yaku va arriba, en grande
+---
+
+<section id="work" class="trabajos" data-trabajos>
+  <span id="software" class="ancla"></span><span id="design" class="ancla"></span>
+  <header class="cabecera-trabajos contenedor">
+    <div>
+      <p class="etiqueta">Selected work</p>
+      <h2 class="titulo-panel" data-titulo-software>Software I design and build.</h2>
+      <h2 class="titulo-panel" data-titulo-design hidden>Brands, products and campaigns.</h2>
+    </div>
+    <div class="interruptor" role="tablist" aria-label="Work type">
+      <button type="button" role="tab" id="pestana-software" aria-controls="panel-software" aria-selected="true" data-panel="software">Software</button>
+      <button type="button" role="tab" id="pestana-design" aria-controls="panel-design" aria-selected="false" data-panel="design">Design</button>
+    </div>
+  </header>
+
+  <div id="panel-software" role="tabpanel" aria-labelledby="pestana-software" data-panel-contenido="software">
+    <YakuEscaparate />
+    <div class="contenedor mas-apps">
+      <p class="etiqueta">More apps · all live on my own server</p>
+      <div class="rejilla">
+        {otrasApps.map((p) => <TarjetaProyecto proyecto={p} />)}
+      </div>
+    </div>
+  </div>
+
+  <div id="panel-design" role="tabpanel" aria-labelledby="pestana-design" data-panel-contenido="design" hidden>
+    <div class="contenedor">
+      <div class="rejilla">
+        {diseño.map((p) => <TarjetaProyecto proyecto={p} />)}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+  const raiz = document.querySelector<HTMLElement>('[data-trabajos]')!
+  const botones = raiz.querySelectorAll<HTMLButtonElement>('[data-panel]')
+
+  function mostrar(panel: string) {
+    botones.forEach((b) => b.setAttribute('aria-selected', String(b.dataset.panel === panel)))
+    raiz.querySelectorAll<HTMLElement>('[data-panel-contenido]').forEach((p) => { p.hidden = p.dataset.panelContenido !== panel })
+    raiz.querySelector<HTMLElement>('[data-titulo-software]')!.hidden = panel !== 'software'
+    raiz.querySelector<HTMLElement>('[data-titulo-design]')!.hidden = panel !== 'design'
+    ScrollTrigger.refresh() // las animaciones de scroll recalculan sus posiciones
+  }
+
+  botones.forEach((b) => b.addEventListener('click', () => {
+    mostrar(b.dataset.panel!)
+    history.replaceState(null, '', `#${b.dataset.panel}`)
+  }))
+  // Flechas del teclado entre las dos pestañas
+  raiz.querySelector('[role="tablist"]')!.addEventListener('keydown', (e) => {
+    const k = (e as KeyboardEvent).key
+    if (k !== 'ArrowLeft' && k !== 'ArrowRight') return
+    const siguiente = [...botones].find((b) => b.getAttribute('aria-selected') !== 'true')!
+    siguiente.click(); siguiente.focus()
+  })
+  // /#design o /#software desde otros enlaces
+  const segunEnlace = () => { const h = location.hash.slice(1); if (h === 'design' || h === 'software') mostrar(h) }
+  window.addEventListener('hashchange', segunEnlace)
+  segunEnlace()
+</script>
+
+<style>
+  .trabajos { position: relative; padding-top: var(--espacio-8); }
+  .ancla { position: absolute; top: 0; }
+  .cabecera-trabajos { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: var(--espacio-5); }
+  .cabecera-trabajos > div:first-child { display: flex; flex-direction: column; gap: var(--espacio-3); }
+  .titulo-panel { font-size: var(--titulo-2); }
+
+  /* El interruptor: misma familia que Light/Dark, pero más grande */
+  .interruptor { display: flex; padding: 4px; border-radius: var(--radio-pildora); background: var(--color-superficie); border: var(--linea-fina) solid var(--color-linea); }
+  .interruptor button {
+    min-height: 44px; padding: 0 var(--espacio-5); border: none; border-radius: var(--radio-pildora);
+    background: transparent; color: var(--color-texto-suave); font: var(--peso-medio) var(--texto-m) / 1 var(--fuente-texto); cursor: pointer;
+    transition: background-color 0.25s, color 0.25s;
+  }
+  .interruptor button[aria-selected='true'] { background: var(--color-invertido); color: var(--color-sobre-invertido); }
+
+  .mas-apps { display: flex; flex-direction: column; gap: var(--espacio-5); padding-block: var(--espacio-7) var(--espacio-8); }
+  #panel-design .contenedor { padding-block: var(--espacio-7) var(--espacio-8); }
+</style>

@@ -1,0 +1,276 @@
+---
+// Caso 01 · Yaku: la app EN USO, guiada por el scroll (como el chat del hero).
+// El móvil enseña capturas REALES de yaku.danies.trade (npm run capturas-yaku) y la tablet
+// de cocina recibe el pedido al mismo tiempo: así se entiende el tiempo real en segundos.
+import { Image } from 'astro:assets'
+import cartaLargaOscuro from '../assets/yaku/oscuro-carta-larga.png'
+import cartaLargaClaro from '../assets/yaku/claro-carta-larga.png'
+import platoOscuro from '../assets/yaku/oscuro-plato.png'
+import platoClaro from '../assets/yaku/claro-plato.png'
+import cartaPedidoOscuro from '../assets/yaku/oscuro-carta-pedido.png'
+import cartaPedidoClaro from '../assets/yaku/claro-carta-pedido.png'
+import pedidoOscuro from '../assets/yaku/oscuro-pedido.png'
+import pedidoClaro from '../assets/yaku/claro-pedido.png'
+import recibidoOscuro from '../assets/yaku/oscuro-estado-recibido.png'
+import recibidoClaro from '../assets/yaku/claro-estado-recibido.png'
+import preparandoOscuro from '../assets/yaku/oscuro-estado-preparando.png'
+import preparandoClaro from '../assets/yaku/claro-estado-preparando.png'
+
+// Las pantallas del móvil, en orden. (La carta es una captura larga que se desliza.)
+const pantallas = [
+  { id: 'carta', claro: cartaLargaClaro, oscuro: cartaLargaOscuro, larga: true },
+  { id: 'plato', claro: platoClaro, oscuro: platoOscuro },
+  { id: 'carta-pedido', claro: cartaPedidoClaro, oscuro: cartaPedidoOscuro },
+  { id: 'pedido', claro: pedidoClaro, oscuro: pedidoOscuro },
+  { id: 'recibido', claro: recibidoClaro, oscuro: recibidoOscuro },
+  { id: 'preparando', claro: preparandoClaro, oscuro: preparandoOscuro },
+]
+// Cuánto baja la carta larga para enseñar la rejilla (en % de su propia altura)
+const bajadaCarta = Math.round(((cartaLargaOscuro.height - 1688) / cartaLargaOscuro.height) * 45)
+
+const pasos = [
+  'Scan the table QR · browse the menu',
+  'Open a dish',
+  'Add it to the order',
+  'Send it to the kitchen',
+  'The kitchen gets it — live',
+  'Status updates on the phone',
+]
+---
+
+<section class="yaku" data-yaku aria-label="Case 01 · Yaku">
+  <div class="escena contenedor">
+    <div class="texto">
+      <p class="etiqueta">Case 01 · Design + development · <span class="en-vivo">● Live</span></p>
+      <h3 class="titulo">Yaku — order from the table.</h3>
+      <p class="entradilla">
+        A QR code on every table, a menu that sells with photography and a kitchen screen that updates in
+        real time. For a Peruvian–Mexican restaurant in Hamburg — designed, built and hosted by me.
+      </p>
+      <dl class="ficha">
+        <div><dt>Role</dt><dd>Product design · Front-end · Back-end</dd></div>
+        <div><dt>Stack</dt><dd>React · Supabase Realtime · Postgres RLS</dd></div>
+        <div><dt>Scope</dt><dd>Guest app · Kitchen screen · QR system</dd></div>
+      </dl>
+      <div class="acciones">
+        <a class="pildora pildora--llena" href="/app-yaku.html">Read the case study →</a>
+        <a class="pildora" href="https://yaku.danies.trade/?mesa=demo" rel="noopener">Try it live ↗</a>
+      </div>
+    </div>
+
+    <div class="dispositivos" aria-hidden="true">
+      <!-- Tablet de cocina (HTML, como la pantalla real de /cocina) -->
+      <div class="tablet">
+        <div class="cocina">
+          <div class="cocina-barra"><span class="cocina-logo">Y</span><span>Bestellungen</span><span class="cocina-live">● Live</span></div>
+          <div class="cocina-columnas">
+            <div class="cocina-col"><p>Neu</p></div>
+            <div class="cocina-col"><p>In Zubereitung</p></div>
+            <div class="cocina-col"><p>Serviert</p></div>
+            <article class="ticket" data-ticket>
+              <div class="ticket-cab"><span>Tisch 99</span><span>0 min</span></div>
+              <p class="ticket-plato"><b>1×</b> Mar Nikkei</p>
+              <span class="ticket-boton" data-ticket-boton><span class="b-starten">Starten →</span><span class="b-serviert">Serviert →</span></span>
+            </article>
+          </div>
+        </div>
+      </div>
+
+      <!-- Móvil con la app real -->
+      <div class="telefono">
+        <div class="pantalla-app">
+          {pantallas.map((p, i) => (
+            <div class={`capa${p.larga ? ' capa--larga' : ''}`} data-pantalla={p.id} style={i === 0 ? '' : 'visibility:hidden'}>
+              <Image src={p.claro} alt="" class="solo-claro" widths={[390, 780]} sizes="(max-width: 900px) 70vw, 300px" loading={i === 0 ? 'eager' : 'lazy'} />
+              <Image src={p.oscuro} alt="" class="solo-oscuro" widths={[390, 780]} sizes="(max-width: 900px) 70vw, 300px" loading={i === 0 ? 'eager' : 'lazy'} />
+            </div>
+          ))}
+          <span class="toque" data-toque></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="leyenda">
+      <div class="leyenda-pasos">
+        {pasos.map((p, i) => <p class="etiqueta paso" data-paso={i}><span>{String(i + 1).padStart(2, '0')}</span> {p}</p>)}
+      </div>
+      <div class="progreso"><span data-progreso></span></div>
+    </div>
+  </div>
+</section>
+
+<script define:vars={{ bajadaCarta }}>
+  window.__yakuBajada = bajadaCarta
+</script>
+
+<script>
+  import { gsap } from 'gsap'
+  import { ScrollTrigger } from 'gsap/ScrollTrigger'
+  gsap.registerPlugin(ScrollTrigger)
+
+  const yaku = document.querySelector<HTMLElement>('[data-yaku]')!
+  const capa = (id: string) => yaku.querySelector(`[data-pantalla="${id}"]`)
+  const toque = yaku.querySelector('[data-toque]')
+  const pasos = yaku.querySelectorAll('[data-paso]')
+  const ticket = yaku.querySelector<HTMLElement>('[data-ticket]')!
+
+  const mm = gsap.matchMedia()
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    yaku.classList.add('yaku--animado')
+    gsap.set(yaku.querySelectorAll('[data-pantalla]'), { autoAlpha: 0 })
+    gsap.set(capa('carta'), { autoAlpha: 1 })
+    gsap.set(pasos, { autoAlpha: 0, y: 10 }); gsap.set(pasos[0], { autoAlpha: 1, y: 0 })
+    gsap.set(ticket, { autoAlpha: 0, y: -20, scale: 0.95 })
+    gsap.set(toque, { autoAlpha: 0, scale: 0.4 })
+
+    const tl = gsap.timeline({
+      defaults: { ease: 'power2.inOut', duration: 0.5 },
+      scrollTrigger: { trigger: yaku, start: 'top top', end: 'bottom bottom', scrub: 0.6 },
+    })
+    const paso = (i: number, t: number) => {
+      tl.to(pasos[i - 1], { autoAlpha: 0, y: -10, duration: 0.2 }, t)
+        .to(pasos[i], { autoAlpha: 1, y: 0, duration: 0.2 }, t + 0.15)
+    }
+    // Un "toque" de dedo en un punto de la pantalla (en % de la pantalla)
+    const tocar = (x: number, y: number, t: number) => {
+      tl.set(toque, { left: `${x}%`, top: `${y}%` }, t)
+        .to(toque, { autoAlpha: 1, scale: 1, duration: 0.12, ease: 'power1.out' }, t)
+        .to(toque, { autoAlpha: 0, scale: 1.6, duration: 0.25 }, t + 0.14)
+    }
+    // Cambio de pantalla: la nueva entra deslizándose
+    const entrar = (id: string, t: number, desde: 'abajo' | 'derecha' | 'fundido' = 'fundido') => {
+      if (desde === 'fundido') {
+        tl.to(capa(id), { autoAlpha: 1, duration: 0.4 }, t)
+      } else {
+        // se coloca fuera de la pantalla justo antes y entra deslizándose
+        tl.set(capa(id), { autoAlpha: 1, [desde === 'abajo' ? 'yPercent' : 'xPercent']: 100 }, t)
+          .to(capa(id), { yPercent: 0, xPercent: 0, duration: 0.45 }, t)
+      }
+    }
+    const salir = (id: string, t: number) => tl.to(capa(id), { autoAlpha: 0, duration: 0.01 }, t)
+
+    // 01 · la carta baja para enseñar los platos y vuelve arriba
+    const imagenesCarta = capa('carta')!.querySelectorAll('img')
+    tl.to(imagenesCarta, { yPercent: -(window as any).__yakuBajada, duration: 0.9 }, 0)
+      .to(imagenesCarta, { yPercent: 0, duration: 0.6 }, 1.0)
+    // 02 · toque en Mar Nikkei → se abre el plato desde abajo
+    paso(1, 1.6); tocar(26, 73, 1.7); entrar('plato', 1.85, 'abajo'); salir('carta', 2.3)
+    // 03 · toque en "Add" → vuelve a la carta con la barra de pedido
+    paso(2, 2.7); tocar(66, 94, 2.8); entrar('carta-pedido', 2.95); salir('plato', 3.4)
+    // 04 · toque en la barra → pantalla del pedido → toque en "Place order"
+    paso(3, 3.7); tocar(50, 94.5, 3.8); entrar('pedido', 3.95, 'derecha'); salir('carta-pedido', 4.4)
+    tocar(50, 75.6, 4.7); entrar('recibido', 4.85); salir('pedido', 5.3)
+    // 05 · en ese mismo momento, el ticket aparece en la cocina
+    paso(4, 4.9)
+    tl.to(ticket, { autoAlpha: 1, y: 0, scale: 1, duration: 0.35, ease: 'back.out(1.6)' }, 4.95)
+      .fromTo(ticket, { boxShadow: '0 0 0 0 rgb(242 179 61 / 0)' }, { boxShadow: '0 0 0 6px rgb(242 179 61 / 0.9)', duration: 0.2, yoyo: true, repeat: 1 }, 5.3)
+    // 06 · la cocina pulsa "Starten" → el ticket pasa de columna y el móvil cambia de estado
+    paso(5, 5.9)
+    tl.to(yaku.querySelector('[data-ticket-boton]'), { scale: 0.9, duration: 0.1, yoyo: true, repeat: 1 }, 6.0)
+      .call(() => ticket.classList.remove('ticket--preparando'), [], 6.19)
+      .to(ticket, { x: () => ticket.offsetWidth + 10, duration: 0.5 }, 6.2)
+      .call(() => ticket.classList.add('ticket--preparando'), [], 6.21)
+      .to(capa('preparando'), { autoAlpha: 1, duration: 0.4 }, 6.4)
+    tl.to({}, { duration: 0.7 })
+    tl.fromTo(yaku.querySelector('[data-progreso]'), { scaleX: 0 }, { scaleX: 1, ease: 'none', duration: tl.duration() }, 0)
+
+    return () => yaku.classList.remove('yaku--animado')
+  })
+</script>
+
+<style>
+  .escena {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    grid-template-areas: 'texto dispositivos' 'leyenda dispositivos';
+    align-items: center;
+    column-gap: var(--espacio-7);
+    padding-block: var(--espacio-7);
+  }
+  .yaku--animado { height: calc(460svh - var(--alto-cabecera)); }
+  .yaku--animado .escena {
+    position: sticky; top: var(--alto-cabecera); height: calc(100svh - var(--alto-cabecera));
+    align-content: center; padding-block: var(--espacio-5);
+  }
+
+  .texto { grid-area: texto; display: flex; flex-direction: column; gap: var(--espacio-4); }
+  .en-vivo { color: var(--color-acento); }
+  .titulo { font-size: var(--titulo-2); font-weight: var(--peso-fino); letter-spacing: var(--tracking-titulo); line-height: 1.02; }
+  .ficha { margin: var(--espacio-2) 0 0; display: flex; flex-direction: column; border-top: var(--linea-fina) solid var(--color-linea); }
+  .ficha div { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: var(--espacio-3); padding-block: var(--espacio-2); border-bottom: var(--linea-fina) solid var(--color-linea); font-size: var(--texto-s); }
+  .ficha dt { font-family: var(--fuente-mono); font-size: var(--texto-xs); color: var(--color-texto-suave); }
+  .ficha dd { margin: 0; }
+  .acciones { display: flex; flex-wrap: wrap; gap: var(--espacio-3); padding-top: var(--espacio-2); }
+
+  /* ---------- Dispositivos ---------- */
+  .dispositivos { grid-area: dispositivos; position: relative; aspect-ratio: 1.15; width: 100%; max-height: 74svh; justify-self: center; }
+  .telefono {
+    position: absolute; right: 0; bottom: 0; width: 36%; aspect-ratio: 390 / 844; z-index: 2;
+    padding: 2.2%; border-radius: 13% / 6%; background: #0b0a09;
+    box-shadow: 0 40px 70px -30px rgb(0 0 0 / 0.55), inset 0 0 0 1px rgb(255 255 255 / 0.08);
+  }
+  .pantalla-app { position: relative; width: 100%; height: 100%; border-radius: 11% / 5%; overflow: hidden; background: #121110; }
+  .capa { position: absolute; inset: 0; overflow: hidden; }
+  .capa :global(img) { width: 100%; height: auto; display: block; }
+  .capa:not(.capa--larga) :global(img) { height: 100%; object-fit: cover; object-position: top; }
+  .toque {
+    position: absolute; width: 16%; aspect-ratio: 1; margin: -8% 0 0 -8%; border-radius: 50%; z-index: 3; pointer-events: none;
+    background: rgb(255 255 255 / 0.35); border: 2px solid rgb(255 255 255 / 0.9); box-shadow: 0 0 0 6px rgb(0 0 0 / 0.12);
+  }
+
+  .tablet {
+    position: absolute; left: 0; top: 4%; width: 82%; aspect-ratio: 4 / 3; padding: 1.6%;
+    border-radius: 4.5%; background: #0b0a09; box-shadow: 0 40px 80px -40px rgb(0 0 0 / 0.5), inset 0 0 0 1px rgb(255 255 255 / 0.08);
+  }
+  .cocina { width: 100%; height: 100%; border-radius: 3.2%; overflow: hidden; background: #121110; color: #f2eee6; container-type: inline-size; display: flex; flex-direction: column; }
+  .cocina-barra { display: flex; align-items: center; gap: 4cqw; padding: 3cqw 4cqw; border-bottom: 1px solid #262320; font-size: 2.6cqw; }
+  .cocina-logo { font-family: Georgia, serif; font-size: 4cqw; line-height: 1; }
+  .cocina-live { margin-left: auto; color: #8fe0a8; }
+  .cocina-columnas { position: relative; flex-grow: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2cqw; padding: 3cqw 4cqw; }
+  .cocina-col p { margin: 0; font-size: 3cqw; text-transform: uppercase; letter-spacing: 0.04em; }
+  .ticket {
+    position: absolute; top: 10cqw; left: 4cqw; width: calc((100% - 8cqw - 4cqw) / 3);
+    display: flex; flex-direction: column; gap: 1.6cqw; padding: 2.4cqw; border-radius: 2cqw;
+    background: #f2eee6; color: #121110; font-size: 2.4cqw;
+  }
+  .ticket-cab { display: flex; justify-content: space-between; align-items: baseline; }
+  .ticket-cab span:first-child { font-size: 3.4cqw; text-transform: uppercase; }
+  .ticket-cab span:last-child { color: #6b645b; }
+  .ticket-plato { margin: 0; font-size: 2.6cqw; }
+  .ticket-boton { padding: 1.6cqw; border-radius: 1.4cqw; background: #f2b33d; text-align: center; font-weight: 600; }
+  .b-serviert, .ticket--preparando .b-starten { display: none; }
+  .ticket--preparando .b-serviert { display: inline; }
+  .ticket--preparando .ticket-boton { background: #121110; color: #f2eee6; }
+
+  /* Capturas claras u oscuras según el modo de la web (y oscuras en "modo cine") */
+  .solo-oscuro { display: none !important; }
+  :global(:root[data-theme='dark']) .solo-oscuro, :global(:root.cine) .solo-oscuro { display: block !important; }
+  :global(:root[data-theme='dark']) .solo-claro, :global(:root.cine) .solo-claro { display: none !important; }
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .solo-oscuro { display: block !important; }
+    :global(:root:not([data-theme='light'])) .solo-claro { display: none !important; }
+  }
+
+  /* ---------- Leyenda ---------- */
+  .leyenda { grid-area: leyenda; align-self: end; display: flex; flex-direction: column; gap: var(--espacio-3); padding-top: var(--espacio-5); }
+  .leyenda-pasos { display: grid; }
+  .paso { grid-area: 1 / 1; margin: 0; }
+  .paso span { color: var(--color-acento); }
+  .yaku:not(.yaku--animado) .paso:not(:first-child) { display: none; }
+  .progreso { height: 2px; border-radius: 2px; background: var(--color-linea); overflow: hidden; max-width: 22rem; }
+  .progreso span { display: block; height: 100%; background: var(--color-acento); transform-origin: left; transform: scaleX(0); }
+
+  /* Sin animación: la tablet ya enseña el ticket en preparación */
+  .yaku:not(.yaku--animado) .ticket { left: calc(4cqw + (100% - 8cqw - 4cqw) / 3 + 2cqw); }
+  .yaku:not(.yaku--animado) .b-starten { display: none; }
+  .yaku:not(.yaku--animado) .b-serviert { display: inline; }
+
+  @media (max-width: 900px) {
+    .escena { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'texto' 'dispositivos' 'leyenda'; row-gap: var(--espacio-5); }
+    .yaku--animado .escena { align-content: start; overflow: hidden; }
+    .yaku--animado .texto .entradilla, .yaku--animado .ficha { display: none; }
+    .dispositivos { max-height: 56svh; aspect-ratio: 1; }
+    .telefono { width: 44%; right: 2%; }
+    .tablet { width: 80%; top: 6%; }
+  }
+</style>
