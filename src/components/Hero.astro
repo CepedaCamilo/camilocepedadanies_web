@@ -176,14 +176,18 @@ const pasos = [
 
   @media (max-width: 900px) {
     .escena { grid-template-columns: minmax(0, 1fr); gap: var(--espacio-5); align-content: start; }
+    /* la sección sube por detrás del header (margen negativo): así la escena ocupa la pantalla entera desde arriba
+       y la altura del header no se cuenta dos veces */
+    .hero--animado { margin-top: calc(-1 * var(--alto-cabecera)); }
     .hero--animado .escena {
       top: 0; height: 100svh; height: 100dvh;
-      padding: calc(var(--alto-cabecera) + var(--espacio-5)) var(--espacio-4) var(--espacio-5); /* la foto empieza debajo del header */
-      align-content: start; transition: padding-top 0.35s ease;
+      padding: calc(var(--alto-cabecera) + var(--espacio-4)) var(--espacio-4) var(--espacio-5);
+      gap: var(--espacio-4); align-content: start;
     }
-    :global(html.cabecera-oculta) .hero--animado .escena { padding-top: var(--espacio-6); }
-    .escenario { order: -1; }
-    .flotar { width: min(70vw, 36svh); }
+    .escenario { order: -1; gap: var(--espacio-4); }
+    /* foto grande, pero su tamaño sale de la altura de la pantalla: lo que sobra después de reservar sitio
+       para el header, el paso y el titular (~26rem). Así foto + titular caben en la primera pantalla de cualquier móvil */
+    .flotar { width: clamp(9rem, calc(100svh - 26rem), 84vw); }
     .hero--animado .texto .entradilla, .hero--animado .acciones { display: none; }
     .hero--animado h1 { font-size: clamp(2rem, 1.4rem + 3vw, 2.75rem); }
   }

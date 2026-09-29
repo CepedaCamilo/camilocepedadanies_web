@@ -183,7 +183,14 @@ p { margin: 0; }
     height: 100dvh !important;
     padding-top: var(--espacio-6) !important;
     padding-bottom: var(--espacio-6) !important;
-    row-gap: var(--espacio-5) !important;
-    align-content: safe center !important; /* centrado en la pantalla (y si no cabe, desde arriba) */
+    row-gap: var(--espacio-6) !important;
+    /* tres franjas: título arriba · animación en el centro (con aire) · paso abajo. Sin huecos grandes */
+    grid-template-rows: auto minmax(0, 1fr) auto !important;
+    align-content: stretch !important;
+    align-items: center !important;
   }
+  /* "Case 01 · …" más separado del título */
+  #work section[class*='--animado'] > .escena > .texto { gap: var(--espacio-5) !important; align-self: start; }
+  /* el paso siempre abajo del todo */
+  #work section[class*='--animado'] > .escena > .leyenda { align-self: end !important; padding-top: 0 !important; }
 }

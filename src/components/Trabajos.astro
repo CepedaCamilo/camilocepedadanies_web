@@ -78,6 +78,12 @@ const { diseño, software } = Astro.props
   // Dónde empieza cada parte (justo debajo de la cabecera + la barra de trabajos)
   const cabecera = document.querySelector<HTMLElement>('.cabecera')!
   const alturaBarras = () => cabecera.offsetHeight + barra.offsetHeight
+
+  // ¿La barra ya está fija bajo el header? Solo entonces puede esconderse con él en el móvil
+  // (si no, al esconderse subía por encima del vídeo de THE BRIDGE)
+  const marcarFija = () => barra.classList.toggle('fija', raiz.getBoundingClientRect().top + barra.offsetTop <= cabecera.offsetHeight + 1)
+  addEventListener('scroll', marcarFija, { passive: true })
+  marcarFija()
   const inicio = (panel: string) =>
     panel === 'design'
       ? panelDesign.getBoundingClientRect().top + scrollY - alturaBarras()
@@ -159,7 +165,7 @@ const { diseño, software } = Astro.props
   /* en el móvil se esconde junto con el header al bajar, y vuelve al subir */
   @media (max-width: 900px) {
     .cabecera-trabajos { transition: transform 0.35s ease, background-color 0.7s ease; }
-    :global(html.cabecera-oculta) .cabecera-trabajos { transform: translateY(calc(-100% - var(--alto-cabecera))); }
+    :global(html.cabecera-oculta) .cabecera-trabajos.fija { transform: translateY(calc(-100% - var(--alto-cabecera))); }
   }
 
   /* El interruptor: misma familia que Light/Dark, pero más grande */
