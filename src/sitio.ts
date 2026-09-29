@@ -1,7 +1,7 @@
 // Datos generales de la web. Si cambias de email o de ciudad, se cambia aquí y en ningún otro sitio.
 export const sitio = {
   nombre: 'Camilo Cepeda Danies',
-  email: 'camilocepedadanies@gmail.com',
+  email: 'hi@camilocepedadanies.com', // se reenvía a Gmail (reenvío de Namecheap)
   ciudad: 'Hamburg',
   // Demo "Secure by default" (/files-live.html): la ventanilla que envía y comprueba los códigos por email.
   // Es la clave PUBLISHABLE (pública, pensada para ir en la web); la secreta nunca sale del servidor.
