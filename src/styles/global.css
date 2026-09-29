@@ -183,14 +183,20 @@ p { margin: 0; }
     height: 100dvh !important;
     padding-top: var(--espacio-6) !important;
     padding-bottom: var(--espacio-6) !important;
-    row-gap: var(--espacio-6) !important;
-    /* tres franjas: título arriba · animación en el centro (con aire) · paso abajo. Sin huecos grandes */
-    grid-template-rows: auto minmax(0, 1fr) auto !important;
+    row-gap: 0 !important;
+    /* "Case 0X" fijo arriba · (espacio) · título + animación + paso juntos en el centro · (espacio) */
+    grid-template-areas: 'kicker' '.' 'titulo' 'anim' 'paso' '.' !important;
+    grid-template-rows: auto minmax(0, 1fr) auto auto auto minmax(0, 1fr) !important;
     align-content: stretch !important;
     align-items: center !important;
   }
-  /* "Case 01 · …" más separado del título */
-  #work section[class*='--animado'] > .escena > .texto { gap: var(--espacio-5) !important; align-self: start; }
-  /* el paso siempre abajo del todo */
-  #work section[class*='--animado'] > .escena > .leyenda { align-self: end !important; padding-top: 0 !important; }
+  /* el bloque de texto se "abre": el kicker y el título se colocan cada uno en su franja */
+  #work section[class*='--animado'] > .escena > .texto { display: contents !important; }
+  #work section[class*='--animado'] > .escena > .texto > .etiqueta:first-child { grid-area: kicker; margin: 0; }
+  #work section[class*='--animado'] > .escena > .texto > .titulo { grid-area: titulo; margin: 0 0 var(--espacio-6); }
+  /* la animación: cualquier hijo de la escena que no sea el texto ni el paso */
+  #work section[class*='--animado'] > .escena > :not(.texto):not(.leyenda) { grid-area: anim; }
+  #work section[class*='--animado'] > .escena > .leyenda { grid-area: paso; align-self: start !important; padding-top: var(--espacio-5) !important; }
+  /* después de los balones (no tienen "paso") el texto sube un poco */
+  #work .licencias--animado + .detalle-movil { padding-top: var(--espacio-4); }
 }
