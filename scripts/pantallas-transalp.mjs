@@ -17,7 +17,7 @@ const guardar = async (entrada, recorte, ancho, nombre) => {
 // Portátil: la página de Facebook (en rollout.jpg la pantalla está de frente y sin nada delante)
 await guardar('rollout.jpg', { left: 1240, top: 569, width: 782, height: 489 }, 1200, 'laptop-facebook.webp')
 // Móvil: el perfil de Instagram
-await guardar('rollout.jpg', { left: 97, top: 742, width: 172, height: 376 }, 336, 'movil-instagram.webp')
+await guardar('rollout.jpg', { left: 91, top: 731, width: 187, height: 392 }, 336, 'movil-instagram.webp')
 // Pantalla grande: el tráiler "Take a ride on the wild side", recortado a 16:10 alrededor del titular
 await guardar('trailer.jpg', { left: 645, top: 0, width: 2024, height: 1265 }, 1600, 'pantalla-trailer.webp')
 // Tablet: 5 publicaciones de la campaña social (social.jpg es una rejilla de 5 × 2, cada una 400 × 532)
