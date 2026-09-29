@@ -1,0 +1,93 @@
+---
+// Impressum en 3 idiomas. La versión alemana (/de/impressum.html) es la que vale legalmente;
+// inglés (/impressum.html) y español (/es/impressum.html) son traducciones de cortesía.
+import { sitio } from '../../sitio'
+import { idiomaDe, enlace } from '../../i18n'
+import AvisoTraduccion from './AvisoTraduccion.astro'
+const idioma = idiomaDe(Astro.url)
+const mailto = `mailto:${sitio.email}`
+const pais = idioma === 'de' ? 'Deutschland' : idioma === 'es' ? 'Alemania' : 'Germany'
+---
+
+<article class="contenedor seccion legal">
+  {idioma === 'de' && (
+    <>
+      <h1>Impressum</h1>
+
+      <h2>Angaben gemäß § 5 DDG</h2>
+      <p>Camilo Cepeda Danies<br />Thadenstraße 22<br />22767 Hamburg<br />{pais}</p>
+
+      <h2>Kontakt</h2>
+      <p>E-Mail: <a href={mailto}>{sitio.email}</a><br />Telefon: +49 177 5898083</p>
+
+      <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
+      <p>Camilo Cepeda Danies, Anschrift wie oben</p>
+
+      <h2>Marken und Rechte Dritter</h2>
+      <p>
+        Gezeigte Marken, Logos und Produktabbildungen dienen ausschließlich der Darstellung eigener Arbeiten
+        im Portfolio. Alle Rechte liegen bei den jeweiligen Inhabern. Die Fußball-Designs (u. a. der Ball im
+        Header dieser Seite) entstanden im Rahmen meiner Tätigkeit bei der Trade Con GmbH; die Rechte an den
+        Designs liegen bei der Trade Con GmbH. UEFA, UEFA Champions League, FIFA, DFB sowie alle zugehörigen
+        Namen, Logos und Marken sind Eigentum der jeweiligen Rechteinhaber.
+      </p>
+    </>
+  )}
+
+  {idioma === 'en' && (
+    <>
+      <p class="etiqueta" lang="de">Impressum</p>
+      <h1>Legal notice</h1>
+      <AvisoTraduccion enlaceAleman={enlace('de', '/impressum.html')} />
+
+      <h2>Information pursuant to § 5 DDG (German Digital Services Act)</h2>
+      <p>Camilo Cepeda Danies<br />Thadenstraße 22<br />22767 Hamburg<br />{pais}</p>
+
+      <h2>Contact</h2>
+      <p>Email: <a href={mailto}>{sitio.email}</a><br />Phone: +49 177 5898083</p>
+
+      <h2>Responsible for the content pursuant to § 18 (2) MStV (German Interstate Media Treaty)</h2>
+      <p>Camilo Cepeda Danies, address as above</p>
+
+      <h2>Trademarks and third-party rights</h2>
+      <p>
+        Trademarks, logos and product images are shown solely to present my own work in this portfolio.
+        All rights remain with their respective owners. The football designs (including the ball in the
+        header of this page) were created as part of my work at Trade Con GmbH; the rights to these designs
+        belong to Trade Con GmbH. UEFA, UEFA Champions League, FIFA, DFB and all related names, logos and
+        trademarks are the property of their respective owners.
+      </p>
+    </>
+  )}
+
+  {idioma === 'es' && (
+    <>
+      <p class="etiqueta" lang="de">Impressum</p>
+      <h1>Aviso legal</h1>
+      <AvisoTraduccion enlaceAleman={enlace('de', '/impressum.html')} />
+
+      <h2>Datos según el § 5 DDG (ley alemana de servicios digitales)</h2>
+      <p>Camilo Cepeda Danies<br />Thadenstraße 22<br />22767 Hamburg<br />{pais}</p>
+
+      <h2>Contacto</h2>
+      <p>Correo electrónico: <a href={mailto}>{sitio.email}</a><br />Teléfono: +49 177 5898083</p>
+
+      <h2>Responsable del contenido según el § 18, apdo. 2 MStV (tratado interestatal alemán de medios)</h2>
+      <p>Camilo Cepeda Danies, dirección indicada arriba</p>
+
+      <h2>Marcas y derechos de terceros</h2>
+      <p>
+        Las marcas, logotipos e imágenes de productos se muestran únicamente para presentar mi propio trabajo
+        en este portfolio. Todos los derechos pertenecen a sus respectivos titulares. Los diseños de balones
+        (entre ellos el balón de la cabecera de esta página) se crearon en el marco de mi trabajo en Trade Con
+        GmbH; los derechos sobre esos diseños pertenecen a Trade Con GmbH. UEFA, UEFA Champions League, FIFA,
+        DFB y todos los nombres, logotipos y marcas relacionados son propiedad de sus respectivos titulares.
+      </p>
+    </>
+  )}
+</article>
+
+<style>
+  .legal { display: flex; flex-direction: column; gap: var(--espacio-4); max-width: 46rem; }
+  .legal h2 { font-size: var(--titulo-3); font-weight: var(--peso-normal); letter-spacing: -0.02em; margin-top: var(--espacio-5); }
+</style>

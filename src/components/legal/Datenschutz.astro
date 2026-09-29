@@ -1,0 +1,264 @@
+---
+// Datenschutzerklärung en 3 idiomas. La versión alemana (/de/datenschutz.html) es la que vale legalmente;
+// inglés (/datenschutz.html) y español (/es/datenschutz.html) son traducciones de cortesía.
+// Si cambias algo aquí, cámbialo en los 3 idiomas (y la fecha "Stand").
+import { sitio } from '../../sitio'
+import { idiomaDe, enlace } from '../../i18n'
+import AvisoTraduccion from './AvisoTraduccion.astro'
+const idioma = idiomaDe(Astro.url)
+const mailto = `mailto:${sitio.email}`
+const APPS = 'https://danies.trade/datenschutz/'
+---
+
+<article class="contenedor seccion legal">
+  {idioma === 'de' && (
+    <>
+      <h1>Datenschutzerklärung</h1>
+      <p class="etiqueta">Stand: September 2026</p>
+
+      <h2>1. Verantwortlicher</h2>
+      <p>Camilo Cepeda Danies<br />Thadenstraße 22, 22767 Hamburg<br />E-Mail: <a href={mailto}>{sitio.email}</a></p>
+
+      <h2>2. Hosting und Server-Logs</h2>
+      <p>
+        Diese Website läuft auf einem eigenen Server bei der Hetzner Online GmbH, Industriestr. 25,
+        91710 Gunzenhausen, Deutschland (Standort Nürnberg). Mit Hetzner besteht ein Vertrag zur
+        Auftragsverarbeitung (Art. 28 DSGVO).
+      </p>
+      <p>
+        Beim Aufruf werden technisch notwendige Daten verarbeitet: IP-Adresse, Datum und Uhrzeit,
+        aufgerufene Adresse und Browser-Kennung. Das dient dem sicheren Betrieb
+        (Art. 6 Abs. 1 lit. f DSGVO). Die Protokolle haben eine feste Größengrenze und werden danach
+        automatisch überschrieben.
+      </p>
+
+      <h2>3. Kontakt per E-Mail</h2>
+      <p>
+        Wenn Sie mir schreiben, verarbeite ich Ihre E-Mail-Adresse und Ihre Nachricht, um Ihre Anfrage zu
+        beantworten (Art. 6 Abs. 1 lit. b bzw. f DSGVO). E-Mails an {sitio.email} werden über den
+        Weiterleitungsdienst meines Domain-Anbieters Namecheap, Inc. (USA) an mein Postfach weitergeleitet. Mein
+        Postfach wird von Google Ireland Limited (Gordon House, Barrow Street, Dublin 4, Irland) betrieben. Nachrichten lösche ich, sobald sie für
+        die Anfrage nicht mehr benötigt werden, soweit keine gesetzlichen Aufbewahrungspflichten bestehen.
+      </p>
+
+      <h2>4. Cookies, Schriften und externe Inhalte</h2>
+      <p>
+        Diese Website setzt keine Cookies und verwendet keine Analyse- oder Tracking-Dienste. Wenn Sie das
+        Farbschema (Light/Dark) wählen, wird diese Einstellung im lokalen Speicher Ihres Browsers abgelegt;
+        das ist für die von Ihnen gewünschte Funktion erforderlich (§ 25 Abs. 2 Nr. 2 TDDDG) und wird
+        nicht an mich übertragen. Schriften und Videos werden von meinem eigenen Server geladen.
+      </p>
+      <p>
+        Einige Links führen zu externen Seiten (z. B. YouTube oder Kundenwebsites). Erst wenn Sie einen
+        solchen Link anklicken, werden Daten an den jeweiligen Anbieter übertragen; dort gelten dessen
+        Datenschutzbestimmungen.
+      </p>
+
+      <h2>5. Meine Web-Apps</h2>
+      <p>
+        Die im Bereich „Software“ gezeigten Apps laufen unter danies.trade. Für sie gilt eine eigene
+        <a href={APPS}>Datenschutzerklärung</a>.
+      </p>
+
+      <h2 id="demo">6. Live-Demos in meinem Portfolio</h2>
+      <p>
+        <strong>Chat-Demo:</strong> Die Demo läuft ausschließlich in Ihrem Browser. Was Sie schreiben, wird
+        nicht übertragen und nicht gespeichert; beim Neuladen der Seite ist alles gelöscht.
+      </p>
+      <p>
+        <strong>Sicherheits-Demo („Secure by default“):</strong> Wenn Sie Ihre E-Mail-Adresse eingeben, sende
+        ich Ihnen einen einmaligen sechsstelligen Code, damit Sie die Anmeldung ausprobieren können. Dafür
+        verarbeite ich Ihre E-Mail-Adresse und – nur zum Schutz vor Missbrauch (z. B. massenhaftem Versand) –
+        Ihre IP-Adresse (Art. 6 Abs. 1 lit. b und f DSGVO). Auf meinem Server werden weder die E-Mail-Adresse
+        noch die IP-Adresse noch der Code im Klartext gespeichert, sondern nur nicht umkehrbare Prüfwerte
+        (HMAC). Diese werden nach 24 Stunden automatisch gelöscht. Es wird kein Konto angelegt.
+      </p>
+      <p>
+        Der Versand erfolgt über Resend, Inc. (USA). Mit Resend besteht ein Vertrag zur Auftragsverarbeitung;
+        die Übermittlung in die USA stützt sich auf das EU-US Data Privacy Framework sowie
+        Standardvertragsklauseln. Resend kann Versandprotokolle (u. a. Empfängeradresse und Zeitpunkt) für
+        einen begrenzten Zeitraum speichern. Dateien, die Sie in der Demo auswählen, verlassen Ihren Browser
+        nicht und werden nicht hochgeladen.
+      </p>
+
+      <h2>7. Ihre Rechte</h2>
+      <p>
+        Sie haben das Recht auf Auskunft (Art. 15), Berichtigung (Art. 16), Löschung (Art. 17),
+        Einschränkung der Verarbeitung (Art. 18), Datenübertragbarkeit (Art. 20) und Widerspruch (Art. 21
+        DSGVO). Schreiben Sie dazu an die oben genannte E-Mail-Adresse. Sie können sich außerdem bei einer
+        Aufsichtsbehörde beschweren (Art. 77 DSGVO), zum Beispiel beim Hamburgischen Beauftragten für
+        Datenschutz und Informationsfreiheit, Ludwig-Erhard-Str. 22, 20459 Hamburg.
+      </p>
+    </>
+  )}
+
+  {idioma === 'en' && (
+    <>
+      <p class="etiqueta" lang="de">Datenschutzerklärung</p>
+      <h1>Privacy policy</h1>
+      <p class="etiqueta">Last updated: September 2026</p>
+      <AvisoTraduccion enlaceAleman={enlace('de', '/datenschutz.html')} />
+
+      <h2>1. Controller</h2>
+      <p>Camilo Cepeda Danies<br />Thadenstraße 22, 22767 Hamburg, Germany<br />Email: <a href={mailto}>{sitio.email}</a></p>
+
+      <h2>2. Hosting and server logs</h2>
+      <p>
+        This website runs on my own server at Hetzner Online GmbH, Industriestr. 25, 91710 Gunzenhausen,
+        Germany (data centre in Nuremberg). A data processing agreement with Hetzner is in place
+        (Art. 28 GDPR).
+      </p>
+      <p>
+        When you visit the site, technically necessary data is processed: IP address, date and time,
+        requested address and browser identifier. This serves the secure operation of the site
+        (Art. 6(1)(f) GDPR). The logs have a fixed size limit and are then automatically overwritten.
+      </p>
+
+      <h2>3. Contact by email</h2>
+      <p>
+        If you write to me, I process your email address and your message in order to answer your request
+        (Art. 6(1)(b) or (f) GDPR). Emails to {sitio.email} are forwarded to my mailbox by the forwarding
+        service of my domain provider Namecheap, Inc. (USA). My mailbox is operated by Google Ireland Limited
+        (Gordon House, Barrow Street, Dublin 4, Ireland). I delete messages as soon as they are no longer
+        needed for the request, unless statutory retention obligations apply.
+      </p>
+
+      <h2>4. Cookies, fonts and external content</h2>
+      <p>
+        This website sets no cookies and uses no analytics or tracking services. If you choose the colour
+        scheme (light/dark), this setting is stored in your browser's local storage; this is necessary for
+        the function you requested (§ 25(2) no. 2 TDDDG) and is not transmitted to me. Fonts and videos are
+        loaded from my own server.
+      </p>
+      <p>
+        Some links lead to external sites (e.g. YouTube or client websites). Data is only transmitted to the
+        respective provider once you click such a link; their privacy policies then apply.
+      </p>
+
+      <h2>5. My web apps</h2>
+      <p>
+        The apps shown in the “Software” section run under danies.trade. A separate
+        <a href={APPS} hreflang="de">privacy policy</a> (in German) applies to them.
+      </p>
+
+      <h2 id="demo">6. Live demos in my portfolio</h2>
+      <p>
+        <strong>Chat demo:</strong> The demo runs entirely in your browser. What you write is neither
+        transmitted nor stored; everything is deleted when you reload the page.
+      </p>
+      <p>
+        <strong>Security demo (“Secure by default”):</strong> If you enter your email address, I send you a
+        one-time six-digit code so that you can try out the sign-in. For this I process your email address
+        and – only to protect against abuse (e.g. mass sending) – your IP address (Art. 6(1)(b) and (f)
+        GDPR). My server stores neither the email address, the IP address nor the code in plain text, only
+        irreversible check values (HMAC). These are deleted automatically after 24 hours. No account is
+        created.
+      </p>
+      <p>
+        Emails are sent via Resend, Inc. (USA). A data processing agreement with Resend is in place; the
+        transfer to the USA is based on the EU-US Data Privacy Framework and standard contractual clauses.
+        Resend may store sending logs (including recipient address and time) for a limited period. Files you
+        select in the demo do not leave your browser and are not uploaded.
+      </p>
+
+      <h2>7. Your rights</h2>
+      <p>
+        You have the right of access (Art. 15), rectification (Art. 16), erasure (Art. 17), restriction of
+        processing (Art. 18), data portability (Art. 20) and objection (Art. 21 GDPR). To exercise them,
+        write to the email address above. You can also lodge a complaint with a supervisory authority
+        (Art. 77 GDPR), for example the Hamburg Commissioner for Data Protection and Freedom of Information
+        (Der Hamburgische Beauftragte für Datenschutz und Informationsfreiheit), Ludwig-Erhard-Str. 22,
+        20459 Hamburg.
+      </p>
+    </>
+  )}
+
+  {idioma === 'es' && (
+    <>
+      <p class="etiqueta" lang="de">Datenschutzerklärung</p>
+      <h1>Política de privacidad</h1>
+      <p class="etiqueta">Actualizada: septiembre de 2026</p>
+      <AvisoTraduccion enlaceAleman={enlace('de', '/datenschutz.html')} />
+
+      <h2>1. Responsable</h2>
+      <p>Camilo Cepeda Danies<br />Thadenstraße 22, 22767 Hamburgo, Alemania<br />Correo electrónico: <a href={mailto}>{sitio.email}</a></p>
+
+      <h2>2. Alojamiento y registros del servidor</h2>
+      <p>
+        Esta web funciona en un servidor propio de Hetzner Online GmbH, Industriestr. 25, 91710 Gunzenhausen,
+        Alemania (centro de datos en Núremberg). Con Hetzner existe un contrato de encargo del tratamiento
+        (art. 28 RGPD).
+      </p>
+      <p>
+        Al visitar la web se tratan los datos técnicamente necesarios: dirección IP, fecha y hora, dirección
+        solicitada e identificador del navegador. Esto sirve para el funcionamiento seguro de la web
+        (art. 6.1.f RGPD). Los registros tienen un tamaño máximo fijo y después se sobrescriben
+        automáticamente.
+      </p>
+
+      <h2>3. Contacto por correo electrónico</h2>
+      <p>
+        Si usted me escribe, trato su dirección de correo electrónico y su mensaje para responder a su consulta
+        (art. 6.1.b o f RGPD). Los correos a {sitio.email} se reenvían a mi buzón mediante el servicio de
+        reenvío de mi proveedor de dominio, Namecheap, Inc. (EE. UU.). Mi buzón lo gestiona Google Ireland
+        Limited (Gordon House, Barrow Street, Dublín 4, Irlanda). Borro los mensajes en cuanto ya no son
+        necesarios para la consulta, salvo que existan obligaciones legales de conservación.
+      </p>
+
+      <h2>4. Cookies, fuentes y contenido externo</h2>
+      <p>
+        Esta web no usa cookies ni servicios de analítica o seguimiento. Si usted elige el modo de color
+        (claro/oscuro), esa preferencia se guarda en el almacenamiento local de su navegador; es necesario
+        para la función que usted ha solicitado (§ 25, apdo. 2, n.º 2 TDDDG) y no se me transmite. Las fuentes y los
+        vídeos se cargan desde mi propio servidor.
+      </p>
+      <p>
+        Algunos enlaces llevan a sitios externos (p. ej. YouTube o webs de clientes). Solo cuando usted hace clic
+        en uno de ellos se transmiten datos al proveedor correspondiente; allí se aplica su política de
+        privacidad.
+      </p>
+
+      <h2>5. Mis aplicaciones web</h2>
+      <p>
+        Las aplicaciones de la sección «Software» funcionan en danies.trade. Para ellas rige una
+        <a href={APPS} hreflang="de">política de privacidad</a> propia (en alemán).
+      </p>
+
+      <h2 id="demo">6. Demos en vivo de mi portfolio</h2>
+      <p>
+        <strong>Demo del chat:</strong> la demo funciona solo en su navegador. Lo que usted escribe no se
+        transmite ni se guarda; al recargar la página se borra todo.
+      </p>
+      <p>
+        <strong>Demo de seguridad («Secure by default»):</strong> si introduce su correo electrónico, le envío
+        un código de un solo uso de seis cifras para que pueda probar el inicio de sesión. Para ello trato su
+        correo electrónico y —solo para evitar abusos (p. ej. envíos masivos)— su dirección IP (art. 6.1.b y f
+        RGPD). En mi servidor no se guardan en texto legible ni el correo, ni la IP, ni el código, sino solo
+        valores de comprobación irreversibles (HMAC), que se borran automáticamente a las 24 horas. No se crea
+        ninguna cuenta.
+      </p>
+      <p>
+        El envío se realiza a través de Resend, Inc. (EE. UU.). Con Resend existe un contrato de encargo del
+        tratamiento; la transferencia a EE. UU. se basa en el Marco de Privacidad de Datos UE-EE. UU. y en
+        cláusulas contractuales tipo. Resend puede guardar registros de envío (entre otros, la dirección del
+        destinatario y la hora) durante un tiempo limitado. Los archivos que usted selecciona en la demo no salen de su
+        navegador y no se suben.
+      </p>
+
+      <h2>7. Sus derechos</h2>
+      <p>
+        Usted tiene derecho de acceso (art. 15), rectificación (art. 16), supresión (art. 17), limitación del
+        tratamiento (art. 18), portabilidad (art. 20) y oposición (art. 21 RGPD). Para ejercerlos, escriba a
+        la dirección de correo indicada arriba. También puede presentar una reclamación ante una autoridad de
+        control (art. 77 RGPD), por ejemplo ante el Comisionado de Protección de Datos y Libertad de
+        Información de Hamburgo (Der Hamburgische Beauftragte für Datenschutz und Informationsfreiheit),
+        Ludwig-Erhard-Str. 22, 20459 Hamburgo.
+      </p>
+    </>
+  )}
+</article>
+
+<style>
+  .legal { display: flex; flex-direction: column; gap: var(--espacio-4); max-width: 46rem; }
+  .legal h2 { font-size: var(--titulo-3); font-weight: var(--peso-normal); letter-spacing: -0.02em; margin-top: var(--espacio-5); }
+</style>

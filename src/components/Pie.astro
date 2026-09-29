@@ -1,14 +1,21 @@
 ---
 import { sitio } from '../sitio'
+import { idiomaDe, enlace, t } from '../i18n'
 const año = new Date().getFullYear()
+const idioma = idiomaDe(Astro.url)
+const textos = t(idioma, {
+  en: { impressum: 'Legal notice', datenschutz: 'Privacy' },
+  de: { impressum: 'Impressum', datenschutz: 'Datenschutz' },
+  es: { impressum: 'Aviso legal', datenschutz: 'Privacidad' },
+})
 ---
 
 <footer class="pie contenedor">
   <span class="etiqueta">© {año} {sitio.nombre}</span>
   <nav aria-label="Legal" class="etiqueta">
     <a href={`mailto:${sitio.email}`}>{sitio.email}</a>
-    <a href="/impressum.html">Impressum</a>
-    <a href="/datenschutz.html">Datenschutz</a>
+    <a href={enlace(idioma, '/impressum.html')}>{textos.impressum}</a>
+    <a href={enlace(idioma, '/datenschutz.html')}>{textos.datenschutz}</a>
   </nav>
 </footer>
 

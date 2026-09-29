@@ -1,0 +1,18 @@
+---
+// Aviso en las versiones EN/ES de las páginas legales: la versión alemana es la que vale legalmente.
+import { idiomaDe, t } from '../../i18n'
+interface Props { enlaceAleman: string }
+const { enlaceAleman } = Astro.props
+const idioma = idiomaDe(Astro.url)
+const textos = t(idioma, {
+  en: { antes: 'This is a courtesy translation. Only the ', enlace: 'German version', despues: ' is legally binding.' },
+  de: null,
+  es: { antes: 'Esta es una traducción de cortesía. Solo la ', enlace: 'versión en alemán', despues: ' es jurídicamente vinculante.' },
+})
+---
+
+{textos && <p class="aviso-traduccion etiqueta">{textos.antes}<a href={enlaceAleman} hreflang="de" lang="de">{textos.enlace}</a>{textos.despues}</p>}
+
+<style>
+  .aviso-traduccion { padding: var(--espacio-3) var(--espacio-4); border: var(--linea-fina) solid var(--color-linea); border-radius: var(--radio-m); }
+</style>

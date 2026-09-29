@@ -1,8 +1,8 @@
 ---
 // Datenschutzerklärung (el idioma sale de la dirección: /datenschutz.html = EN, /de/… = DE, /es/… = ES). Texto: components/legal/Datenschutz.astro
-import Base from '../layouts/Base.astro'
-import Datenschutz from '../components/legal/Datenschutz.astro'
-import { idiomaDe, t } from '../i18n'
+import Base from '../../layouts/Base.astro'
+import Datenschutz from '../../components/legal/Datenschutz.astro'
+import { idiomaDe, t } from '../../i18n'
 const titulo = t(idiomaDe(Astro.url), { en: 'Privacy policy', de: 'Datenschutz', es: 'Política de privacidad' })
 ---
 

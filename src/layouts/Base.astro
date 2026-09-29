@@ -13,7 +13,7 @@ import { idiomas, idiomaDe, sinIdioma, enlace, locales, t } from '../i18n'
 interface Props {
   titulo?: string
   descripcion?: string
-  idioma?: string // para páginas que no siguen /de /es (p. ej. Impressum en alemán)
+  idioma?: string // normalmente sale de la dirección (/, /de, /es)
 }
 const idiomaPagina = idiomaDe(Astro.url)
 const textos = t(idiomaPagina, {
