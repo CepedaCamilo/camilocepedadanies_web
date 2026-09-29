@@ -94,7 +94,9 @@ This kind of system fits wherever sensitive documents move between people who al
 
 ## Try it
 
-The [live demo](/files-live.html) follows the same flow as the real system: enter any email, use the demo code, drop a file and create a link that expires. It is private by design — your files **never leave your browser**, nothing is uploaded or stored, and reloading the page starts again from zero. The real system stays closed, as it would inside a company.
+The [live demo](/files-live.html) follows the same flow as the real system: enter your email and you receive a **real one-time code** from my server. Verify it, drop a file and create a link that expires.
+
+The demo applies the same principles it presents. It is a separate service that creates no account and gives no access to the real system. Your email address and the code are never stored in plain text — only unreadable fingerprints, deleted automatically after 24 hours. Codes are limited per address, per connection and per day, so nobody can use the demo to flood someone else's inbox, and each code allows only five attempts. The files you choose **never leave your browser**: nothing is uploaded, and reloading the page starts again from zero.
 
 ## Architecture
 

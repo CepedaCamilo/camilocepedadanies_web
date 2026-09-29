@@ -1,7 +1,8 @@
 ---
 // "Try it live" del caso 03 (Secure by default): el mismo móvil de la animación, pero de verdad.
-// DEMO de diseño de interacción: nada sale del navegador y nada se guarda (las fotos se ven con un enlace local
-// del propio navegador, URL.createObjectURL). Al recargar, vuelve a empezar.
+// El código de 6 cifras llega DE VERDAD por email (Edge Function demo-codigo en mi servidor; no crea cuentas,
+// guarda solo huellas y todo se borra a las 24 h). Los archivos, en cambio, nunca salen del navegador
+// (se ven con un enlace local, URL.createObjectURL). Al recargar, vuelve a empezar.
 import '@fontsource-variable/geist'
 import '@fontsource-variable/geist-mono'
 import '../styles/tokens.css'
@@ -15,7 +16,7 @@ import { sitio } from '../sitio'
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Secure by default · live demo — {sitio.nombre}</title>
-    <meta name="description" content="Sign in with a code, drop a file, share a link that expires. A demo — nothing leaves your browser." />
+    <meta name="description" content="Receive a real one-time code by email, drop a file, share a link that expires. Your files never leave your browser." />
     <link rel="icon" href="/favicon.png" />
     <script is:inline>
       try {
@@ -40,19 +41,21 @@ import { sitio } from '../sitio'
 
         <div class="cuerpo">
           <!-- 1. Email -->
-          <form class="vista" data-vista="login" data-form-email>
+          <form class="vista" data-vista="login" data-form-email data-api={sitio.demoCodigo.api} data-clave={sitio.demoCodigo.clave}>
             <p class="etiqueta">Secure sign-in</p>
+            <p class="explica">Enter your email and you will receive a 6-digit code to verify it.</p>
             <label class="solo-lectores" for="email">Email</label>
-            <input class="campo" id="email" type="email" required placeholder="Your work email" autocomplete="off" data-email />
+            <input class="campo" id="email" type="email" required maxlength="254" placeholder="Your email" autocomplete="email" data-email />
             <button class="boton" type="submit">Send code</button>
-            <p class="etiqueta pista">Any email works — nothing is sent.</p>
+            <p class="error etiqueta" data-error-email aria-live="polite"></p>
+            <p class="etiqueta pista">Used only for this demo · stored as an unreadable fingerprint · deleted after 24 h · <a href="/datenschutz.html#demo">Datenschutz</a></p>
           </form>
 
           <!-- 2. Código -->
           <form class="vista" data-vista="codigo" data-form-codigo hidden>
             <div class="aviso-mail" data-aviso>
               <span class="etiqueta">Mail · now</span>
-              <span>Demo sign-in code: <b>000 000</b></span>
+              <span>Check your inbox — the code is valid for 10 minutes.</span>
             </div>
             <p class="etiqueta">Enter the 6-digit code sent to <span data-email-eco></span></p>
             <label class="casillas" data-casillas>
@@ -63,6 +66,7 @@ import { sitio } from '../sitio'
             </label>
             <p class="error etiqueta" data-error aria-live="polite"></p>
             <button class="boton" type="submit">Verify</button>
+            <p class="etiqueta pista">No email? Check your spam folder · <button type="button" class="enlace-texto" data-reenviar>Send a new code</button> · <button type="button" class="enlace-texto" data-otro-email>Use another email</button></p>
           </form>
 
           <!-- 3. Espacio privado -->
@@ -81,7 +85,7 @@ import { sitio } from '../sitio'
           </div>
         </div>
       </div>
-      <p class="etiqueta nota">Demo — your files never leave this browser. Nothing is uploaded or stored; reload to start again.</p>
+      <p class="etiqueta nota">Demo — the code is sent by email; your files never leave this browser and nothing is uploaded. Reload to start again.</p>
     </main>
 
     <footer class="abajo etiqueta">
@@ -91,7 +95,6 @@ import { sitio } from '../sitio'
 
     <script>
       const MAXIMO = 10 * 1024 * 1024 // 10 MB, como en la app real
-      const CODIGO = '000000'
       const DURACION = 60 // segundos del enlace en la demo (en la app real: 1 hora)
 
       const vista = (id: string) => document.querySelector<HTMLElement>(`[data-vista="${id}"]`)!
@@ -107,15 +110,45 @@ import { sitio } from '../sitio'
       const codigo = document.querySelector<HTMLInputElement>('[data-codigo]')!
       const casillas = document.querySelectorAll<HTMLElement>('.casilla')
       const error = document.querySelector<HTMLElement>('[data-error]')!
-      formEmail.addEventListener('submit', (e) => {
+      const errorEmail = document.querySelector<HTMLElement>('[data-error-email]')!
+
+      // La "ventanilla" del servidor: envía y comprueba los códigos (clave pública, nunca la secreta)
+      async function ventanilla(datos: Record<string, string>) {
+        try {
+          const r = await fetch(formEmail.dataset.api!, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', apikey: formEmail.dataset.clave!, Authorization: `Bearer ${formEmail.dataset.clave}` },
+            body: JSON.stringify(datos),
+          })
+          const cuerpo = await r.json().catch(() => ({}))
+          return r.ok ? { ok: true } : { ok: false, error: cuerpo.error ?? 'Something went wrong. Please try again.' }
+        } catch {
+          return { ok: false, error: 'No connection. Please try again.' }
+        }
+      }
+      // Botón ocupado: se desactiva y dice qué está pasando
+      const ocupado = (b: HTMLButtonElement, texto: string | null) => {
+        if (texto) { b.dataset.texto ??= b.textContent!; b.textContent = texto; b.disabled = true }
+        else { b.textContent = b.dataset.texto ?? b.textContent; b.disabled = false }
+      }
+
+      async function enviarCodigo(boton: HTMLButtonElement, avisoEn: HTMLElement) {
+        ocupado(boton, 'Sending…')
+        const r = await ventanilla({ accion: 'enviar', email: email.value.trim() })
+        ocupado(boton, null)
+        if (!r.ok) { avisoEn.textContent = r.error!; avisoEn.classList.remove('bien'); return false }
+        return true
+      }
+
+      formEmail.addEventListener('submit', async (e) => {
         e.preventDefault()
         pulsar(formEmail.querySelector('button')!)
+        errorEmail.textContent = ''
+        if (!(await enviarCodigo(formEmail.querySelector('button')!, errorEmail))) return
         document.querySelector('[data-email-eco]')!.textContent = email.value.trim()
-        setTimeout(() => {
-          mostrar('codigo')
-          codigo.value = ''; pintarCasillas(); error.textContent = ''; error.classList.remove('bien')
-          if (matchMedia('(pointer: fine)').matches) codigo.focus()
-        }, 350)
+        mostrar('codigo')
+        codigo.value = ''; pintarCasillas(); error.textContent = ''; error.classList.remove('bien')
+        if (matchMedia('(pointer: fine)').matches) codigo.focus()
       })
 
       // 2. Código: 6 casillas redondas que se rellenan (por dentro es un solo campo)
@@ -131,14 +164,29 @@ import { sitio } from '../sitio'
       codigo.addEventListener('focus', pintarCasillas)
       codigo.addEventListener('blur', pintarCasillas)
       const formCodigo = document.querySelector<HTMLFormElement>('[data-form-codigo]')!
-      formCodigo.addEventListener('submit', (e) => {
+      const temblar = () => {
+        const c = formCodigo.querySelector('[data-casillas]')!
+        c.classList.remove('tiembla'); void (c as HTMLElement).offsetWidth; c.classList.add('tiembla')
+      }
+      document.querySelector('[data-reenviar]')!.addEventListener('click', async (e) => {
+        if (await enviarCodigo(e.currentTarget as HTMLButtonElement, error)) {
+          codigo.value = ''; pintarCasillas()
+          error.textContent = 'A new code is on its way.'; error.classList.add('bien')
+        }
+      })
+      document.querySelector('[data-otro-email]')!.addEventListener('click', () => { mostrar('login'); email.focus() })
+
+      formCodigo.addEventListener('submit', async (e) => {
         e.preventDefault()
-        pulsar(formCodigo.querySelector('button')!)
-        if (codigo.value !== CODIGO) {
-          error.textContent = 'Wrong code — in this demo it is 000000.'
-          formCodigo.querySelector('[data-casillas]')!.classList.remove('tiembla')
-          void (formCodigo as HTMLElement).offsetWidth
-          formCodigo.querySelector('[data-casillas]')!.classList.add('tiembla')
+        const boton = formCodigo.querySelector<HTMLButtonElement>('button[type=submit]')!
+        pulsar(boton)
+        if (codigo.value.length !== 6) { error.textContent = 'The code has 6 digits.'; error.classList.remove('bien'); temblar(); return }
+        ocupado(boton, 'Verifying…')
+        const r = await ventanilla({ accion: 'verificar', email: email.value.trim(), codigo: codigo.value })
+        ocupado(boton, null)
+        if (!r.ok) {
+          error.textContent = r.error!; error.classList.remove('bien')
+          temblar()
           return
         }
         casillas.forEach((c) => c.classList.add('ok'))
@@ -287,6 +335,11 @@ import { sitio } from '../sitio'
       @keyframes tiembla { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
       .error { color: #d4502e; min-height: 1em; }
       .error.bien { color: var(--color-acento); }
+      .explica { margin: 0; line-height: 1.4; }
+      .pista a, .enlace-texto { color: inherit; text-decoration: underline; }
+      .enlace-texto { padding: 0; border: 0; background: none; font: inherit; cursor: pointer; }
+      .enlace-texto:disabled { opacity: 0.5; cursor: default; }
+      .boton:disabled { opacity: 0.7; cursor: default; }
 
       .fila { display: flex; justify-content: space-between; align-items: center; }
       .salir { border: 0; background: none; cursor: pointer; color: var(--color-texto-suave); text-decoration: underline; }
