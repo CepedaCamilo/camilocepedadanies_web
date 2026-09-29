@@ -1,0 +1,157 @@
+---
+// Los 4 dispositivos de la campaña Transalp (pantalla, portátil, tablet, móvil), dibujados en HTML/CSS; cada uno flota solo.
+// - En la portada (TransalpEscaparate) los mueve el scroll con GSAP (data-disp, data-post, data-trailer).
+// - Con `autoplay` (caso de estudio) se animan solos: los posts van cambiando en la tablet y el tráiler se acerca despacio.
+// Imágenes de las pantallas: `npm run transalp` (scripts/pantallas-transalp.mjs → public/transalp/).
+interface Props { autoplay?: boolean }
+const { autoplay = false } = Astro.props
+const posts = ['bruneck', 'regla', 'fecha', 'ciclista', 'ruta']
+---
+
+<!-- El "escaparate": 4 dispositivos, cada uno en su capa (la capa la mueve el scroll; .flota respira sola) -->
+<div class="escenario" aria-hidden="true" data-dispositivos data-autoplay={autoplay ? '' : undefined}>
+  <div class="capa-disp capa-pantalla" data-disp="pantalla">
+    <div class="flota" style="--dur: 7s; --retraso: -1s">
+      <div class="monitor">
+        <div class="pantalla"><img src="/transalp/pantalla-trailer.webp" alt="" data-trailer loading="lazy" decoding="async" /></div>
+      </div>
+      <div class="cuello"></div>
+      <div class="base"></div>
+    </div>
+  </div>
+
+  <div class="capa-disp capa-laptop" data-disp="laptop">
+    <div class="flota" style="--dur: 6.2s; --retraso: -3s">
+      <div class="laptop-tapa">
+        <div class="pantalla"><img src="/transalp/laptop-facebook.webp" alt="" loading="lazy" decoding="async" /></div>
+      </div>
+      <div class="laptop-base"></div>
+    </div>
+  </div>
+
+  <div class="capa-disp capa-tablet" data-disp="tablet">
+    <div class="flota" style="--dur: 5.6s; --retraso: -2s">
+      <div class="tablet">
+        <div class="pantalla">
+          {posts.map((p) => <img src={`/transalp/post-${p}.webp`} alt="" data-post={p} loading="lazy" decoding="async" />)}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="capa-disp capa-movil" data-disp="movil">
+    <div class="flota" style="--dur: 6.6s; --retraso: -4s">
+      <div class="movil">
+        <span class="muesca"></span>
+        <div class="pantalla"><img src="/transalp/movil-instagram.webp" alt="" loading="lazy" decoding="async" /></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Modo "autoplay": cada 2,6 s entra el siguiente post en la tablet (si la persona no prefiere menos movimiento)
+  document.querySelectorAll<HTMLElement>('[data-dispositivos][data-autoplay]').forEach((escena) => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const posts = escena.querySelectorAll<HTMLElement>('[data-post]')
+    let i = 0
+    posts[0].classList.add('visible')
+    setInterval(() => {
+      posts[i].classList.remove('visible')
+      i = (i + 1) % posts.length
+      posts[i].classList.add('visible')
+    }, 2600)
+  })
+</script>
+
+<style>
+  /* ---------- El escaparate ---------- */
+  .escenario {
+    position: relative; width: 100%; max-height: 72svh; aspect-ratio: 1.3; margin-inline: auto;
+    perspective: 1800px; container-type: inline-size;
+    --marco: #0b0a09;
+    --aluminio: linear-gradient(180deg, #e9e8e6, #b9b7b3 60%, #d6d4d0);
+  }
+  .capa-disp { position: absolute; transform-style: preserve-3d; will-change: transform; }
+  /* cada dispositivo "respira": sube y baja despacio, a su ritmo, y su sombra crece y mengua con él */
+  .flota { position: relative; animation: flotar var(--dur) ease-in-out var(--retraso) infinite; }
+  .flota::after {
+    content: ''; position: absolute; left: 12%; right: 12%; bottom: -7%; height: 7%; z-index: -1; border-radius: 50%;
+    background: radial-gradient(closest-side, rgb(0 0 0 / 0.32), transparent); filter: blur(6px);
+    animation: sombra var(--dur) ease-in-out var(--retraso) infinite;
+  }
+  @keyframes flotar { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-1.1cqw); } }
+  @keyframes sombra { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(0.88); opacity: 0.7; } }
+
+  .pantalla { position: relative; width: 100%; height: 100%; overflow: hidden; background: #111; }
+  .pantalla img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  /* reflejo del cristal: una luz suave en diagonal, como en una pantalla de verdad */
+  .pantalla::after {
+    content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+    background: linear-gradient(118deg, rgb(255 255 255 / 0.13) 0%, rgb(255 255 255 / 0.04) 32%, transparent 33%, transparent 100%);
+  }
+
+  /* Pantalla grande (tipo Studio Display): marco fino, cuello y base de aluminio */
+  .capa-pantalla { left: 17%; top: 0; width: 66%; z-index: 1; }
+  /* marco negro fino + canto de aluminio alrededor (lo que hace que parezca un producto real) */
+  .monitor {
+    position: relative; z-index: 1; aspect-ratio: 16 / 10; padding: 1.2%; border-radius: 1.3cqw; background: var(--marco);
+    box-shadow: 0 0 0 0.22cqw #cfccc7, 0 0 0 0.3cqw #7d7a75, 0 2cqw 3cqw -1.5cqw rgb(0 0 0 / 0.45);
+  }
+  .monitor .pantalla { border-radius: 0.5cqw; }
+  /* pie: una lámina de aluminio que baja por detrás de la pantalla (sombra arriba, brillo en el centro) */
+  .cuello {
+    position: relative; width: 19%; height: 8.5cqw; margin: -0.6cqw auto 0;
+    background:
+      linear-gradient(180deg, rgb(0 0 0 / 0.55) 0%, rgb(0 0 0 / 0.12) 22%, transparent 45%),
+      linear-gradient(90deg, #8e8b86 0%, #d9d7d3 14%, #f2f1ee 46%, #e2e0dc 70%, #a19e99 92%, #7f7c77 100%);
+    clip-path: polygon(3% 0, 97% 0, 100% 100%, 0 100%);
+  }
+  /* base: la placa vista en perspectiva, con el canto delantero más oscuro */
+  .base {
+    position: relative; width: 31%; height: 1.5cqw; margin: -0.1cqw auto 0;
+    background: linear-gradient(180deg, #f3f2ef 0%, #d8d6d2 55%, #9d9a95 80%, #6f6c68 100%);
+    clip-path: polygon(9% 0, 91% 0, 100% 100%, 0 100%);
+  }
+
+  /* Portátil */
+  .capa-laptop { right: 0; top: 40%; width: 50%; z-index: 3; }
+  .laptop-tapa {
+    width: 86%; margin: 0 auto; aspect-ratio: 16 / 10; padding: 1.8% 1.8% 2.4%; border-radius: 1.2cqw 1.2cqw 0.2cqw 0.2cqw; background: var(--marco);
+    box-shadow: 0 0 0 0.18cqw #bcb9b4, 0 0 0 0.24cqw #6f6c67;
+  }
+  .laptop-tapa .pantalla { border-radius: 0.3cqw; }
+  .laptop-base {
+    height: 1.6cqw; border-radius: 0.15cqw 0.15cqw 1.4cqw 1.4cqw; position: relative;
+    background: linear-gradient(180deg, #5e5b57 0%, #f1f0ed 18%, #d7d5d1 55%, #a9a6a1 85%, #7a7772 100%);
+  }
+  .laptop-base::before { content: ''; position: absolute; left: 42%; right: 42%; top: 0; height: 30%; border-radius: 0 0 0.6cqw 0.6cqw; background: rgb(0 0 0 / 0.18); }
+
+  /* Tablet */
+  .capa-tablet { left: 7%; top: 30%; width: 25%; z-index: 2; }
+  /* la pantalla tiene la proporción EXACTA de los posts (396 × 530): nada se recorta; el marco la rodea */
+  .tablet { padding: 4.5%; border-radius: 2cqw; background: var(--marco); box-shadow: 0 0 0 0.16cqw #a9a6a1, 0 0 0 0.22cqw #5f5c58; }
+  .tablet .pantalla { height: auto; aspect-ratio: 396 / 530; border-radius: 0.5cqw; }
+
+  /* Móvil */
+  .capa-movil { left: 0; top: 50%; width: 12.5%; z-index: 4; }
+  /* igual: la pantalla con la proporción exacta de la captura de Instagram (187 × 392) */
+  .movil { position: relative; padding: 4.5%; border-radius: 2.1cqw; background: var(--marco); box-shadow: 0 0 0 0.14cqw #a9a6a1, 0 0 0 0.2cqw #5f5c58; }
+  .movil .pantalla { height: auto; aspect-ratio: 187 / 392; border-radius: 1.5cqw; background: #fff; }
+  /* la muesca negra tapa la muesca gris de la maqueta original */
+  .muesca { position: absolute; z-index: 3; left: 29%; right: 29%; top: 4.5%; height: 3.2%; border-radius: 0 0 1cqw 1cqw; background: var(--marco); }
+
+  /* Posts de la tablet: solo se ve el primero (GSAP o el autoplay enseñan los demás) */
+  .tablet [data-post]:not(:first-child) { opacity: 0; }
+  [data-autoplay] .tablet [data-post] { opacity: 0; transform: translateY(6%); transition: opacity 0.6s ease, transform 0.6s ease; }
+  [data-autoplay] .tablet [data-post].visible { opacity: 1; transform: none; }
+  [data-autoplay] [data-trailer] { animation: acercar 14s ease-in-out infinite alternate; }
+  @keyframes acercar { from { transform: scale(1.12) translateX(2%); } to { transform: scale(1); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .flota, .flota::after, [data-autoplay] [data-trailer] { animation: none; }
+  }
+  @media (max-width: 900px) {
+    .escenario { aspect-ratio: 1.02; max-height: 50svh; }
+  }
+</style>

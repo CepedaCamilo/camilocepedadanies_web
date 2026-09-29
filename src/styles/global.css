@@ -114,7 +114,7 @@ p { margin: 0; }
 .prosa > p:has(> img), .prosa > p:has(> a > img) { margin: 0; }
 .prosa img, .prosa video { width: 100%; border-radius: var(--radio-l); background: var(--color-superficie); }
 .prosa p:has(> em:only-child) { margin-top: calc(-1 * var(--espacio-1)); } /* el pie de foto respira: ~20 px bajo la imagen */
-.prosa p:has(> img) em { margin-top: var(--espacio-4); }
+.prosa p:has(> img) em, .prosa p:has(> a > img) em { margin-top: var(--espacio-4); }
 /* imágenes recortadas (fondo transparente, p. ej. "…-recorte.png"): sin fondo ni esquinas redondeadas */
 .prosa img[src*="recorte"], .prosa img.sin-fondo, .galeria-balones img { background: none; border-radius: 0; }
 /* galería de balones (fondo transparente): 4 por fila, 2 en móvil */
@@ -126,7 +126,7 @@ p { margin: 0; }
 .prosa hr { width: 100%; border: 0; border-top: var(--linea-fina) solid var(--color-linea); margin: var(--espacio-5) 0 0; }
 .prosa hr + p { font-size: var(--texto-xs); color: var(--color-texto-suave); max-width: 40rem; }
 /* Pies de foto: la cursiva que va SOLA en su línea, o bajo una pareja de imágenes. Las cursivas dentro de un texto siguen normales. */
-.prosa p:has(> em:only-child) em, .prosa p:has(> img) em { font-style: normal; font-size: var(--texto-s); color: var(--color-texto-suave); max-width: 40rem; display: block; }
+.prosa p:has(> em:only-child) em, .prosa p:has(> img) em, .prosa p:has(> a > img) em { font-style: normal; font-size: var(--texto-s); color: var(--color-texto-suave); max-width: 40rem; display: block; }
 .prosa h2 { font-size: var(--titulo-3); font-weight: var(--peso-normal); letter-spacing: -0.02em; margin-top: var(--espacio-5); }
 /* subtítulos (###) y tablas dentro de un caso de estudio */
 .prosa h3 { font-size: var(--texto-l, 1.25rem); font-weight: var(--peso-medio); letter-spacing: -0.01em; margin: var(--espacio-2) 0 calc(-1 * var(--espacio-3)); }
@@ -153,6 +153,15 @@ p { margin: 0; }
 }
 
 /* Dos imágenes seguidas en un proyecto (p. ej. modo claro y oscuro) → una al lado de la otra */
+.prosa p:has(> img), .prosa p:has(> a > img) { max-width: none; } /* las imágenes usan todo el ancho del caso (como los vídeos) */
+/* imagen enlazada a un vídeo de YouTube: un botón de play en el centro */
+.prosa a[href*="youtu"]:has(> img) { position: relative; display: block; }
+.prosa a[href*="youtu"]:has(> img)::after {
+  content: ''; position: absolute; left: 50%; top: 50%; width: 5.5rem; height: 5.5rem; margin: -2.75rem 0 0 -2.75rem; border-radius: 50%;
+  background: rgb(255 255 255 / 0.92) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8 5.5v13l11-6.5z' fill='%23231A15'/%3E%3C/svg%3E") 58% 50% / 42% no-repeat;
+  box-shadow: 0 10px 40px -10px rgb(0 0 0 / 0.5); transition: transform 0.25s ease;
+}
+.prosa a[href*="youtu"]:has(> img):hover::after { transform: scale(1.08); }
 .prosa p:has(> img + img) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--espacio-4); max-width: 36rem; }
 .prosa p:has(> img + img) img { border-radius: var(--radio-l); }
 .prosa p:has(> img + img) em { grid-column: 1 / -1; }

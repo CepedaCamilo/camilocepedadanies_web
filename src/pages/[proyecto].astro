@@ -3,6 +3,7 @@
 import { getCollection, render } from 'astro:content'
 import { Image } from 'astro:assets'
 import Base from '../layouts/Base.astro'
+import TransalpDispositivos from '../components/TransalpDispositivos.astro'
 
 export async function getStaticPaths() {
   const proyectos = (await getCollection('proyectos', (p) => !p.data.oculto)).sort(
@@ -10,7 +11,8 @@ export async function getStaticPaths() {
   )
   return proyectos.map((proyecto, i) => ({
     params: { proyecto: proyecto.id },
-    props: { proyecto, siguiente: proyectos[(i + 1) % proyectos.length] },
+    // el último caso no tiene "siguiente": vuelve a la portada (What I bring)
+    props: { proyecto, siguiente: i < proyectos.length - 1 ? proyectos[i + 1] : null },
   }))
 }
 
@@ -42,16 +44,27 @@ const [titulo, subtitulo] = p.titulo.split(' — ')
       }
     </header>
 
-    {p.portada && <Image class="portada" src={p.portada} alt="" widths={[800, 1400, 2200]} sizes="100vw" />}
+    {/* Transalp: en lugar de una imagen, los dispositivos animados de la portada (se mueven solos) */}
+    {proyecto.id === 'integrated-campaign-communication' && <div class="portada-escena"><TransalpDispositivos autoplay /></div>}
+    {p.portada && <Image class="portada" src={p.portada} alt="" widths={[800, 1400, 2200]} sizes="(max-width: 1000px) 100vw, 960px" />}
 
     <div class="prosa">
       <Content />
     </div>
 
-    <a class="siguiente" href={`/${siguiente.id}.html`}>
-      <span class="etiqueta">Next project →</span>
-      <span class="siguiente-titulo">{siguiente.data.titulo.split(' — ')[0]}</span>
-    </a>
+    {
+      siguiente ? (
+        <a class="siguiente" href={`/${siguiente.id}.html`}>
+          <span class="etiqueta">Next project →</span>
+          <span class="siguiente-titulo">{siguiente.data.titulo.split(' — ')[0]}</span>
+        </a>
+      ) : (
+        <a class="siguiente" href="/#about">
+          <span class="etiqueta">← Back to the start</span>
+          <span class="siguiente-titulo">What I bring</span>
+        </a>
+      )
+    }
   </article>
 </Base>
 
@@ -61,7 +74,10 @@ const [titulo, subtitulo] = p.titulo.split(' — ')
   .cabecera-proyecto { display: flex; flex-direction: column; align-items: flex-start; gap: var(--espacio-5); max-width: 56rem; }
   .subtitulo { display: block; color: var(--color-texto-suave); }
   .meta { display: flex; flex-direction: column; gap: var(--espacio-3); }
-  .portada { width: 100%; border-radius: var(--radio-l); }
+  /* la imagen de cabecera mide lo mismo que las imágenes y vídeos del caso (60rem); si es un recorte sin fondo, algo menos */
+  .portada { width: 100%; max-width: 60rem; border-radius: var(--radio-l); }
+  .portada[src*="recorte"] { max-width: 40rem; border-radius: 0; }
+  .portada-escena { width: 100%; max-width: 60rem; }
   .siguiente {
     display: flex; flex-direction: column; gap: var(--espacio-3);
     padding-top: var(--espacio-6); border-top: var(--linea-fina) solid var(--color-linea); text-decoration: none;

@@ -1,16 +1,25 @@
 ---
-titulo: Integrated Campaign Communication
+titulo: Integrated campaign design.
 tipo: design
-categoria: Creation & promotion
-cliente: Bike & Tour Transalp
-resumen: Multi-platform visual campaigns combining trailer production, social media assets, promotional storytelling and event communication for cohesive audience engagement.
-disciplinas: [Social Media Systems, Motion Campaigns, Paid Ad Visuals, Event Promotion]
-portada: ./integrated-campaign-communication/portada.jpg
+categoria: BIKE Transalp · TOUR Transalp
+cliente: HAVE A GOOD ONE
+resumen: Campaign work developed during my time at HAVE A GOOD ONE — shaping the visual communication for two major alpine cycling events across digital and promotional touchpoints.
+disciplinas: [Graphic Direction, Campaign Design, Motion, Social, Web, Event Promotion]
 orden: 50
 ---
 
-![Bike Transalp promotional rollout](./integrated-campaign-communication/rollout.jpg)
-*Cross-platform promotional rollout developed for Bike Festival, Bike & Tour Transalp, including social media branding, teaser communication, web visuals and online audience touchpoints.*
+From launch trailers and route reveals to social campaigns and web assets, I worked on communication designed to build anticipation, engage participants and carry each event’s identity consistently throughout the campaign cycle.
+
+### Role
+Graphic Direction · Campaign Design · Motion
+
+### Context
+HAVE A GOOD ONE · Event campaign communication
+
+### Scope
+Social · Motion · Web · Event Promotion
+
+
 
 [![Bike Transalp campaign trailer](./integrated-campaign-communication/trailer.jpg)](https://www.youtube.com/watch?v=USL3U4n7VhQ)
 *Animated campaign trailer created to generate anticipation and communicate the event's adventurous identity before launch. [Watch on YouTube ↗](https://www.youtube.com/watch?v=USL3U4n7VhQ)*

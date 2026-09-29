@@ -20,7 +20,7 @@ Trade Con GmbH · Officially licensed products
 ### Scope
 Footballs · Textiles · Retail Packaging
 
-## The collection
+## Some of the collection
 
 <div class="galeria-balones">
   <img src="/licencias/01.webp" alt="FIFA World Cup 26™ football" loading="lazy" width="900" height="900">
@@ -34,10 +34,6 @@ Footballs · Textiles · Retail Packaging
 </div>
 
 *FIFA World Cup 26™, DFB and UEFA Champions League footballs — from the national team series to the club competition.*
-
-<img class="sin-fondo" src="/3d/balon/007.webp" alt="UEFA Champions League football UCL_2025008, rendered in Cinema 4D" width="900" height="900" loading="lazy">
-
-*UCL_2025008 "We are the Champions" — 30-panel football, rendered in Cinema 4D. The same render spins in the hero of this site.*
 
 ## Packaging and retail
 
