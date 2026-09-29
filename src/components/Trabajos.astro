@@ -32,7 +32,7 @@ const otrosDiseños = diseño.filter((p) => p.id !== 'product-design') // las li
 
   <div id="panel-software" role="tabpanel" aria-labelledby="pestana-software" data-panel-contenido="software">
     <YakuEscaparate />
-    <div class="contenedor mas-apps">
+    <div class="contenedor mas-apps" id="mas-software">
       <p class="etiqueta">More apps · all live on my own server</p>
       <div class="rejilla">
         {otrasApps.map((p) => <TarjetaProyecto proyecto={p} />)}
@@ -42,7 +42,7 @@ const otrosDiseños = diseño.filter((p) => p.id !== 'product-design') // las li
 
   <div id="panel-design" role="tabpanel" aria-labelledby="pestana-design" data-panel-contenido="design" hidden>
     <LicenciasEscaparate />
-    <div class="contenedor mas-apps">
+    <div class="contenedor mas-apps" id="mas-design">
       <p class="etiqueta">More design work</p>
       <div class="rejilla">
         {otrosDiseños.map((p) => <TarjetaProyecto proyecto={p} />)}
@@ -71,6 +71,13 @@ const otrosDiseños = diseño.filter((p) => p.id !== 'product-design') // las li
     // Si ya estabas dentro de la sección (p. ej. a mitad de Yaku), vuelve al principio del panel nuevo
     const inicio = raiz.getBoundingClientRect().top + scrollY
     if (scrollY > inicio) window.scrollTo({ top: inicio, behavior: 'instant' })
+  }))
+  // "Next project": baja suavemente hasta los siguientes proyectos del panel (justo bajo las dos barras fijas)
+  raiz.querySelectorAll<HTMLAnchorElement>('[data-siguiente]').forEach((a) => a.addEventListener('click', (e) => {
+    e.preventDefault()
+    const destino = document.querySelector<HTMLElement>(a.hash)!
+    const barras = raiz.querySelector<HTMLElement>('.cabecera-trabajos')!.getBoundingClientRect().bottom
+    window.scrollTo({ top: destino.getBoundingClientRect().top + scrollY - Math.max(barras, 0), behavior: 'smooth' })
   }))
   // Flechas del teclado entre las dos pestañas
   raiz.querySelector('[role="tablist"]')!.addEventListener('keydown', (e) => {
