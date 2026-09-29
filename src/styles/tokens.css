@@ -76,6 +76,7 @@
   --color-invertido: var(--tinta-900);       /* botones rellenos */
   --color-sobre-invertido: var(--hueso-200);
   --filtro-logos: none;
+  --filtro-dibujo: none;
   color-scheme: light;
 }
 
@@ -95,6 +96,7 @@
     --color-invertido: var(--crema-100);
     --color-sobre-invertido: var(--cacao-900);
     --filtro-logos: invert(1) brightness(1.4);
+    --filtro-dibujo: invert(1);
     color-scheme: dark;
   }
 }
@@ -115,7 +117,61 @@
   --color-invertido: var(--crema-100);
   --color-sobre-invertido: var(--cacao-900);
   --filtro-logos: invert(1) brightness(1.4);
+  --filtro-dibujo: invert(1);
   color-scheme: dark;
+}
+
+/* d) "modo contraste" (sección Core expertise): la página pasa SIEMPRE al modo contrario.
+      En Light → los valores de Dark (arriba, junto a .cine); en Dark → vuelven los de Light. */
+:root.contraste:not([data-theme='dark']) {
+  --color-fondo: var(--cacao-900);
+  --color-superficie: var(--cacao-800);
+  --color-superficie-2: var(--cacao-600);
+  --color-forma: var(--cacao-700);
+  --color-texto: var(--crema-100);
+  --color-texto-suave: var(--crema-400);
+  --color-linea: var(--cacao-500);
+  --color-acento: var(--cobalto-400);
+  --color-sobre-acento: var(--blanco);
+  --color-invertido: var(--crema-100);
+  --color-sobre-invertido: var(--cacao-900);
+  --filtro-logos: invert(1) brightness(1.4);
+  --filtro-dibujo: invert(1);
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root.contraste:not([data-theme='light']) {
+    --color-fondo: var(--hueso-200);
+    --color-superficie: var(--hueso-100);
+    --color-superficie-2: var(--hueso-300);
+    --color-forma: var(--hueso-400);
+    --color-texto: var(--tinta-900);
+    --color-texto-suave: var(--tinta-600);
+    --color-linea: var(--hueso-400);
+    --color-acento: var(--cobalto-500);
+    --color-sobre-acento: var(--blanco);
+    --color-invertido: var(--tinta-900);
+    --color-sobre-invertido: var(--hueso-200);
+    --filtro-logos: none;
+    --filtro-dibujo: none;
+    color-scheme: light;
+  }
+}
+:root[data-theme='dark'].contraste {
+  --color-fondo: var(--hueso-200);
+  --color-superficie: var(--hueso-100);
+  --color-superficie-2: var(--hueso-300);
+  --color-forma: var(--hueso-400);
+  --color-texto: var(--tinta-900);
+  --color-texto-suave: var(--tinta-600);
+  --color-linea: var(--hueso-400);
+  --color-acento: var(--cobalto-500);
+  --color-sobre-acento: var(--blanco);
+  --color-invertido: var(--tinta-900);
+  --color-sobre-invertido: var(--hueso-200);
+  --filtro-logos: none;
+  --filtro-dibujo: none;
+  color-scheme: light;
 }
 
 @media (max-width: 720px) {

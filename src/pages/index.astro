@@ -15,31 +15,32 @@ const proyectos = (await getCollection('proyectos', (p) => !p.data.oculto)).sort
 const diseño = proyectos.filter((p) => p.data.tipo === 'design')
 const software = proyectos.filter((p) => p.data.tipo === 'software')
 
-// Preguntas de "Core expertise" (texto original de la web anterior)
+// "Core expertise": las tres áreas y las preguntas (textos de Camilo, sep 2026)
+const areas = [
+  { t: 'Brand & Product', d: 'Identity systems, licensed products, packaging and retail experiences designed to work across real-world markets.' },
+  { t: 'Digital Product', d: 'Interfaces, prototypes and working web applications — from product thinking and visual design to front-end and back-end implementation.' },
+  { t: 'Creative Direction', d: 'Campaigns, storytelling, motion, photography and AI-supported production shaped into coherent visual systems.' },
+]
 const preguntas = [
   {
-    q: 'What kind of projects do I specialize in?',
-    a: 'I work across licensed product design, brand identity systems, motion media, commercial photography, UI concepts and AI-enhanced visual production. My focus is always on projects that require both strong aesthetics and strategic communication.',
+    q: 'What kind of work do I specialize in?',
+    a: 'I work across brand, product and digital experiences — from identity systems, packaging and licensed products to interfaces, campaigns and working web applications.',
   },
   {
-    q: 'Do I work only with one design discipline?',
-    a: 'No. My work is intentionally multidisciplinary. Depending on the project, I combine branding, product development, media editing, photography, digital interfaces and AI-supported workflows to achieve the strongest result.',
+    q: 'Do I only design, or do I also build?',
+    a: 'Both. My background is in design and creative direction, and I now build digital products as well — working across interface design, front-end, back-end and deployment.',
   },
   {
-    q: 'International experience & collaboration',
-    a: 'Based in Hamburg, my work has been developed across European and international contexts, adapting visual communication to different industries, audiences and market expectations.',
+    q: 'How do I approach a new project?',
+    a: 'I start with the problem, not the medium. The goal is to understand what needs to work, what needs to communicate and what the user should experience — then choose the right combination of design, technology and production.',
   },
   {
-    q: 'How do I approach a new creative challenge?',
-    a: 'Every project starts with identifying the problem, the audience and the business objective behind it. From there, I build solutions that are not only visually refined, but also practical, scalable and purpose-driven.',
+    q: 'What connects such different disciplines?',
+    a: 'Systems thinking. Whether it is a brand, a physical product, a campaign or an application, I look for consistency between concept, function, visual language and execution.',
   },
   {
-    q: 'How does AI support my workflow?',
-    a: 'AI is used as an enhancement tool for faster ideation, visual prototyping, advanced image generation and modern content production — always combined with human creative direction and design control.',
-  },
-  {
-    q: 'What makes the final output stand out?',
-    a: 'Each project is built around clarity, modern execution and strategic intention — creating visual results that are not only attractive, but durable, purposeful and commercially strong.',
+    q: 'Where does AI fit into my work?',
+    a: 'As a production and exploration tool — not a substitute for direction. I use generative tools for visual development, storytelling and creative production while keeping concept, art direction and editorial decisions human.',
   },
 ]
 ---
@@ -54,14 +55,16 @@ const preguntas = [
   <!-- SOBRE MÍ -->
   <section id="about" class="seccion contenedor sobre-mi">
     <div class="sobre-mi-texto">
-      <p class="etiqueta">03 · Core expertise</p>
-      <h2>A multidisciplinary creative approach.</h2>
+      <p class="etiqueta">Core expertise</p>
+      <h2>What I bring</h2>
       <p class="entradilla">
-        With 8+ years of experience, I build visual systems across licensed product development, motion
-        campaigns, corporate branding and AI-supported narrative production — always guided by strategic
-        clarity and communication purpose.
+        A multidisciplinary practice built around three connected areas: brand, product and digital experiences.
       </p>
-      <Image class="ilustracion" src={escaladores} alt="" widths={[600, 1000]} sizes="(max-width: 900px) 100vw, 40vw" />
+      <dl class="areas">
+        {areas.map((a) => <div><dt>{a.t}</dt><dd>{a.d}</dd></div>)}
+      </dl>
+      <p class="lema">From concept to production.<br />From visual system to working product.</p>
+      <Image class="ilustracion" src={escaladores} alt="" widths={[600, 1000]} sizes="(max-width: 900px) 90vw, 36vw" />
     </div>
     <div class="preguntas">
       {
@@ -80,12 +83,24 @@ const preguntas = [
 
   <!-- CONTACTO -->
   <section id="contact" class="seccion contenedor contacto">
-    <p class="etiqueta">04 · Contact</p>
+    <p class="etiqueta">Contact</p>
     <h2>Something meaningful?</h2>
     <a class="pildora pildora--llena pildora--grande" href={`mailto:${sitio.email}`}>Let's connect ↗</a>
     <p class="etiqueta">{sitio.email}</p>
   </section>
 </Base>
+
+<script>
+  import { ScrollTrigger } from 'gsap/ScrollTrigger'
+  // Modo contraste: mientras "Core expertise" ocupa el centro de la pantalla, la página pasa al modo contrario
+  // (Light → Dark, Dark → Light). Los colores de cada caso están en tokens.css (".contraste").
+  ScrollTrigger.create({
+    trigger: '#about',
+    start: 'top 55%',
+    end: 'bottom 45%',
+    onToggle: (st) => document.documentElement.classList.toggle('contraste', st.isActive),
+  })
+</script>
 
 <style>
   /* SECCIONES */
@@ -94,9 +109,16 @@ const preguntas = [
   /* SOBRE MÍ */
   .sobre-mi { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--espacio-7); }
   .sobre-mi-texto { display: flex; flex-direction: column; gap: var(--espacio-5); }
-  .ilustracion { width: 100%; margin-top: var(--espacio-5); }
-  :global(:root[data-theme='dark']) .ilustracion { filter: invert(1); }
-  @media (prefers-color-scheme: dark) { :global(:root:not([data-theme='light'])) .ilustracion { filter: invert(1); } }
+  /* un poco más pequeña: la línea que sube a la derecha no pasa del ancho del texto de arriba */
+  .ilustracion { width: 86%; margin-top: var(--espacio-4); filter: var(--filtro-dibujo); }
+
+  /* las tres áreas: filas con línea fina, como la ficha de los casos */
+  .areas { margin: 0; display: flex; flex-direction: column; border-top: var(--linea-fina) solid var(--color-linea); }
+  .areas div { display: grid; grid-template-columns: 11rem minmax(0, 1fr); gap: var(--espacio-4); padding-block: var(--espacio-3); border-bottom: var(--linea-fina) solid var(--color-linea); }
+  .areas dt { font-weight: var(--peso-medio); }
+  .areas dd { margin: 0; color: var(--color-texto-suave); font-size: var(--texto-s); }
+  .lema { margin: 0; font-size: var(--titulo-3); font-weight: var(--peso-fino); letter-spacing: -0.02em; line-height: 1.25; }
+  @media (max-width: 600px) { .areas div { grid-template-columns: minmax(0, 1fr); gap: var(--espacio-1); } }
 
   .preguntas { border-top: var(--linea-fina) solid var(--color-linea); align-self: start; }
   details { border-bottom: var(--linea-fina) solid var(--color-linea); }
