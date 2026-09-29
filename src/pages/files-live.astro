@@ -1,5 +1,5 @@
 ---
-// "Try it live" del caso 03 (Private Files): el mismo móvil de la animación, pero de verdad.
+// "Try it live" del caso 03 (Secure by default): el mismo móvil de la animación, pero de verdad.
 // DEMO de diseño de interacción: nada sale del navegador y nada se guarda (las fotos se ven con un enlace local
 // del propio navegador, URL.createObjectURL). Al recargar, vuelve a empezar.
 import '@fontsource-variable/geist'
@@ -14,7 +14,7 @@ import { sitio } from '../sitio'
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Private Files · live demo — {sitio.nombre}</title>
+    <title>Secure by default · live demo — {sitio.nombre}</title>
     <meta name="description" content="Sign in with a code, drop a file, share a link that expires. A demo — nothing leaves your browser." />
     <link rel="icon" href="/favicon.png" />
     <script is:inline>
@@ -34,14 +34,14 @@ import { sitio } from '../sitio'
       <div class="telefono">
         <div class="barra">
           <span class="etiqueta">files.danies.trade · demo</span>
-          <span class="etiqueta seguro">● Private</span>
+          <span class="etiqueta seguro">● Encrypted · DE</span>
         </div>
         <h1 class="titulo-app">Files</h1>
 
         <div class="cuerpo">
           <!-- 1. Email -->
           <form class="vista" data-vista="login" data-form-email>
-            <p class="etiqueta">Sign in · no password needed</p>
+            <p class="etiqueta">Secure sign-in</p>
             <label class="solo-lectores" for="email">Email</label>
             <input class="campo" id="email" type="email" required placeholder="Your work email" autocomplete="off" data-email />
             <button class="boton" type="submit">Send code</button>
@@ -113,7 +113,7 @@ import { sitio } from '../sitio'
         document.querySelector('[data-email-eco]')!.textContent = email.value.trim()
         setTimeout(() => {
           mostrar('codigo')
-          codigo.value = ''; pintarCasillas(); error.textContent = ''
+          codigo.value = ''; pintarCasillas(); error.textContent = ''; error.classList.remove('bien')
           if (matchMedia('(pointer: fine)').matches) codigo.focus()
         }, 350)
       })
@@ -142,6 +142,7 @@ import { sitio } from '../sitio'
           return
         }
         casillas.forEach((c) => c.classList.add('ok'))
+        error.textContent = '✓ Identity verified'; error.classList.add('bien')
         setTimeout(() => { casillas.forEach((c) => c.classList.remove('ok')); mostrar('espacio') }, 600)
       })
 
@@ -285,6 +286,7 @@ import { sitio } from '../sitio'
       .tiembla { animation: tiembla 0.4s; }
       @keyframes tiembla { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
       .error { color: #d4502e; min-height: 1em; }
+      .error.bien { color: var(--color-acento); }
 
       .fila { display: flex; justify-content: space-between; align-items: center; }
       .salir { border: 0; background: none; cursor: pointer; color: var(--color-texto-suave); text-decoration: underline; }

@@ -1,35 +1,36 @@
 ---
-// Caso 03 · Private Files: login sin contraseña + archivos privados (+ roles), contado como una sola historia.
+// Caso 03 · Secure by default: login verificado + base de datos protegida + archivos según la DSGVO, en una sola historia.
 // El "móvil" es el mismo del chat (mismo diseño); la historia avanza con el scroll.
 // "Try it live" abre la demo (/files-live.html).
 const EMAIL = 'you@company.com'
 const CODIGO = '482913'
 const pasos = [
-  'Sign in without a password',
-  'A one-time 6-digit code',
-  'Your private space',
-  'Uploaded to a server in Germany',
-  'Links that expire',
+  'Verified sign-in',
+  'One-time code — valid once, for minutes',
+  'Only you can see your files',
+  'Stored in Germany, under DSGVO',
+  'Shared links expire automatically',
 ]
 ---
 
-<section class="archivos-caso" id="caso-archivos" data-archivos aria-label="Case 03 · Private Files">
+<section class="archivos-caso" id="caso-archivos" data-archivos aria-label="Case 03 · Secure by default">
   <div class="escena contenedor">
     <div class="texto">
       <p class="etiqueta">Case 03 · Design + development · <span class="en-vivo">● Live</span></p>
-      <h3 class="titulo">Private Files<span class="titulo-2">Security first, by design.</span></h3>
+      <h3 class="titulo">Secure by default<span class="titulo-2">Login, data and files — protected at every step.</span></h3>
       <p class="entradilla">
-        A private workspace where people sign in without a password, upload their files and share them through
-        links that expire — built around one question: what happens if something goes wrong?
+        In any app, the most valuable thing is the data behind it. This workspace shows how I protect it: every
+        sign-in is verified, every record is guarded by rules inside the database, and every uploaded file is handled
+        according to European data protection law.
       </p>
       <p class="texto-suave">
-        I designed and built the whole system — passwordless sign-in, private storage, roles and an admin back office,
-        account deletion — on my own server in Germany, with the security rules living in the database itself.
+        I designed and built the complete system — verified sign-in, a protected database, private file storage, user
+        roles and account deletion — hosted on my own server in Germany.
       </p>
       <dl class="ficha">
         <div><dt>Role</dt><dd>Product Design · Front-end · Back-end</dd></div>
         <div><dt>Stack</dt><dd>React · Supabase Auth · Storage · Postgres RLS</dd></div>
-        <div><dt>Scope</dt><dd>Passwordless login · Private files · Roles · DSGVO</dd></div>
+        <div><dt>Scope</dt><dd>Secure login · Protected database · DSGVO-compliant files</dd></div>
       </dl>
       <div class="acciones">
         <a class="pildora pildora--llena" href="/app-archivos.html">Read the case study →</a>
@@ -43,14 +44,14 @@ const pasos = [
         <div class="telefono">
           <div class="barra">
             <span class="etiqueta">files.danies.trade</span>
-            <span class="etiqueta seguro">● Private</span>
+            <span class="etiqueta seguro">● Encrypted · DE</span>
           </div>
           <p class="titulo-app">Files</p>
 
           <div class="cuerpo">
             <!-- 1. Entrar con el email -->
             <div class="vista" data-vista="login">
-              <p class="etiqueta">Sign in · no password needed</p>
+              <p class="etiqueta">Secure sign-in</p>
               <div class="campo-email"><span data-email></span><span class="cursor" data-cursor-email></span><span class="placeholder" data-placeholder-email>Your work email</span></div>
               <span class="boton" data-enviar-codigo>Send code</span>
             </div>
@@ -65,7 +66,7 @@ const pasos = [
               <div class="casillas">
                 {CODIGO.split('').map((n) => <span class="casilla" data-casilla><span>{n}</span></span>)}
               </div>
-              <span class="verificado" data-verificado>✓ Signed in</span>
+              <span class="verificado" data-verificado>✓ Identity verified</span>
             </div>
 
             <!-- 3–5. El espacio privado -->
