@@ -33,8 +33,8 @@ const barrendero = {
 }
 
 export default defineConfig({
-  // La dirección de la web (para la imagen al compartir y los enlaces de idioma). Mientras se prueba en v5.danies.trade,
-  // `npm run publicar` la cambia con SITE_URL; cuando el dominio final esté activo, basta con quitar esa variable.
+  // La dirección de la web (para la imagen al compartir y los enlaces de idioma). Activa desde el 29 sep 2026.
+  // Para una prueba en otra dirección: SITE_URL=https://… astro build
   site: process.env.SITE_URL ?? 'https://camilocepedadanies.com',
   // Páginas como "product-design.html": así los enlaces de la web antigua siguen funcionando
   build: { format: 'file' },
