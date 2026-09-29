@@ -17,7 +17,7 @@ Yaku already had a strong brand and a great kitchen. Years ago I designed a *Mob
 
 ## Where it started
 
-![The original Mobile Ordering Prototype — visuals only](./app-yaku/prototipo-2020.jpg)
+![The original Mobile Ordering Prototype — visuals only](./app-yaku/prototipo-recorte.png)
 *Before the app: the original Mobile Ordering Prototype — still only visuals.*
 
 ![Yaku's responsive website](./app-yaku/web-yaku.jpg)
