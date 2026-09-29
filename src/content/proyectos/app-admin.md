@@ -7,6 +7,7 @@ resumen: An admin panel to create, rename and delete users. The dangerous work h
 disciplinas: [React, Vite, Supabase, Edge Functions, Roles & Permissions]
 enlace: https://admin.danies.trade
 textoEnlace: Open the back office
+oculto: true # ahora forma parte del caso "Private Files" (app-archivos)
 orden: 140
 ---
 

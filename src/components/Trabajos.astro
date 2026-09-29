@@ -5,6 +5,7 @@
 import TarjetaProyecto from './TarjetaProyecto.astro'
 import YakuEscaparate from './YakuEscaparate.astro'
 import ChatEscaparate from './ChatEscaparate.astro'
+import ArchivosEscaparate from './ArchivosEscaparate.astro'
 import LicenciasEscaparate from './LicenciasEscaparate.astro'
 import TransalpEscaparate from './TransalpEscaparate.astro'
 import type { CollectionEntry } from 'astro:content'
@@ -14,7 +15,6 @@ interface Props {
   software: CollectionEntry<'proyectos'>[]
 }
 const { diseño, software } = Astro.props
-const otrasApps = software.filter((p) => p.id !== 'app-yaku' && p.id !== 'app-chat') // Yaku y el chat van arriba, en grande
 const otrosDiseños = diseño.filter((p) => p.id !== 'product-design' && p.id !== 'integrated-campaign-communication') // licencias y Transalp van arriba, en grande
 ---
 
@@ -35,12 +35,7 @@ const otrosDiseños = diseño.filter((p) => p.id !== 'product-design' && p.id !=
   <div id="panel-software" role="tabpanel" aria-labelledby="pestana-software" data-panel-contenido="software">
     <YakuEscaparate />
     <ChatEscaparate />
-    <div class="contenedor mas-apps" id="mas-software">
-      <p class="etiqueta">More apps · all live on my own server</p>
-      <div class="rejilla">
-        {otrasApps.map((p) => <TarjetaProyecto proyecto={p} />)}
-      </div>
-    </div>
+    <ArchivosEscaparate />
   </div>
 
   <div id="panel-design" role="tabpanel" aria-labelledby="pestana-design" data-panel-contenido="design" hidden>
@@ -79,6 +74,8 @@ const otrosDiseños = diseño.filter((p) => p.id !== 'product-design' && p.id !=
   // "Next project": baja suavemente hasta los siguientes proyectos del panel (justo bajo las dos barras fijas)
   raiz.querySelectorAll<HTMLAnchorElement>('[data-siguiente]').forEach((a) => a.addEventListener('click', (e) => {
     e.preventDefault()
+    // "#design": el siguiente proyecto está en la otra pestaña → se cambia de pestaña (y se va a su inicio)
+    if (a.hash === '#design') { raiz.querySelector<HTMLButtonElement>('[data-panel="design"]')!.click(); return }
     const destino = document.querySelector<HTMLElement>(a.hash)!
     const barras = raiz.querySelector<HTMLElement>('.cabecera-trabajos')!.getBoundingClientRect().bottom
     window.scrollTo({ top: destino.getBoundingClientRect().top + scrollY - Math.max(barras, 0), behavior: 'smooth' })

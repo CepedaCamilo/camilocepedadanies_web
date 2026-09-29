@@ -1,0 +1,345 @@
+---
+// Caso 03 · Private Files: login sin contraseña + archivos privados (+ roles), contado como una sola historia.
+// El "móvil" es el mismo del chat (mismo diseño); la historia avanza con el scroll.
+// "Try it live" abre la demo (/files-live.html).
+const EMAIL = 'you@company.com'
+const CODIGO = '482913'
+const pasos = [
+  'Sign in without a password',
+  'A one-time 6-digit code',
+  'Your private space',
+  'Uploaded to a server in Germany',
+  'Links that expire',
+]
+---
+
+<section class="archivos-caso" id="caso-archivos" data-archivos aria-label="Case 03 · Private Files">
+  <div class="escena contenedor">
+    <div class="texto">
+      <p class="etiqueta">Case 03 · Design + development · <span class="en-vivo">● Live</span></p>
+      <h3 class="titulo">Private Files<span class="titulo-2">Security first, by design.</span></h3>
+      <p class="entradilla">
+        A private workspace where people sign in without a password, upload their files and share them through
+        links that expire — built around one question: what happens if something goes wrong?
+      </p>
+      <p class="texto-suave">
+        I designed and built the whole system — passwordless sign-in, private storage, roles and an admin back office,
+        account deletion — on my own server in Germany, with the security rules living in the database itself.
+      </p>
+      <dl class="ficha">
+        <div><dt>Role</dt><dd>Product Design · Front-end · Back-end</dd></div>
+        <div><dt>Stack</dt><dd>React · Supabase Auth · Storage · Postgres RLS</dd></div>
+        <div><dt>Scope</dt><dd>Passwordless login · Private files · Roles · DSGVO</dd></div>
+      </dl>
+      <div class="acciones">
+        <a class="pildora pildora--llena" href="/app-archivos.html">Read the case study →</a>
+        <a class="pildora" href="/files-live.html">Try it live ↗</a>
+        <a class="pildora" href="#design" data-siguiente>Next project ↓</a>
+      </div>
+    </div>
+
+    <div class="dispositivo" aria-hidden="true">
+      <div class="movil">
+        <div class="telefono">
+          <div class="barra">
+            <span class="etiqueta">files.danies.trade</span>
+            <span class="etiqueta seguro">● Private</span>
+          </div>
+          <p class="titulo-app">Files</p>
+
+          <div class="cuerpo">
+            <!-- 1. Entrar con el email -->
+            <div class="vista" data-vista="login">
+              <p class="etiqueta">Sign in · no password needed</p>
+              <div class="campo-email"><span data-email></span><span class="cursor" data-cursor-email></span><span class="placeholder" data-placeholder-email>Your work email</span></div>
+              <span class="boton" data-enviar-codigo>Send code</span>
+            </div>
+
+            <!-- 2. El código de 6 cifras -->
+            <div class="vista" data-vista="codigo">
+              <div class="aviso-mail" data-aviso-mail>
+                <span class="etiqueta">Mail · now</span>
+                <span>Your sign-in code: <b>{CODIGO.slice(0, 3)} {CODIGO.slice(3)}</b></span>
+              </div>
+              <p class="etiqueta">Enter the 6-digit code</p>
+              <div class="casillas">
+                {CODIGO.split('').map((n) => <span class="casilla" data-casilla><span>{n}</span></span>)}
+              </div>
+              <span class="verificado" data-verificado>✓ Signed in</span>
+            </div>
+
+            <!-- 3–5. El espacio privado -->
+            <div class="vista vista--espacio" data-vista="espacio">
+              <p class="etiqueta">My files</p>
+              <div class="zona" data-zona><span>Drop files here</span><span class="etiqueta">Images & PDF · max. 10 MB</span></div>
+              <div class="archivo" data-archivo>
+                <img src="/transalp/pantalla-trailer.webp" alt="" loading="lazy" decoding="async" />
+                <div class="archivo-datos">
+                  <span>alps.jpg</span>
+                  <span class="etiqueta">2.4 MB</span>
+                  <span class="barra-subida"><span data-subida></span></span>
+                </div>
+                <span class="privado" data-privado>🔒 Private</span>
+              </div>
+              <div class="enlace" data-enlace>
+                <span class="etiqueta">Secure link</span>
+                <span class="enlace-tiempo"><span data-expira>expires in </span><b data-reloj>60:00</b></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- La tarjeta del archivo que "cae" en el móvil (fuera del móvil, para que pueda venir de lejos) -->
+      <div class="volador" data-volador><img src="/transalp/pantalla-trailer.webp" alt="" loading="lazy" decoding="async" /><span>alps.jpg</span></div>
+    </div>
+
+    <div class="leyenda">
+      <div class="leyenda-pasos">
+        {pasos.map((p, i) => <p class="etiqueta paso" data-paso={i}><span>{String(i + 1).padStart(2, '0')}</span> {p}</p>)}
+      </div>
+      <div class="progreso"><span data-progreso></span></div>
+    </div>
+  </div>
+</section>
+<!-- En móvil la escena fija no tiene sitio para los botones: van aquí, justo debajo de la animación -->
+<div class="contenedor acciones-movil">
+  <a class="pildora pildora--llena" href="/app-archivos.html">Read the case study →</a>
+  <a class="pildora" href="/files-live.html">Try it live ↗</a>
+  <a class="pildora" href="#design" data-siguiente>Next project ↓</a>
+</div>
+
+<script define:vars={{ EMAIL }}>
+  window.__archivosEmail = EMAIL
+</script>
+
+<script>
+  import { gsap } from 'gsap'
+  import { ScrollTrigger } from 'gsap/ScrollTrigger'
+  gsap.registerPlugin(ScrollTrigger)
+
+  const raiz = document.querySelector<HTMLElement>('[data-archivos]')!
+  const $ = <T extends HTMLElement = HTMLElement>(s: string) => raiz.querySelector<T>(s)!
+  const vista = (id: string) => $(`[data-vista="${id}"]`)
+  const pasos = raiz.querySelectorAll('[data-paso]')
+  const casillas = raiz.querySelectorAll<HTMLElement>('[data-casilla]')
+  const EMAIL = (window as any).__archivosEmail as string
+
+  const mm = gsap.matchMedia()
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    raiz.classList.add('archivos-caso--animado')
+
+    // El email se escribe letra a letra; el reloj del enlace cuenta de 60:00 a 00:00 (1 hora, como en la app real)
+    const estado = { letras: 0, segundos: 3600 }
+    const pintarEmail = () => { $('[data-email]').textContent = EMAIL.slice(0, Math.round(estado.letras)) }
+    const pintarReloj = () => {
+      const s = Math.max(0, Math.round(estado.segundos))
+      $('[data-reloj]').textContent = s === 0 ? 'Expired' : `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`
+      $('[data-enlace]').classList.toggle('enlace--caducado', s === 0)
+      $('[data-expira]').hidden = s === 0
+    }
+
+    // Estado inicial
+    gsap.set(pasos, { autoAlpha: 0, y: 10 }); gsap.set(pasos[0], { autoAlpha: 1, y: 0 })
+    gsap.set([vista('codigo'), vista('espacio')], { autoAlpha: 0, xPercent: 12 })
+    gsap.set($('[data-aviso-mail]'), { autoAlpha: 0, yPercent: -120 })
+    gsap.set(casillas, { '--lleno': 0 })
+    gsap.set(raiz.querySelectorAll('.casilla span'), { autoAlpha: 0, y: 6 })
+    gsap.set($('[data-verificado]'), { autoAlpha: 0, scale: 0.8 })
+    gsap.set($('[data-volador]'), { autoAlpha: 0, xPercent: 160, yPercent: -140, rotate: 14 })
+    gsap.set($('[data-archivo]'), { autoAlpha: 0, y: 10 })
+    gsap.set($('[data-subida]'), { scaleX: 0 })
+    gsap.set($('[data-privado]'), { autoAlpha: 0, scale: 0.8 })
+    gsap.set($('[data-enlace]'), { autoAlpha: 0, y: 10 })
+    gsap.set($('[data-cursor-email]'), { autoAlpha: 1 })
+    pintarEmail(); pintarReloj()
+
+    const tl = gsap.timeline({
+      defaults: { ease: 'power2.inOut', duration: 0.3 },
+      scrollTrigger: { trigger: raiz, start: 'top top', end: 'bottom bottom', scrub: 0.6 },
+    })
+    const paso = (i: number, t: number) => {
+      tl.to(pasos[i - 1], { autoAlpha: 0, y: -10, duration: 0.2 }, t)
+        .to(pasos[i], { autoAlpha: 1, y: 0, duration: 0.2 }, t + 0.15)
+    }
+    const cambiarVista = (de: string, a: string, t: number) => {
+      tl.to(vista(de), { autoAlpha: 0, xPercent: -12, duration: 0.3 }, t)
+        .to(vista(a), { autoAlpha: 1, xPercent: 0, duration: 0.3 }, t + 0.1)
+    }
+
+    // 1. El email se escribe y se pulsa "Send code" (se hunde y cambia de color, como Send en el chat)
+    tl.to($('[data-placeholder-email]'), { autoAlpha: 0, duration: 0.05 }, 0.1)
+      .to(estado, { letras: EMAIL.length, duration: 0.9, ease: 'none', onUpdate: pintarEmail }, 0.15)
+      .to($('[data-enviar-codigo]'), { scale: 0.9, duration: 0.1, ease: 'power2.in' }, 1.1)
+      .to($('[data-enviar-codigo]'), { '--pulsado': 1, duration: 0.15 }, 1.15)
+      .to($('[data-enviar-codigo]'), { scale: 1, duration: 0.2, ease: 'back.out(3)' }, 1.2)
+      .set($('[data-cursor-email]'), { autoAlpha: 0 }, 1.1)
+    // 2. Llega el código por email y se rellena casilla a casilla
+    paso(1, 1.4); cambiarVista('login', 'codigo', 1.4)
+    tl.to($('[data-aviso-mail]'), { autoAlpha: 1, yPercent: 0, duration: 0.3, ease: 'back.out(1.6)' }, 1.7)
+    casillas.forEach((c, i) => {
+      const t = 2.1 + i * 0.13
+      tl.to(c, { '--lleno': 1, duration: 0.1 }, t).to(c.querySelector('span'), { autoAlpha: 1, y: 0, duration: 0.12 }, t)
+    })
+    tl.to($('[data-verificado]'), { autoAlpha: 1, scale: 1, duration: 0.2, ease: 'back.out(2)' }, 3.0)
+    // 3. El espacio privado: una foto viene volando y cae en la zona
+    paso(2, 3.4); cambiarVista('codigo', 'espacio', 3.4)
+    tl.to($('[data-volador]'), { autoAlpha: 1, duration: 0.15 }, 3.7)
+      .to($('[data-volador]'), { xPercent: 0, yPercent: 0, rotate: -4, duration: 0.7, ease: 'power3.out' }, 3.7)
+      .to($('[data-zona]'), { '--encendida': 1, duration: 0.2 }, 4.1)
+      .to($('[data-volador]'), { autoAlpha: 0, scale: 0.6, duration: 0.2 }, 4.4)
+      .to($('[data-zona]'), { '--encendida': 0, duration: 0.2 }, 4.55)
+    // 4. Se sube a mi servidor en Alemania: barra de progreso → "Private"
+    paso(3, 4.5)
+    tl.to($('[data-archivo]'), { autoAlpha: 1, y: 0, duration: 0.2 }, 4.5)
+      .to($('[data-subida]'), { scaleX: 1, duration: 0.7, ease: 'power1.inOut' }, 4.6)
+      .to($('[data-subida]').parentElement, { autoAlpha: 0, duration: 0.1 }, 5.3)
+      .to($('[data-privado]'), { autoAlpha: 1, scale: 1, duration: 0.2, ease: 'back.out(2)' }, 5.35)
+    // 5. Un enlace seguro que caduca: el reloj baja hasta "Expired"
+    paso(4, 5.7)
+    tl.to($('[data-enlace]'), { autoAlpha: 1, y: 0, duration: 0.2 }, 5.7)
+      .to(estado, { segundos: 0, duration: 1.1, ease: 'none', onUpdate: pintarReloj }, 5.95)
+      .to({}, { duration: 0.3 })
+    tl.fromTo($('[data-progreso]'), { scaleX: 0 }, { scaleX: 1, duration: 7.35, ease: 'none' }, 0)
+    return () => raiz.classList.remove('archivos-caso--animado')
+  })
+</script>
+
+<style>
+  .escena {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    grid-template-areas: 'texto dispositivo' 'leyenda dispositivo';
+    align-items: center;
+    column-gap: var(--espacio-7);
+    padding-block: var(--espacio-7);
+  }
+  .archivos-caso--animado { height: calc(420svh - var(--alto-cabecera)); }
+  .archivos-caso--animado .escena {
+    position: sticky; top: calc(var(--alto-cabecera) + var(--alto-barra-trabajos));
+    height: calc(100svh - var(--alto-cabecera) - var(--alto-barra-trabajos));
+    align-content: center; padding-block: var(--espacio-5);
+  }
+
+  .texto { grid-area: texto; display: flex; flex-direction: column; gap: var(--espacio-4); }
+  .en-vivo { color: var(--color-acento); }
+  .titulo-2 { display: block; color: var(--color-texto-suave); }
+  .titulo { font-size: var(--titulo-2); font-weight: var(--peso-fino); letter-spacing: var(--tracking-titulo); line-height: 1.02; }
+  .texto-suave { margin: 0; color: var(--color-texto-suave); font-size: var(--texto-s); }
+  .ficha { margin: var(--espacio-2) 0 0; display: flex; flex-direction: column; border-top: var(--linea-fina) solid var(--color-linea); }
+  .ficha div { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: var(--espacio-3); padding-block: var(--espacio-2); border-bottom: var(--linea-fina) solid var(--color-linea); font-size: var(--texto-s); }
+  .ficha dt { font-family: var(--fuente-mono); font-size: var(--texto-xs); color: var(--color-texto-suave); }
+  .ficha dd { margin: 0; }
+  .acciones { display: flex; flex-wrap: wrap; gap: var(--espacio-2); padding-top: var(--espacio-2); }
+  .acciones .pildora, .acciones-movil .pildora { padding-inline: 1.25rem; }
+  .acciones-movil { display: none; flex-wrap: wrap; gap: var(--espacio-2); padding-block: var(--espacio-5) var(--espacio-2); }
+
+  /* ---------- El móvil: mismo diseño que el chat (HeroApp.astro) ---------- */
+  .dispositivo { grid-area: dispositivo; position: relative; display: flex; justify-content: center; align-items: center; height: 100%; min-height: 0; }
+  .movil { height: min(100%, 72svh); aspect-ratio: 0.6; max-width: 100%; }
+  .telefono {
+    width: 100%; height: 100%; display: flex; flex-direction: column; gap: 3%;
+    padding: 7% 6%; border-radius: 12% / 8%;
+    background: var(--color-superficie); border: var(--linea-fina) solid var(--color-linea);
+    box-shadow: 0 40px 80px -30px rgb(35 26 21 / 0.35);
+    font-size: clamp(0.62rem, 0.45rem + 0.45vw, 0.9rem); overflow: hidden;
+  }
+  .barra { display: flex; justify-content: space-between; }
+  .barra .etiqueta { font-size: 0.85em; }
+  .seguro { color: var(--color-acento); }
+  .titulo-app { margin: 0; font-size: 2.6em; font-weight: var(--peso-fino); letter-spacing: var(--tracking-titulo); line-height: 1; }
+  .cuerpo { position: relative; flex-grow: 1; border-radius: 1.6em; background: var(--color-fondo); overflow: hidden; }
+  .vista { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 0.9em; padding: 1.1em; }
+  .vista .etiqueta { font-size: 0.8em; }
+  .vista--espacio { justify-content: flex-start; }
+
+  /* 1. email + botón */
+  .campo-email {
+    position: relative; padding: 0.9em 1.1em; border-radius: 999px; white-space: nowrap; overflow: hidden;
+    background: var(--color-invertido); color: var(--color-sobre-invertido);
+  }
+  .placeholder { position: absolute; left: 1.1em; opacity: 0.7; }
+  .cursor { display: inline-block; width: 1px; height: 1.1em; margin-left: 1px; vertical-align: text-bottom; background: currentColor; animation: parpadeo 1s steps(1) infinite; }
+  @keyframes parpadeo { 50% { opacity: 0; } }
+  .boton {
+    --pulsado: 0;
+    align-self: stretch; text-align: center; padding: 0.85em 1.1em; border-radius: 999px; font-weight: var(--peso-medio);
+    background: color-mix(in srgb, var(--color-sobre-invertido) calc(var(--pulsado) * 100%), var(--color-acento));
+    color: color-mix(in srgb, var(--color-invertido) calc(var(--pulsado) * 100%), var(--color-sobre-acento));
+  }
+
+  /* 2. aviso del email + casillas */
+  .aviso-mail {
+    position: absolute; top: 1em; left: 1em; right: 1em; display: flex; flex-direction: column; gap: 0.2em;
+    padding: 0.75em 1em; border-radius: 1.3em; background: var(--color-superficie-2); line-height: 1.3;
+  }
+  .aviso-mail b { font-family: var(--fuente-mono); letter-spacing: 0.08em; }
+  .casillas { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.45em; }
+  .casilla {
+    --lleno: 0;
+    aspect-ratio: 0.8; display: grid; place-items: center; border-radius: 999px; font-family: var(--fuente-mono); font-size: 1.25em;
+    border: var(--linea-fina) solid color-mix(in srgb, var(--color-acento) calc(var(--lleno) * 100%), var(--color-linea));
+    background: color-mix(in srgb, var(--color-superficie-2) calc(var(--lleno) * 100%), transparent);
+  }
+  .verificado { align-self: center; padding: 0.5em 1em; border-radius: 999px; background: var(--color-acento); color: var(--color-sobre-acento); font-weight: var(--peso-medio); }
+
+  /* 3–5. espacio privado */
+  .zona {
+    --encendida: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.3em; min-height: 26%;
+    border-radius: 1.3em; text-align: center;
+    border: 1.5px dashed color-mix(in srgb, var(--color-acento) calc(var(--encendida) * 100%), var(--color-linea));
+    background: color-mix(in srgb, var(--color-acento) calc(var(--encendida) * 14%), transparent);
+  }
+  .archivo {
+    display: grid; grid-template-columns: 3.2em minmax(0, 1fr) auto; align-items: center; gap: 0.8em;
+    padding: 0.6em; border-radius: 1.3em; background: var(--color-superficie-2);
+  }
+  .archivo img { width: 3.2em; height: 3.2em; border-radius: 0.9em; object-fit: cover; }
+  .archivo-datos { display: flex; flex-direction: column; gap: 0.25em; min-width: 0; }
+  .barra-subida { height: 0.3em; border-radius: 999px; background: var(--color-linea); overflow: hidden; }
+  .barra-subida span { display: block; height: 100%; background: var(--color-acento); transform-origin: left; }
+  .privado { padding: 0.4em 0.8em; border-radius: 999px; font-size: 0.8em; font-weight: var(--peso-medio); background: var(--color-invertido); color: var(--color-sobre-invertido); }
+  .enlace {
+    display: flex; justify-content: space-between; align-items: center; gap: 0.6em;
+    padding: 0.75em 1em; border-radius: 999px; background: var(--color-acento); color: var(--color-sobre-acento);
+    transition: background-color 0.3s, color 0.3s;
+  }
+  .enlace .etiqueta { color: inherit; opacity: 0.8; }
+  .enlace b { font-family: var(--fuente-mono); font-weight: var(--peso-medio); }
+  .enlace--caducado { background: var(--color-superficie-2); color: var(--color-texto-suave); }
+
+  /* la foto que llega volando */
+  .volador {
+    position: absolute; left: 50%; top: 52%; width: min(38%, 14rem); margin-left: -7%; z-index: 3;
+    display: flex; flex-direction: column; gap: 0.4em; padding: 0.5em 0.5em 0.7em; border-radius: 1.2em;
+    background: var(--color-superficie); border: var(--linea-fina) solid var(--color-linea);
+    box-shadow: 0 30px 50px -20px rgb(0 0 0 / 0.45); font-size: var(--texto-xs); pointer-events: none;
+  }
+  .volador img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 0.8em; }
+  .volador span { padding-inline: 0.3em; font-family: var(--fuente-mono); }
+
+  /* Sin animación: se ve el espacio privado con el archivo ya subido */
+  .archivos-caso:not(.archivos-caso--animado) [data-vista='login'],
+  .archivos-caso:not(.archivos-caso--animado) [data-vista='codigo'],
+  .archivos-caso:not(.archivos-caso--animado) .volador,
+  .archivos-caso:not(.archivos-caso--animado) .barra-subida { display: none; }
+
+  /* ---------- Leyenda ---------- */
+  .leyenda { grid-area: leyenda; align-self: end; display: flex; flex-direction: column; gap: var(--espacio-3); padding-top: var(--espacio-5); }
+  .leyenda-pasos { display: grid; }
+  .paso { grid-area: 1 / 1; margin: 0; }
+  .paso span { color: var(--color-acento); }
+  .archivos-caso:not(.archivos-caso--animado) .paso:not(:first-child) { display: none; }
+  .progreso { height: 2px; border-radius: 2px; background: var(--color-linea); overflow: hidden; max-width: 22rem; }
+  .progreso span { display: block; height: 100%; background: var(--color-acento); transform-origin: left; transform: scaleX(0); }
+
+  @media (max-width: 900px) {
+    .escena { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'texto' 'dispositivo' 'leyenda'; row-gap: var(--espacio-5); }
+    .archivos-caso--animado .escena { align-content: start; overflow: hidden; }
+    .archivos-caso--animado .texto .entradilla, .archivos-caso--animado .texto-suave, .archivos-caso--animado .ficha,
+    .archivos-caso--animado .acciones { display: none; }
+    .archivos-caso--animado + .acciones-movil { display: flex; }
+    .dispositivo { height: 42svh; }
+    .movil { height: 100%; }
+  }
+</style>

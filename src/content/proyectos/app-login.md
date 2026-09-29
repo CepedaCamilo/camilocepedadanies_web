@@ -7,6 +7,7 @@ resumen: Sign in with a six-digit code sent by email — no passwords. It is als
 disciplinas: [React, Vite, Supabase Auth, Edge Functions, SMTP]
 enlace: https://login.danies.trade
 textoEnlace: Open the login
+oculto: true # ahora forma parte del caso "Private Files" (app-archivos)
 orden: 120
 ---
 

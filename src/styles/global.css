@@ -117,6 +117,13 @@ p { margin: 0; }
 /* Pies de foto: la cursiva que va SOLA en su línea, o bajo una pareja de imágenes. Las cursivas dentro de un texto siguen normales. */
 .prosa p:has(> em:only-child) em, .prosa p:has(> img) em { font-style: normal; font-size: var(--texto-s); color: var(--color-texto-suave); max-width: 40rem; display: block; }
 .prosa h2 { font-size: var(--titulo-3); font-weight: var(--peso-normal); letter-spacing: -0.02em; margin-top: var(--espacio-5); }
+/* subtítulos (###) y tablas dentro de un caso de estudio */
+.prosa h3 { font-size: var(--texto-l, 1.25rem); font-weight: var(--peso-medio); letter-spacing: -0.01em; margin: var(--espacio-2) 0 calc(-1 * var(--espacio-3)); }
+.prosa table { width: 100%; max-width: 52rem; border-collapse: collapse; font-size: var(--texto-s); }
+.prosa th { text-align: left; font-family: var(--fuente-mono); font-size: var(--texto-xs); font-weight: var(--peso-normal); color: var(--color-texto-suave); }
+.prosa th, .prosa td { padding: var(--espacio-3) var(--espacio-4) var(--espacio-3) 0; border-bottom: var(--linea-fina) solid var(--color-linea); vertical-align: top; }
+.prosa td:first-child { width: 42%; }
+@media (max-width: 600px) { .prosa td:first-child { width: auto; } }
 .prosa ul { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: var(--espacio-2); max-width: 44rem; }
 .prosa p { max-width: 44rem; }
 .prosa blockquote {
