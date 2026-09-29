@@ -75,6 +75,16 @@ const { diseño, software } = Astro.props
     onLeaveBack: () => marcar('software'),
   })
 
+  // Contraste: mientras se recorren los casos, la cabecera + la barra "Selected work" (hasta la línea) usan el modo contrario
+  const cabecera = document.querySelector<HTMLElement>('.cabecera')!
+  ScrollTrigger.create({
+    trigger: raiz,
+    start: () => `top ${cabecera.offsetHeight - barra.offsetTop}px`, // cuando la barra se queda fija bajo la cabecera
+    end: () => `bottom ${cabecera.offsetHeight + barra.offsetHeight}px`, // cuando la barra se va con el final de la sección
+    invalidateOnRefresh: true,
+    onToggle: (st) => [cabecera, barra].forEach((e) => e.classList.toggle('invertir', st.isActive)),
+  })
+
   // Dónde empieza cada parte (justo debajo de la cabecera + la barra de trabajos)
   const alturaBarras = () => document.querySelector<HTMLElement>('.cabecera')!.offsetHeight + barra.offsetHeight
   const inicio = (panel: string) =>
