@@ -184,19 +184,22 @@ p { margin: 0; }
     padding-top: var(--espacio-6) !important;
     padding-bottom: var(--espacio-6) !important;
     row-gap: 0 !important;
-    /* "Case 0X" fijo arriba · (espacio) · título + animación + paso juntos en el centro · (espacio) */
-    grid-template-areas: 'kicker' '.' 'titulo' 'anim' 'paso' '.' !important;
-    grid-template-rows: auto minmax(0, 1fr) auto auto auto minmax(0, 1fr) !important;
+    /* "Case 0X" fijo arriba; el espacio libre se reparte en 4 partes iguales:
+       kicker · (espacio) · título · (espacio) · animación · (espacio) · paso · (espacio).
+       Así el título queda a medio camino entre el kicker y la animación, y el paso a medio camino
+       entre la animación y el final de la pantalla */
+    grid-template-areas: 'kicker' '.' 'titulo' '.' 'anim' '.' 'paso' '.' !important;
+    grid-template-rows: auto minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) !important;
     align-content: stretch !important;
     align-items: center !important;
   }
   /* el bloque de texto se "abre": el kicker y el título se colocan cada uno en su franja */
   #work section[class*='--animado'] > .escena > .texto { display: contents !important; }
   #work section[class*='--animado'] > .escena > .texto > .etiqueta:first-child { grid-area: kicker; margin: 0; }
-  #work section[class*='--animado'] > .escena > .texto > .titulo { grid-area: titulo; margin: 0 0 var(--espacio-6); }
+  #work section[class*='--animado'] > .escena > .texto > .titulo { grid-area: titulo; margin: 0; }
   /* la animación: cualquier hijo de la escena que no sea el texto ni el paso */
   #work section[class*='--animado'] > .escena > :not(.texto):not(.leyenda) { grid-area: anim; }
-  #work section[class*='--animado'] > .escena > .leyenda { grid-area: paso; align-self: start !important; padding-top: var(--espacio-5) !important; }
+  #work section[class*='--animado'] > .escena > .leyenda { grid-area: paso; align-self: center !important; padding-top: 0 !important; }
   /* después de los balones (no tienen "paso") el texto sube un poco */
   #work .licencias--animado + .detalle-movil { padding-top: var(--espacio-4); }
 }
