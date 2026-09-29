@@ -1,0 +1,181 @@
+---
+// La portada (en los tres idiomas). src/pages/index.astro, de/index.astro y es/index.astro la usan tal cual:
+// el idioma sale de la dirección (/, /de, /es). Los textos de cada idioma están aquí mismo.
+import { Image } from 'astro:assets'
+import Base from '../layouts/Base.astro'
+import Trabajos from './Trabajos.astro'
+import Hero from './Hero.astro'
+import Cine from './Cine.astro'
+import { sitio } from '../sitio'
+import { idiomaDe, t } from '../i18n'
+import escaladores from '../assets/marca/escaladores.png'
+
+const idioma = idiomaDe(Astro.url)
+
+// "Practice": las tres áreas, las preguntas y el lema (textos de Camilo, sep 2026)
+const practica = t(idioma, {
+  en: {
+    kicker: 'Practice',
+    titulo: 'What I bring',
+    intro: 'A multidisciplinary practice across three connected areas: brand, product and digital experiences.',
+    areas: [
+      { t: 'Brand & Product', d: 'Identity systems, licensed products, packaging and retail experiences built for real-world markets.' },
+      { t: 'Digital Product', d: 'Interfaces and working web applications — from product thinking and design to front-end and back-end.' },
+      { t: 'Creative Direction', d: 'Campaigns, storytelling, motion, photography and AI-supported visual production.' },
+    ],
+    preguntas: [
+      { q: 'Do I only design, or do I also build?', a: 'Both. My background is in design and creative direction, and I now build digital products as well — working across interface design, front-end, back-end and deployment.' },
+      { q: 'How do I turn an idea into a finished product?', a: 'Step by step, from understanding to making. I define the problem and the audience, shape the concept and the visual system, prototype early — then build, test and refine until it works in the real world, whether that is a product on a shelf or an application on a server.' },
+      { q: 'What connects such different disciplines?', a: 'Systems thinking. Whether it is a brand, a physical product, a campaign or an application, I look for consistency between concept, function, visual language and execution.' },
+      { q: 'How do I approach a new project?', a: 'I start with the problem, not the medium. The goal is to understand what needs to work, what needs to communicate and what the user should experience — then choose the right combination of design, technology and production.' },
+      { q: 'Where does AI fit into my work?', a: 'As a production and exploration tool — not a substitute for direction. I use generative tools for visual development, storytelling and creative production while keeping concept, art direction and editorial decisions human.' },
+    ],
+    lema: ['From concept to production.', 'From visual system to working product.'],
+  },
+  de: {
+    kicker: 'Arbeitsweise',
+    titulo: 'Was ich mitbringe',
+    intro: 'Eine multidisziplinäre Arbeitsweise in drei verbundenen Bereichen: Marke, Produkt und digitale Erlebnisse.',
+    areas: [
+      { t: 'Marke & Produkt', d: 'Identitätssysteme, Lizenzprodukte, Verpackungen und Retail-Erlebnisse für reale Märkte.' },
+      { t: 'Digitales Produkt', d: 'Interfaces und funktionierende Webanwendungen — vom Produktdenken und Design bis zu Front-end und Back-end.' },
+      { t: 'Creative Direction', d: 'Kampagnen, Storytelling, Motion, Fotografie und KI-gestützte visuelle Produktion.' },
+    ],
+    preguntas: [
+      { q: 'Gestalte ich nur – oder entwickle ich auch?', a: 'Beides. Ich komme aus Design und Creative Direction und entwickle heute auch digitale Produkte — von Interface-Design über Front-end und Back-end bis zum Deployment.' },
+      { q: 'Wie wird aus einer Idee ein fertiges Produkt?', a: 'Schritt für Schritt, vom Verstehen zum Machen. Ich definiere Problem und Zielgruppe, forme Konzept und visuelles System und baue früh Prototypen — dann wird entwickelt, getestet und verfeinert, bis es in der realen Welt funktioniert: als Produkt im Regal oder als Anwendung auf einem Server.' },
+      { q: 'Was verbindet so unterschiedliche Disziplinen?', a: 'Systemdenken. Ob Marke, physisches Produkt, Kampagne oder Anwendung — ich suche die Übereinstimmung zwischen Konzept, Funktion, Bildsprache und Umsetzung.' },
+      { q: 'Wie gehe ich ein neues Projekt an?', a: 'Ich beginne beim Problem, nicht beim Medium. Ziel ist zu verstehen, was funktionieren muss, was es kommunizieren soll und was die Nutzer erleben sollen — und dann die passende Kombination aus Design, Technologie und Produktion zu wählen.' },
+      { q: 'Welche Rolle spielt KI in meiner Arbeit?', a: 'Die eines Werkzeugs für Produktion und Exploration — kein Ersatz für Regie. Ich nutze generative Tools für visuelle Entwicklung, Storytelling und kreative Produktion; Konzept, Art Direction und redaktionelle Entscheidungen bleiben menschlich.' },
+    ],
+    lema: ['Vom Konzept zur Produktion.', 'Vom visuellen System zum funktionierenden Produkt.'],
+  },
+  es: {
+    kicker: 'Práctica',
+    titulo: 'Lo que aporto',
+    intro: 'Una práctica multidisciplinar en tres áreas conectadas: marca, producto y experiencias digitales.',
+    areas: [
+      { t: 'Marca y producto', d: 'Sistemas de identidad, productos licenciados, packaging y experiencias de retail pensados para mercados reales.' },
+      { t: 'Producto digital', d: 'Interfaces y aplicaciones web que funcionan — del pensamiento de producto y el diseño al front-end y el back-end.' },
+      { t: 'Dirección creativa', d: 'Campañas, storytelling, motion, fotografía y producción visual apoyada en IA.' },
+    ],
+    preguntas: [
+      { q: '¿Solo diseño o también desarrollo?', a: 'Las dos cosas. Vengo del diseño y la dirección creativa, y ahora también construyo productos digitales: diseño de interfaz, front-end, back-end y despliegue.' },
+      { q: '¿Cómo convierto una idea en un producto terminado?', a: 'Paso a paso, de entender a hacer. Defino el problema y el público, doy forma al concepto y al sistema visual, prototipo pronto — y después construyo, pruebo y afino hasta que funciona en el mundo real, ya sea un producto en una estantería o una aplicación en un servidor.' },
+      { q: '¿Qué une disciplinas tan distintas?', a: 'El pensamiento sistémico. Sea una marca, un producto físico, una campaña o una aplicación, busco coherencia entre concepto, función, lenguaje visual y ejecución.' },
+      { q: '¿Cómo abordo un proyecto nuevo?', a: 'Empiezo por el problema, no por el medio. El objetivo es entender qué tiene que funcionar, qué tiene que comunicar y qué debe vivir la persona que lo usa — y luego elegir la combinación adecuada de diseño, tecnología y producción.' },
+      { q: '¿Qué papel tiene la IA en mi trabajo?', a: 'Es una herramienta de producción y exploración, no un sustituto de la dirección. Uso herramientas generativas para el desarrollo visual, el storytelling y la producción creativa, mientras el concepto, la dirección de arte y las decisiones editoriales siguen siendo humanos.' },
+    ],
+    lema: ['Del concepto a la producción.', 'Del sistema visual al producto que funciona.'],
+  },
+})
+const contacto = t(idioma, {
+  en: { kicker: 'Contact', titulo: 'Something meaningful?', boton: "Let's connect ↗" },
+  de: { kicker: 'Kontakt', titulo: 'Etwas mit Bedeutung?', boton: 'Lass uns sprechen ↗' },
+  es: { kicker: 'Contacto', titulo: '¿Algo con sentido?', boton: 'Hablemos ↗' },
+})
+---
+
+<Base>
+  <Hero />
+  <Cine />
+
+  <!-- TRABAJOS: Software y Design -->
+  <Trabajos />
+
+  <!-- SOBRE MÍ ("Practice") -->
+  <section id="about" class="seccion contenedor sobre-mi">
+    <header class="sobre-mi-cabecera">
+      <p class="etiqueta">{practica.kicker}</p>
+      <h2>{practica.titulo}</h2>
+      <p class="entradilla">{practica.intro}</p>
+    </header>
+    <div class="sobre-mi-columnas">
+      <dl class="areas">
+        {practica.areas.map((a) => <div><dt>{a.t}</dt><dd>{a.d}</dd></div>)}
+      </dl>
+      <div class="preguntas">
+        {
+          practica.preguntas.map((p, i) => (
+            <details>
+              <summary>
+                <span class="etiqueta">{String(i + 1).padStart(2, '0')}</span>
+                <span>{p.q}</span>
+              </summary>
+              <p>{p.a}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+    <p class="lema">{practica.lema[0]}<br />{practica.lema[1]}</p>
+  </section>
+
+  <!-- CONTACTO -->
+  <section id="contact" class="seccion contenedor contacto">
+    <div class="contacto-texto">
+      <p class="etiqueta">{contacto.kicker}</p>
+      <h2>{contacto.titulo}</h2>
+      <a class="pildora pildora--llena pildora--grande" href={`mailto:${sitio.email}`}>{contacto.boton}</a>
+      <p class="etiqueta">{sitio.email}</p>
+    </div>
+    <!-- los montañistas, subiendo juntos hacia "Let's connect": abajo del todo, siempre enteros -->
+    <Image class="ilustracion" src={escaladores} alt="" widths={[700, 1200]} sizes="(max-width: 900px) 92vw, 620px" />
+  </section>
+</Base>
+
+<script>
+  import { ScrollTrigger } from 'gsap/ScrollTrigger'
+  // Modo contraste: mientras "Practice" ocupa el centro de la pantalla, la página pasa al modo contrario
+  // (Light → Dark, Dark → Light). Los colores de cada caso están en tokens.css (".contraste").
+  ScrollTrigger.create({
+    trigger: '#about',
+    start: 'top 55%',
+    end: 'bottom 45%',
+    onToggle: (st) => document.documentElement.classList.toggle('contraste', st.isActive),
+  })
+</script>
+
+<style>
+  /* SECCIONES */
+  .cabecera-seccion { display: flex; flex-direction: column; gap: var(--espacio-4); margin-bottom: var(--espacio-7); }
+
+  /* SOBRE MÍ ("Practice"): cabecera centrada → dos columnas a la misma altura → lema centrado → dibujo centrado */
+  .sobre-mi { display: flex; flex-direction: column; align-items: center; gap: var(--espacio-7); }
+  .sobre-mi-cabecera { display: flex; flex-direction: column; align-items: center; gap: var(--espacio-4); max-width: 38rem; text-align: center; }
+  .sobre-mi-columnas { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--espacio-7); align-items: stretch; } /* las dos columnas empiezan y terminan en la misma línea */
+
+  /* las tres áreas: filas con línea fina, como la ficha de los casos (misma altura de fila que las preguntas) */
+  .areas { margin: 0; display: flex; flex-direction: column; border-top: var(--linea-fina) solid var(--color-linea); }
+  .areas div { flex: 1; display: grid; grid-template-columns: 11rem minmax(0, 1fr); align-content: start; gap: var(--espacio-4); padding-block: var(--espacio-4); border-bottom: var(--linea-fina) solid var(--color-linea); }
+  .areas dt { font-size: var(--texto-l); letter-spacing: -0.01em; }
+  .areas dd { margin: 0; color: var(--color-texto-suave); }
+  .lema { margin: 0; text-align: center; font-size: var(--titulo-3); font-weight: var(--peso-fino); letter-spacing: -0.02em; line-height: 1.3; }
+  @media (max-width: 600px) { .areas div { grid-template-columns: minmax(0, 1fr); gap: var(--espacio-1); } }
+
+  .preguntas { border-top: var(--linea-fina) solid var(--color-linea); align-self: start; }
+  details { border-bottom: var(--linea-fina) solid var(--color-linea); }
+  summary {
+    display: flex; gap: var(--espacio-4); align-items: baseline;
+    padding-block: var(--espacio-4); cursor: pointer; list-style: none;
+    font-size: var(--texto-l); letter-spacing: -0.01em;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: '+'; margin-left: auto; font-family: var(--fuente-mono); color: var(--color-texto-suave); }
+  details[open] summary::after { content: '−'; }
+  details p { padding: 0 0 var(--espacio-5) calc(var(--espacio-4) + 2ch); color: var(--color-texto-suave); }
+
+  /* CONTACTO */
+  .contacto { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); align-items: end; gap: var(--espacio-7); }
+  .contacto-texto { display: flex; flex-direction: column; align-items: flex-start; gap: var(--espacio-5); }
+  .ilustracion { width: 100%; max-width: 620px; justify-self: end; filter: var(--filtro-dibujo); }
+  @media (max-width: 900px) {
+    .contacto { grid-template-columns: minmax(0, 1fr); }
+    .ilustracion { justify-self: center; }
+  }
+  .pildora--grande { font-size: var(--titulo-3); padding: var(--espacio-4) var(--espacio-6); min-height: 60px; }
+
+  @media (max-width: 900px) {
+    .sobre-mi-columnas { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>

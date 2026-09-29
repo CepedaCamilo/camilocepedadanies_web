@@ -1,0 +1,10 @@
+---
+// Un caso de estudio en alemán. El diseño está en src/components/PaginaProyecto.astro.
+import PaginaProyecto from '../../components/PaginaProyecto.astro'
+import { rutasProyectos } from '../../proyectos'
+
+export const getStaticPaths = () => rutasProyectos('de')
+const { proyecto, siguiente } = Astro.props
+---
+
+<PaginaProyecto proyecto={proyecto} siguiente={siguiente} />

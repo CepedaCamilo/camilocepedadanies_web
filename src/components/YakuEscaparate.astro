@@ -1,4 +1,5 @@
 ---
+import { idiomaDe, enlace, t } from '../i18n'
 // Caso 01 · Yaku: la app EN USO, guiada por el scroll (como el chat del hero).
 // El móvil enseña capturas REALES de yaku.danies.trade (npm run capturas-yaku) y la tablet
 // de cocina recibe el pedido al mismo tiempo: así se entiende el tiempo real en segundos.
@@ -29,57 +30,40 @@ const pantallas = [
 // Cuánto baja la carta larga para enseñar la rejilla (en % de su propia altura)
 const bajadaCarta = Math.round(((cartaLargaOscuro.height - 1688) / cartaLargaOscuro.height) * 45)
 
-const pasos = [
-  'Scan the table QR · browse the menu',
-  'Open a dish',
-  'Add it to the order',
-  'Send it to the kitchen',
-  'The kitchen gets it — live',
-  'Status updates on the phone',
-]
+const pasos = t(idiomaDe(Astro.url), {
+  en: ["Scan the table QR · browse the menu", "Open a dish", "Add it to the order", "Send it to the kitchen", "The kitchen gets it — live", "Status updates on the phone"],
+  de: ["QR-Code am Tisch scannen · Karte ansehen", "Ein Gericht öffnen", "Zur Bestellung hinzufügen", "An die Küche senden", "Die Küche erhält sie — live", "Der Status erscheint auf dem Handy"],
+  es: ["Escanear el QR de la mesa · ver la carta", "Abrir un plato", "Añadirlo al pedido", "Enviarlo a la cocina", "La cocina lo recibe — en vivo", "El estado se actualiza en el móvil"],
+})
 import CasoTexto from './CasoTexto.astro'
 // El texto largo del caso (se usa junto a la animación y, en el móvil, debajo de ella)
-const texto = {
-  "entradilla": "A QR code on every table, a menu that sells with photography and a kitchen screen that updates in real time. For a Peruvian–Mexican restaurant in Hamburg — designed, built and hosted by me.",
-  "ficha": [
-    [
-      "Role",
-      "Product design · Front-end · Back-end"
-    ],
-    [
-      "Stack",
-      "React · Supabase Realtime · Postgres RLS"
-    ],
-    [
-      "Scope",
-      "Guest app · Kitchen screen · QR system"
-    ]
-  ],
-  "acciones": [
-    {
-      "texto": "Read the case study →",
-      "href": "/app-yaku.html",
-      "llena": true
-    },
-    {
-      "texto": "Try it live ↗",
-      "href": "https://yaku.danies.trade/?mesa=demo",
-      "externo": true
-    },
-    {
-      "texto": "Next project ↓",
-      "href": "#caso-chat",
-      "siguiente": true
-    }
-  ]
-}
+const idioma = idiomaDe(Astro.url)
+// Kicker, título y nombre accesible del caso
+const cab = t(idioma, {"en": {"kicker": "Case 01 · Design + development · ", "titulo": "Yaku", "sub": "order from the table.", "aria": "Case 01 · Yaku", "live": "● Live"}, "de": {"kicker": "Case 01 · Design + Entwicklung · ", "titulo": "Yaku", "sub": "am Tisch bestellen.", "aria": "Case 01 · Yaku", "live": "● Live"}, "es": {"kicker": "Caso 01 · Diseño + desarrollo · ", "titulo": "Yaku", "sub": "pedir desde la mesa.", "aria": "Caso 01 · Yaku", "live": "● En vivo"}})
+const texto = t(idioma, {
+  en: {
+    entradilla: "A QR code on every table, a menu that sells with photography and a kitchen screen that updates in real time. For a Peruvian–Mexican restaurant in Hamburg — designed, built and hosted by me.",
+    ficha: [["Role", "Product design · Front-end · Back-end"], ["Stack", "React · Supabase Realtime · Postgres RLS"], ["Scope", "Guest app · Kitchen screen · QR system"]],
+    acciones: [{ texto: "Read the case study →", href: enlace(idioma, "/app-yaku.html"), llena: true }, { texto: "Try it live ↗", href: "https://yaku.danies.trade/?mesa=demo", externo: true }, { texto: "Next project ↓", href: "#caso-chat", siguiente: true }],
+  },
+  de: {
+    entradilla: "Ein QR-Code auf jedem Tisch, eine Karte, die mit Fotografie verkauft, und ein Küchenbildschirm, der sich in Echtzeit aktualisiert. Für ein peruanisch-mexikanisches Restaurant in Hamburg — von mir gestaltet, entwickelt und gehostet.",
+    ficha: [["Rolle", "Produktdesign · Front-end · Back-end"], ["Stack", "React · Supabase Realtime · Postgres RLS"], ["Umfang", "Gäste-App · Küchenbildschirm · QR-System"]],
+    acciones: [{ texto: "Case Study →", href: enlace(idioma, "/app-yaku.html"), llena: true }, { texto: "Live testen ↗", href: "https://yaku.danies.trade/?mesa=demo", externo: true }, { texto: "Nächstes Projekt ↓", href: "#caso-chat", siguiente: true }],
+  },
+  es: {
+    entradilla: "Un código QR en cada mesa, una carta que vende con fotografía y una pantalla de cocina que se actualiza en tiempo real. Para un restaurante peruano-mexicano en Hamburgo — diseñado, desarrollado y alojado por mí.",
+    ficha: [["Rol", "Diseño de producto · Front-end · Back-end"], ["Stack", "React · Supabase Realtime · Postgres RLS"], ["Alcance", "App para clientes · Pantalla de cocina · Sistema QR"]],
+    acciones: [{ texto: "Leer el caso →", href: enlace(idioma, "/app-yaku.html"), llena: true }, { texto: "Probar en vivo ↗", href: "https://yaku.danies.trade/?mesa=demo", externo: true }, { texto: "Siguiente ↓", href: "#caso-chat", siguiente: true }],
+  },
+})
 ---
 
-<section class="yaku" data-yaku aria-label="Case 01 · Yaku">
+<section class="yaku" data-yaku aria-label={cab.aria}>
   <div class="escena contenedor">
     <div class="texto">
-      <p class="etiqueta">Case 01 · Design + development · <span class="en-vivo">● Live</span></p>
-      <h3 class="titulo">Yaku<span class="titulo-2">order from the table.</span></h3>
+      <p class="etiqueta">{cab.kicker}<span class="en-vivo">{cab.live}</span></p>
+      <h3 class="titulo">{cab.titulo}<span class="titulo-2">{cab.sub}</span></h3>
       <CasoTexto {...texto} enEscena />
     </div>
 

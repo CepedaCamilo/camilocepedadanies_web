@@ -1,16 +1,27 @@
 ---
 import InterruptorTema from './InterruptorTema.astro'
+import SelectorIdioma from './SelectorIdioma.astro'
+import { idiomaDe, enlace, t } from '../i18n'
+const idioma = idiomaDe(Astro.url)
+const menu = t(idioma, {
+  en: { inicio: 'home', about: 'About', contacto: 'Contact', principal: 'Main' },
+  de: { inicio: 'Startseite', about: 'Über mich', contacto: 'Kontakt', principal: 'Hauptmenü' },
+  es: { inicio: 'inicio', about: 'Sobre mí', contacto: 'Contacto', principal: 'Menú principal' },
+})
 ---
 
 <header class="cabecera contenedor">
-  <a class="logo" href="/" aria-label="Camilo Cepeda Danies — home"><b>camilo</b><span>cepeda</span><b>danies</b></a>
-  <nav aria-label="Main">
-    <a href="/#software">Software</a>
-    <a href="/#design">Design</a>
-    <a href="/#about">About</a>
-    <a class="pildora pildora--llena contacto" href="/#contact">Contact</a>
+  <a class="logo" href={enlace(idioma, '/')} aria-label={`Camilo Cepeda Danies — ${menu.inicio}`}><b>camilo</b><span>cepeda</span><b>danies</b></a>
+  <nav aria-label={menu.principal}>
+    <a href={enlace(idioma, '/#software')}>Software</a>
+    <a href={enlace(idioma, '/#design')}>Design</a>
+    <a href={enlace(idioma, '/#about')}>{menu.about}</a>
+    <a class="pildora pildora--llena contacto" href={enlace(idioma, '/#contact')}>{menu.contacto}</a>
   </nav>
-  <InterruptorTema />
+  <div class="ajustes">
+    <SelectorIdioma />
+    <InterruptorTema />
+  </div>
 </header>
 
 <script>
@@ -60,6 +71,8 @@ import InterruptorTema from './InterruptorTema.astro'
   nav { display: flex; align-items: center; gap: var(--espacio-5); font-size: var(--texto-s); }
   nav a:not(.pildora) { text-decoration: none; }
   .contacto { min-height: 40px; padding: var(--espacio-2) var(--espacio-4); font-size: var(--texto-s); }
+  /* idioma + sol/luna, juntos a la derecha */
+  .ajustes { display: flex; align-items: center; gap: var(--espacio-2); }
 
   @media (max-width: 900px) {
     .cabecera { transition: transform 0.35s ease, background-color 0.7s ease; }
@@ -68,5 +81,8 @@ import InterruptorTema from './InterruptorTema.astro'
   @media (max-width: 720px) {
     .cabecera { flex-wrap: wrap; align-content: center; gap: var(--espacio-3) var(--espacio-4); }
     nav { order: 3; width: 100%; justify-content: space-between; gap: var(--espacio-3); }
+    .ajustes { gap: var(--espacio-1); }
   }
+  /* móviles estrechos: el logo un pelín más pequeño para que quepa con idioma + sol/luna */
+  @media (max-width: 380px) { .logo { font-size: 0.75rem; } .cabecera { column-gap: var(--espacio-2); } }
 </style>

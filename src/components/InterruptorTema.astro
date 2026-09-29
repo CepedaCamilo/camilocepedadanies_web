@@ -65,4 +65,7 @@
   button:hover { color: var(--color-texto); }
   svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
   button[aria-pressed='true'] { background: var(--color-invertido); color: var(--color-sobre-invertido); }
+  /* en el móvil, más compacto: cabe en la misma fila que el logo */
+  @media (max-width: 720px) { button { width: 30px; height: 30px; } svg { width: 15px; height: 15px; } }
+  @media (max-width: 380px) { button { width: 28px; height: 28px; } }
 </style>

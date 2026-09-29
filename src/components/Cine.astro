@@ -2,9 +2,15 @@
 // "THE BRIDGE": vídeo en bucle justo debajo del hero.
 // Siempre a pantalla completa. Al llegar, la página entera pasa a oscuro ("modo cine", como apple.com)
 // y el título aparece encima con el scroll. Al salir, todo vuelve a su color.
+import { idiomaDe, t } from '../i18n'
+const textos = t(idiomaDe(Astro.url), {
+  en: { aria: 'The Bridge — AI storytelling film', kicker: 'AI direction · Storytelling', texto: 'AI-supported cinematic production — narrative planning, scene continuity and human editorial control.' },
+  de: { aria: 'The Bridge — ein mit KI erzählter Film', kicker: 'KI-Regie · Storytelling', texto: 'KI-gestützte filmische Produktion — narrative Planung, Szenenkontinuität und menschliche redaktionelle Kontrolle.' },
+  es: { aria: 'The Bridge — película narrada con IA', kicker: 'Dirección con IA · Storytelling', texto: 'Producción cinematográfica apoyada en IA — planificación narrativa, continuidad de escena y control editorial humano.' },
+})
 ---
 
-<section class="cine" data-cine aria-label="The Bridge — AI storytelling film">
+<section class="cine" data-cine aria-label={textos.aria}>
   <div class="escena">
     <div class="marco" data-marco>
       <video data-video muted loop playsinline preload="metadata" poster="/videos/ai-storytelling-poster.jpg">
@@ -13,11 +19,9 @@
       <div class="velo" data-velo></div>
     </div>
     <div class="texto contenedor" data-texto>
-      <p class="etiqueta">AI direction · Storytelling</p>
+      <p class="etiqueta">{textos.kicker}</p>
       <h2>The Bridge.</h2>
-      <p class="entradilla">
-        AI-supported cinematic production — narrative planning, scene continuity and human editorial control.
-      </p>
+      <p class="entradilla">{textos.texto}</p>
     </div>
   </div>
 </section>

@@ -5,7 +5,7 @@ import { z } from 'astro/zod'
 // El "molde" de un proyecto. Cada archivo .md de src/content/proyectos/ tiene que rellenarlo.
 // Si falta un campo obligatorio, `npm run build` avisa y no publica nada roto.
 const proyectos = defineCollection({
-  loader: glob({ pattern: '*.md', base: './src/content/proyectos' }),
+  loader: glob({ pattern: '**/*.md', base: './src/content/proyectos' }), // inglés en la raíz; alemán en de/, español en es/
   schema: ({ image }) =>
     z.object({
       titulo: z.string(),

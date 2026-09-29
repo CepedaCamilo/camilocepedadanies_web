@@ -8,26 +8,26 @@ import ArchivosEscaparate from './ArchivosEscaparate.astro'
 import LicenciasEscaparate from './LicenciasEscaparate.astro'
 import TransalpEscaparate from './TransalpEscaparate.astro'
 import BridgeEscaparate from './BridgeEscaparate.astro'
-import type { CollectionEntry } from 'astro:content'
+import { idiomaDe, t } from '../i18n'
 
-interface Props {
-  diseño: CollectionEntry<'proyectos'>[]
-  software: CollectionEntry<'proyectos'>[]
-}
-const { diseño, software } = Astro.props
+const textos = t(idiomaDe(Astro.url), {
+  en: { kicker: 'Selected work', software: 'Software I design and build.', design: 'Brands, products and campaigns.', saltar: 'Jump to work type' },
+  de: { kicker: 'Ausgewählte Arbeiten', software: 'Software, die ich gestalte und entwickle.', design: 'Marken, Produkte und Kampagnen.', saltar: 'Zu Software oder Design springen' },
+  es: { kicker: 'Trabajo seleccionado', software: 'Software que diseño y desarrollo.', design: 'Marcas, productos y campañas.', saltar: 'Ir a software o diseño' },
+})
 ---
 
 <section id="work" class="trabajos" data-trabajos>
   <span id="software" class="ancla"></span>
   <header class="cabecera-trabajos contenedor">
     <div class="barra-titulo">
-      <p class="etiqueta">Selected work</p>
+      <p class="etiqueta">{textos.kicker}</p>
       <div class="titulos">
-        <h2 class="titulo-panel activo" data-titulo="software">Software I design and build.</h2>
-        <h2 class="titulo-panel" data-titulo="design" aria-hidden="true">Brands, products and campaigns.</h2>
+        <h2 class="titulo-panel activo" data-titulo="software">{textos.software}</h2>
+        <h2 class="titulo-panel" data-titulo="design" aria-hidden="true">{textos.design}</h2>
       </div>
     </div>
-    <nav class="interruptor" aria-label="Jump to work type">
+    <nav class="interruptor" aria-label={textos.saltar}>
       <button type="button" aria-current="true" data-panel="software">Software</button>
       <button type="button" aria-current="false" data-panel="design">Design</button>
     </nav>

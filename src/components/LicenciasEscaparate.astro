@@ -1,4 +1,5 @@
 ---
+import { idiomaDe, enlace, t } from '../i18n'
 // Diseño · Caso 01: Licensed product design (FIFA · UEFA · DFB) en Trade Con.
 // Mismo formato que Yaku: textos a la izquierda, balones a la derecha que pasan RODANDO con el scroll.
 // Los balones y su orden salen de `npm run balones` (scripts/balones-licencias.mjs → src/data/balones.json).
@@ -11,44 +12,39 @@ const grupos = [
 ]
 import CasoTexto from './CasoTexto.astro'
 // El texto largo del caso (se usa junto a la animación y, en el móvil, debajo de ella)
-const texto = {
-  "entradilla": "Officially licensed football products developed during my time at Trade Con GmbH — spanning product design, packaging and retail execution for major international football properties and European markets.",
-  "suave": "From concept and visual development to production-ready artwork, I worked across footballs, textiles and packaging, translating global brand guidelines into physical products made for retail.",
-  "ficha": [
-    [
-      "Role",
-      "Product Design · Art Direction · Packaging"
-    ],
-    [
-      "Context",
-      "Trade Con GmbH · Officially licensed products"
-    ],
-    [
-      "Scope",
-      "Footballs · Textiles · Retail Packaging"
-    ]
-  ],
-  "acciones": [
-    {
-      "texto": "Read the case study →",
-      "href": "/product-design.html",
-      "llena": true
-    },
-    {
-      "texto": "Next project ↓",
-      "href": "#caso-transalp",
-      "siguiente": true
-    }
-  ],
-  "aviso": "Selected work created as part of my role at Trade Con GmbH and shown for portfolio purposes only. FIFA, UEFA and DFB names, trademarks, logos and licensed assets belong to their respective owners. Associated product and project rights remain with Trade Con GmbH and/or the respective rights holders."
-}
+const idioma = idiomaDe(Astro.url)
+// Kicker, título y nombre accesible del caso
+const cab = t(idioma, {"en": {"kicker": "Case 01 · FIFA · UEFA · DFB", "titulo": "Licensed product design.", "sub": "", "aria": "Licensed product design · FIFA, UEFA, DFB", "live": "● Live"}, "de": {"kicker": "Case 01 · FIFA · UEFA · DFB", "titulo": "Lizenzprodukt-Design.", "sub": "", "aria": "Lizenzprodukt-Design · FIFA, UEFA, DFB", "live": "● Live"}, "es": {"kicker": "Caso 01 · FIFA · UEFA · DFB", "titulo": "Diseño de producto licenciado.", "sub": "", "aria": "Diseño de producto licenciado · FIFA, UEFA, DFB", "live": "● En vivo"}})
+const texto = t(idioma, {
+  en: {
+    entradilla: "Officially licensed football products developed during my time at Trade Con GmbH — spanning product design, packaging and retail execution for major international football properties and European markets.",
+    suave: "From concept and visual development to production-ready artwork, I worked across footballs, textiles and packaging, translating global brand guidelines into physical products made for retail.",
+    ficha: [["Role", "Product Design · Art Direction · Packaging"], ["Context", "Trade Con GmbH · Officially licensed products"], ["Scope", "Footballs · Textiles · Retail Packaging"]],
+    acciones: [{ texto: "Read the case study →", href: enlace(idioma, "/product-design.html"), llena: true }, { texto: "Next project ↓", href: "#caso-transalp", siguiente: true }],
+    aviso: "Selected work created as part of my role at Trade Con GmbH and shown for portfolio purposes only. FIFA, UEFA and DFB names, trademarks, logos and licensed assets belong to their respective owners. Associated product and project rights remain with Trade Con GmbH and/or the respective rights holders.",
+  },
+  de: {
+    entradilla: "Offiziell lizenzierte Fußballprodukte, entstanden während meiner Zeit bei der Trade Con GmbH — von Produktdesign über Verpackung bis zur Umsetzung im Handel, für große internationale Fußballmarken und europäische Märkte.",
+    suave: "Vom Konzept und der visuellen Entwicklung bis zu produktionsreifen Druckdaten habe ich an Bällen, Textilien und Verpackungen gearbeitet und globale Markenrichtlinien in physische Produkte für den Handel übersetzt.",
+    ficha: [["Rolle", "Produktdesign · Art Direction · Verpackung"], ["Kontext", "Trade Con GmbH · Offiziell lizenzierte Produkte"], ["Umfang", "Bälle · Textilien · Handelsverpackungen"]],
+    acciones: [{ texto: "Case Study →", href: enlace(idioma, "/product-design.html"), llena: true }, { texto: "Nächstes Projekt ↓", href: "#caso-transalp", siguiente: true }],
+    aviso: "Ausgewählte Arbeiten, entstanden im Rahmen meiner Tätigkeit bei der Trade Con GmbH und ausschließlich zu Portfoliozwecken gezeigt. Die Namen, Marken, Logos und lizenzierten Inhalte von FIFA, UEFA und DFB gehören ihren jeweiligen Inhabern. Die Rechte an Produkten und Projekten verbleiben bei der Trade Con GmbH und/oder den jeweiligen Rechteinhabern.",
+  },
+  es: {
+    entradilla: "Productos de fútbol con licencia oficial desarrollados durante mi etapa en Trade Con GmbH — del diseño de producto al packaging y la ejecución en tienda, para grandes marcas del fútbol internacional y mercados europeos.",
+    suave: "Del concepto y el desarrollo visual a los artes finales listos para producción, trabajé en balones, textiles y packaging, traduciendo guías de marca globales a productos físicos pensados para la tienda.",
+    ficha: [["Rol", "Diseño de producto · Dirección de arte · Packaging"], ["Contexto", "Trade Con GmbH · Productos con licencia oficial"], ["Alcance", "Balones · Textiles · Packaging de tienda"]],
+    acciones: [{ texto: "Leer el caso →", href: enlace(idioma, "/product-design.html"), llena: true }, { texto: "Siguiente ↓", href: "#caso-transalp", siguiente: true }],
+    aviso: "Trabajo seleccionado, creado como parte de mi puesto en Trade Con GmbH y mostrado solo con fines de portafolio. Los nombres, marcas, logotipos y contenidos licenciados de FIFA, UEFA y DFB pertenecen a sus respectivos propietarios. Los derechos de los productos y proyectos siguen siendo de Trade Con GmbH y/o de los titulares correspondientes.",
+  },
+})
 ---
 
-<section class="licencias" data-licencias aria-label="Licensed product design · FIFA, UEFA, DFB">
+<section class="licencias" data-licencias aria-label={cab.aria}>
   <div class="escena contenedor">
     <div class="texto">
-      <p class="etiqueta">Case 01 · FIFA · UEFA · DFB</p>
-      <h3 class="titulo">Licensed product design.</h3>
+      <p class="etiqueta">{cab.kicker}</p>
+      <h3 class="titulo">{cab.titulo}</h3>
       <CasoTexto {...texto} enEscena />
     </div>
 

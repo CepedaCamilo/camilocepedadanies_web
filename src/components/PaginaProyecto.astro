@@ -1,0 +1,89 @@
+---
+// La página de un caso de estudio (en los tres idiomas). La usan src/pages/[proyecto].astro, de/[proyecto].astro
+// y es/[proyecto].astro. El texto sale del .md del idioma (src/content/proyectos/, …/de/, …/es/).
+import { render, type CollectionEntry } from 'astro:content'
+import { Image } from 'astro:assets'
+import Base from '../layouts/Base.astro'
+import TransalpDispositivos from './TransalpDispositivos.astro'
+import { idiomaDe, enlace, t } from '../i18n'
+import { sinIdiomaId } from '../proyectos'
+
+interface Props {
+  proyecto: CollectionEntry<'proyectos'>
+  siguiente: CollectionEntry<'proyectos'> | null
+}
+const { proyecto, siguiente } = Astro.props
+const idioma = idiomaDe(Astro.url)
+const textos = t(idioma, {
+  en: { todos: '← All projects', cliente: 'Client', siguiente: 'Next project →', volver: '← Back to the start', traigo: 'What I bring', visitar: 'Visit' },
+  de: { todos: '← Alle Projekte', cliente: 'Kunde', siguiente: 'Nächstes Projekt →', volver: '← Zurück zum Anfang', traigo: 'Was ich mitbringe', visitar: 'Ansehen' },
+  es: { todos: '← Todos los proyectos', cliente: 'Cliente', siguiente: 'Siguiente proyecto →', volver: '← Volver al inicio', traigo: 'Lo que aporto', visitar: 'Visitar' },
+})
+const id = sinIdiomaId(proyecto.id)
+const p = proyecto.data
+const { Content } = await render(proyecto)
+// "Título — subtítulo": el subtítulo va en su propia línea (así el título nunca se corta a mitad de frase)
+const [titulo, subtitulo] = p.titulo.split(' — ')
+---
+
+<Base titulo={p.titulo} descripcion={p.resumen}>
+  <article class="contenedor proyecto">
+    <a class="etiqueta volver" href={enlace(idioma, p.tipo === 'software' ? '/#software' : '/#design')}>{textos.todos}</a>
+
+    <header class="cabecera-proyecto">
+      <p class="etiqueta">{p.categoria}{p.año && ` · ${p.año}`}</p>
+      <h1>{titulo}{subtitulo && <span class="subtitulo">{subtitulo}</span>}</h1>
+      <p class="entradilla">{p.resumen}</p>
+      <div class="meta">
+        {p.cliente && <p class="etiqueta">{textos.cliente} · {p.cliente}</p>}
+        {p.disciplinas.length > 0 && <ul class="chips">{p.disciplinas.map((d) => <li>{d}</li>)}</ul>}
+      </div>
+      {
+        p.enlace && (
+          <a class="pildora pildora--llena" href={p.enlace} rel="noopener">
+            {p.textoEnlace ?? textos.visitar} ↗
+          </a>
+        )
+      }
+    </header>
+
+    {/* Transalp: en lugar de una imagen, los dispositivos animados de la portada (se mueven solos) */}
+    {id === 'integrated-campaign-communication' && <div class="portada-escena"><TransalpDispositivos autoplay /></div>}
+    {p.portada && <Image class="portada" src={p.portada} alt="" widths={[800, 1400, 2200]} sizes="(max-width: 1000px) 100vw, 960px" />}
+
+    <div class="prosa">
+      <Content />
+    </div>
+
+    {
+      siguiente ? (
+        <a class="siguiente" href={enlace(idioma, `/${sinIdiomaId(siguiente.id)}.html`)}>
+          <span class="etiqueta">{textos.siguiente}</span>
+          <span class="siguiente-titulo">{siguiente.data.titulo.split(' — ')[0]}</span>
+        </a>
+      ) : (
+        <a class="siguiente" href={enlace(idioma, '/#about')}>
+          <span class="etiqueta">{textos.volver}</span>
+          <span class="siguiente-titulo">{textos.traigo}</span>
+        </a>
+      )
+    }
+  </article>
+</Base>
+
+<style>
+  .proyecto { display: flex; flex-direction: column; gap: var(--espacio-7); padding-block: var(--espacio-6) var(--espacio-8); }
+  .volver { text-decoration: none; }
+  .cabecera-proyecto { display: flex; flex-direction: column; align-items: flex-start; gap: var(--espacio-5); max-width: 56rem; }
+  .subtitulo { display: block; color: var(--color-texto-suave); }
+  .meta { display: flex; flex-direction: column; gap: var(--espacio-3); }
+  /* la imagen de cabecera mide lo mismo que las imágenes y vídeos del caso (60rem); si es un recorte sin fondo, algo menos */
+  .portada { width: 100%; max-width: 60rem; border-radius: var(--radio-l); }
+  .portada[src*="recorte"] { max-width: 40rem; border-radius: 0; }
+  .portada-escena { width: 100%; max-width: 60rem; }
+  .siguiente {
+    display: flex; flex-direction: column; gap: var(--espacio-3);
+    padding-top: var(--espacio-6); border-top: var(--linea-fina) solid var(--color-linea); text-decoration: none;
+  }
+  .siguiente-titulo { font-size: var(--titulo-2); font-weight: var(--peso-fino); letter-spacing: var(--tracking-titulo); line-height: 1.05; }
+</style>

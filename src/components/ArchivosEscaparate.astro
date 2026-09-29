@@ -1,59 +1,47 @@
 ---
+import { idiomaDe, enlace, t } from '../i18n'
 // Caso 03 · Secure by default: login verificado + base de datos protegida + archivos según la DSGVO, en una sola historia.
 // El "móvil" es el mismo del chat (mismo diseño); la historia avanza con el scroll.
 // "Try it live" abre la demo (/files-live.html).
 const EMAIL = 'you@company.com'
 const CODIGO = '482913'
-const pasos = [
-  'Verified sign-in',
-  'One-time code — valid once, for minutes',
-  'Only you can see your files',
-  'Stored in Germany, under DSGVO',
-  'Shared links expire automatically',
-]
+const pasos = t(idiomaDe(Astro.url), {
+  en: ["Verified sign-in", "One-time code — valid once, for minutes", "Only you can see your files", "Stored in Germany, under DSGVO", "Shared links expire automatically"],
+  de: ["Verifizierte Anmeldung", "Einmalcode — nur einmal und nur Minuten gültig", "Nur du siehst deine Dateien", "Gespeichert in Deutschland, nach DSGVO", "Geteilte Links laufen automatisch ab"],
+  es: ["Acceso verificado", "Código de un solo uso — válido una vez, durante minutos", "Solo tú ves tus archivos", "Guardados en Alemania, bajo la DSGVO", "Los enlaces compartidos caducan solos"],
+})
 import CasoTexto from './CasoTexto.astro'
 // El texto largo del caso (se usa junto a la animación y, en el móvil, debajo de ella)
-const texto = {
-  "entradilla": "In any app, the most valuable thing is the data behind it. This workspace shows how I protect it: every sign-in is verified, every record is guarded by rules inside the database, and every uploaded file is handled according to European data protection law.",
-  "suave": "I designed and built the complete system — verified sign-in, a protected database, private file storage, user roles and account deletion — hosted on my own server in Germany.",
-  "ficha": [
-    [
-      "Role",
-      "Product Design · Front-end · Back-end"
-    ],
-    [
-      "Stack",
-      "React · Supabase Auth · Storage · Postgres RLS"
-    ],
-    [
-      "Scope",
-      "Secure login · Protected database · DSGVO-compliant files"
-    ]
-  ],
-  "acciones": [
-    {
-      "texto": "Read the case study →",
-      "href": "/app-archivos.html",
-      "llena": true
-    },
-    {
-      "texto": "Try it live ↗",
-      "href": "/files-live.html"
-    },
-    {
-      "texto": "Next project ↓",
-      "href": "#design",
-      "siguiente": true
-    }
-  ]
-}
+const idioma = idiomaDe(Astro.url)
+// Kicker, título y nombre accesible del caso
+const cab = t(idioma, {"en": {"kicker": "Case 03 · Design + development · ", "titulo": "Secure by default", "sub": "Login, data and files — protected at every step.", "aria": "Case 03 · Secure by default", "live": "● Live"}, "de": {"kicker": "Case 03 · Design + Entwicklung · ", "titulo": "Sicher von Anfang an", "sub": "Login, Daten und Dateien — in jedem Schritt geschützt.", "aria": "Case 03 · Sicher von Anfang an", "live": "● Live"}, "es": {"kicker": "Caso 03 · Diseño + desarrollo · ", "titulo": "Seguro por defecto", "sub": "Acceso, datos y archivos — protegidos en cada paso.", "aria": "Caso 03 · Seguro por defecto", "live": "● En vivo"}})
+const texto = t(idioma, {
+  en: {
+    entradilla: "In any app, the most valuable thing is the data behind it. This workspace shows how I protect it: every sign-in is verified, every record is guarded by rules inside the database, and every uploaded file is handled according to European data protection law.",
+    suave: "I designed and built the complete system — verified sign-in, a protected database, private file storage, user roles and account deletion — hosted on my own server in Germany.",
+    ficha: [["Role", "Product Design · Front-end · Back-end"], ["Stack", "React · Supabase Auth · Storage · Postgres RLS"], ["Scope", "Secure login · Protected database · DSGVO-compliant files"]],
+    acciones: [{ texto: "Read the case study →", href: enlace(idioma, "/app-archivos.html"), llena: true }, { texto: "Try it live ↗", href: "/files-live.html" }, { texto: "Next project ↓", href: "#design", siguiente: true }],
+  },
+  de: {
+    entradilla: "In jeder App ist das Wertvollste die Daten dahinter. Dieser Workspace zeigt, wie ich sie schütze: Jede Anmeldung wird verifiziert, jeder Datensatz durch Regeln in der Datenbank selbst geschützt, und jede hochgeladene Datei nach europäischem Datenschutzrecht behandelt.",
+    suave: "Ich habe das gesamte System gestaltet und entwickelt — verifizierte Anmeldung, geschützte Datenbank, privater Dateispeicher, Benutzerrollen und Kontolöschung — gehostet auf meinem eigenen Server in Deutschland.",
+    ficha: [["Rolle", "Produktdesign · Front-end · Back-end"], ["Stack", "React · Supabase Auth · Storage · Postgres RLS"], ["Umfang", "Sicherer Login · Geschützte Datenbank · DSGVO-konforme Dateien"]],
+    acciones: [{ texto: "Case Study →", href: enlace(idioma, "/app-archivos.html"), llena: true }, { texto: "Live testen ↗", href: "/files-live.html" }, { texto: "Nächstes Projekt ↓", href: "#design", siguiente: true }],
+  },
+  es: {
+    entradilla: "En cualquier app, lo más valioso son los datos que hay detrás. Este espacio muestra cómo los protejo: cada acceso se verifica, cada registro está protegido por reglas dentro de la propia base de datos y cada archivo subido se trata según la ley europea de protección de datos.",
+    suave: "Diseñé y desarrollé el sistema completo — acceso verificado, base de datos protegida, almacenamiento privado de archivos, roles de usuario y borrado de cuenta — alojado en mi propio servidor en Alemania.",
+    ficha: [["Rol", "Diseño de producto · Front-end · Back-end"], ["Stack", "React · Supabase Auth · Storage · Postgres RLS"], ["Alcance", "Acceso seguro · Base de datos protegida · Archivos conformes a la DSGVO"]],
+    acciones: [{ texto: "Leer el caso →", href: enlace(idioma, "/app-archivos.html"), llena: true }, { texto: "Probar en vivo ↗", href: "/files-live.html" }, { texto: "Siguiente ↓", href: "#design", siguiente: true }],
+  },
+})
 ---
 
-<section class="archivos-caso" id="caso-archivos" data-archivos aria-label="Case 03 · Secure by default">
+<section class="archivos-caso" id="caso-archivos" data-archivos aria-label={cab.aria}>
   <div class="escena contenedor">
     <div class="texto">
-      <p class="etiqueta">Case 03 · Design + development · <span class="en-vivo">● Live</span></p>
-      <h3 class="titulo">Secure by default<span class="titulo-2">Login, data and files — protected at every step.</span></h3>
+      <p class="etiqueta">{cab.kicker}<span class="en-vivo">{cab.live}</span></p>
+      <h3 class="titulo">{cab.titulo}<span class="titulo-2">{cab.sub}</span></h3>
       <CasoTexto {...texto} enEscena />
     </div>
 

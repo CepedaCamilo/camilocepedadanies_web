@@ -1,4 +1,5 @@
 ---
+import { idiomaDe, enlace, t } from '../i18n'
 // Design · Caso 03: THE BRIDGE. La escena 23 (vídeo de IA) se reproduce con el scroll: el scroll es la cámara.
 // Se ve como una sala de montaje: el plano completo desde el primer fotograma, código de tiempo real,
 // línea de tiempo con miniaturas y cabezal, y una nota que cambia en cada fase del proceso.
@@ -11,46 +12,43 @@ const notas = [
   { fase: 'Continuity', texto: 'Same cast · same light · same props.' },
   { fase: 'Final edit', texto: 'Scene 23 · 6 s · locked.' },
 ]
-const pasos = ['Narrative & script', 'AI generation', 'Scene continuity', 'Final edit']
+const pasos = t(idiomaDe(Astro.url), {
+  en: ["Narrative & script", "AI generation", "Scene continuity", "Final edit"],
+  de: ["Erzählung & Drehbuch", "KI-Generierung", "Szenenkontinuität", "Finaler Schnitt"],
+  es: ["Narrativa y guion", "Generación con IA", "Continuidad de escena", "Montaje final"],
+})
 import CasoTexto from './CasoTexto.astro'
 // El texto largo del caso (se usa junto a la animación y, en el móvil, debajo de ella)
-const texto = {
-  "entradilla": "An independent storytelling project exploring how narrative, art direction and generative tools can work together as one production system.",
-  "suave": "From concept and narrative structure to visual generation, scene continuity and final edit, I direct the complete process — using AI as a production tool while keeping storytelling, visual decisions and editorial control human.",
-  "ficha": [
-    [
-      "Role",
-      "Creative Direction · Storytelling · AI Production"
-    ],
-    [
-      "Context",
-      "Independent Project · Created & Directed by me"
-    ],
-    [
-      "Scope",
-      "Narrative · AI Visuals · Motion · Editorial"
-    ]
-  ],
-  "acciones": [
-    {
-      "texto": "Read the case study →",
-      "href": "/storytelling-production.html",
-      "llena": true
-    },
-    {
-      "texto": "About me ↓",
-      "href": "#about",
-      "siguiente": true
-    }
-  ]
-}
+const idioma = idiomaDe(Astro.url)
+// Kicker, título y nombre accesible del caso
+const cab = t(idioma, {"en": {"kicker": "Case 03 · THE BRIDGE", "titulo": "THE BRIDGE", "sub": "Storytelling by design, directed with AI.", "aria": "Case 03 · THE BRIDGE", "live": "● Live"}, "de": {"kicker": "Case 03 · THE BRIDGE", "titulo": "THE BRIDGE", "sub": "Storytelling durch Design, mit KI inszeniert.", "aria": "Case 03 · THE BRIDGE", "live": "● Live"}, "es": {"kicker": "Caso 03 · THE BRIDGE", "titulo": "THE BRIDGE", "sub": "Storytelling desde el diseño, dirigido con IA.", "aria": "Caso 03 · THE BRIDGE", "live": "● En vivo"}})
+const texto = t(idioma, {
+  en: {
+    entradilla: "An independent storytelling project exploring how narrative, art direction and generative tools can work together as one production system.",
+    suave: "From concept and narrative structure to visual generation, scene continuity and final edit, I direct the complete process — using AI as a production tool while keeping storytelling, visual decisions and editorial control human.",
+    ficha: [["Role", "Creative Direction · Storytelling · AI Production"], ["Context", "Independent Project · Created & Directed by me"], ["Scope", "Narrative · AI Visuals · Motion · Editorial"]],
+    acciones: [{ texto: "Read the case study →", href: enlace(idioma, "/storytelling-production.html"), llena: true }, { texto: "About me ↓", href: "#about", siguiente: true }],
+  },
+  de: {
+    entradilla: "Ein unabhängiges Storytelling-Projekt, das erforscht, wie Erzählung, Art Direction und generative Tools als ein Produktionssystem zusammenwirken können.",
+    suave: "Vom Konzept und der Erzählstruktur über die visuelle Generierung und Szenenkontinuität bis zum finalen Schnitt leite ich den gesamten Prozess — KI dient als Produktionswerkzeug, während Storytelling, visuelle Entscheidungen und redaktionelle Kontrolle menschlich bleiben.",
+    ficha: [["Rolle", "Creative Direction · Storytelling · KI-Produktion"], ["Kontext", "Unabhängiges Projekt · Von mir erdacht und inszeniert"], ["Umfang", "Erzählung · KI-Visuals · Motion · Schnitt"]],
+    acciones: [{ texto: "Case Study →", href: enlace(idioma, "/storytelling-production.html"), llena: true }, { texto: "Über mich ↓", href: "#about", siguiente: true }],
+  },
+  es: {
+    entradilla: "Un proyecto independiente de storytelling que explora cómo la narrativa, la dirección de arte y las herramientas generativas pueden funcionar juntas como un único sistema de producción.",
+    suave: "Del concepto y la estructura narrativa a la generación visual, la continuidad de escena y el montaje final, dirijo todo el proceso — uso la IA como herramienta de producción, mientras el storytelling, las decisiones visuales y el control editorial siguen siendo humanos.",
+    ficha: [["Rol", "Dirección creativa · Storytelling · Producción con IA"], ["Contexto", "Proyecto independiente · Creado y dirigido por mí"], ["Alcance", "Narrativa · Visuales con IA · Motion · Montaje"]],
+    acciones: [{ texto: "Leer el caso →", href: enlace(idioma, "/storytelling-production.html"), llena: true }, { texto: "Sobre mí ↓", href: "#about", siguiente: true }],
+  },
+})
 ---
 
-<section class="bridge" id="caso-bridge" data-bridge data-total={TOTAL} data-duracion={DURACION} aria-label="Case 03 · THE BRIDGE">
+<section class="bridge" id="caso-bridge" data-bridge data-total={TOTAL} data-duracion={DURACION} aria-label={cab.aria}>
   <div class="escena contenedor">
     <div class="texto">
-      <p class="etiqueta">Case 03 · THE BRIDGE</p>
-      <h3 class="titulo">THE BRIDGE<span class="titulo-2">Storytelling by design, directed with AI.</span></h3>
+      <p class="etiqueta">{cab.kicker}</p>
+      <h3 class="titulo">{cab.titulo}<span class="titulo-2">{cab.sub}</span></h3>
       <CasoTexto {...texto} enEscena />
     </div>
 

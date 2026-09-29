@@ -6,37 +6,66 @@ import { Image } from 'astro:assets'
 import HeroApp from './HeroApp.astro'
 import { sitio } from '../sitio'
 import retrato from '../assets/marca/retrato.png'
+import { idiomaDe, t } from '../i18n'
 
-// Los textos que acompañan a cada paso. Para añadir o cambiar un paso, empieza aquí.
-const pasos = [
-  { num: '01', texto: `Designer & builder · ${sitio.ciudad}` },
-  { num: '02', texto: 'Football design', linea: 'Trade Con GmbH · 2025', nota: 'Created at Trade Con GmbH.' },
-  { num: '03', texto: 'Web app · designed, coded & hosted by me' },
-]
+// Los textos del hero en los tres idiomas (la conversación del chat animado se queda en inglés: es la animación)
+const textos = t(idiomaDe(Astro.url), {
+  en: {
+    titular: 'Designing brands, products and the software behind them.',
+    intro: '8+ years of brand, product and campaign design — and now my own web apps, from the interface to the server.',
+    software: 'See software', design: 'See design work',
+    foto: 'Portrait of Camilo Cepeda Danies', balon: '3D football I designed — drag to spin',
+    pasos: [
+      { num: '01', texto: `Designer & builder · ${sitio.ciudad}` },
+      { num: '02', texto: 'Football design', linea: 'Trade Con GmbH · 2025', nota: 'Created at Trade Con GmbH.' },
+      { num: '03', texto: 'Web app · designed, coded & hosted by me' },
+    ],
+  },
+  de: {
+    titular: 'Ich gestalte Marken, Produkte und die Software dahinter.',
+    intro: 'Über 8 Jahre Marken-, Produkt- und Kampagnendesign — und heute meine eigenen Web-Apps, vom Interface bis zum Server.',
+    software: 'Software ansehen', design: 'Designarbeiten ansehen',
+    foto: 'Porträt von Camilo Cepeda Danies', balon: 'Von mir gestalteter 3D-Fußball — zum Drehen ziehen',
+    pasos: [
+      { num: '01', texto: `Designer & Entwickler · ${sitio.ciudad}` },
+      { num: '02', texto: 'Fußballdesign', linea: 'Trade Con GmbH · 2025', nota: 'Entstanden bei der Trade Con GmbH.' },
+      { num: '03', texto: 'Web-App · gestaltet, programmiert & gehostet von mir' },
+    ],
+  },
+  es: {
+    titular: 'Diseño marcas, productos y el software que hay detrás.',
+    intro: 'Más de 8 años diseñando marca, producto y campañas — y ahora mis propias apps web, de la interfaz al servidor.',
+    software: 'Ver software', design: 'Ver diseño',
+    foto: 'Retrato de Camilo Cepeda Danies', balon: 'Balón 3D diseñado por mí — arrástralo para girarlo',
+    pasos: [
+      { num: '01', texto: `Diseñador y desarrollador · ${sitio.ciudad}` },
+      { num: '02', texto: 'Diseño de balones', linea: 'Trade Con GmbH · 2025', nota: 'Creado en Trade Con GmbH.' },
+      { num: '03', texto: 'App web · diseñada, programada y alojada por mí' },
+    ],
+  },
+})
+const pasos = textos.pasos
 ---
 
 <section class="hero" data-hero>
   <div class="escena contenedor">
     <div class="texto">
       <p class="etiqueta">~/camilo · {sitio.ciudad}</p>
-      <h1>Designing brands, products and the software behind them.</h1>
-      <p class="entradilla">
-        8+ years of brand, product and campaign design — and now my own web apps, from the interface to
-        the server.
-      </p>
+      <h1>{textos.titular}</h1>
+      <p class="entradilla">{textos.intro}</p>
       <div class="acciones">
-        <a class="pildora pildora--llena" href="#software">See software</a>
-        <a class="pildora" href="#design">See design work</a>
+        <a class="pildora pildora--llena" href="#software">{textos.software}</a>
+        <a class="pildora" href="#design">{textos.design}</a>
       </div>
     </div>
 
     <div class="escenario">
       <div class="flotar">
         <div class="capa capa--foto" data-capa="foto">
-          <Image src={retrato} alt="Portrait of Camilo Cepeda Danies" widths={[360, 600]} sizes="(max-width: 900px) 60vw, 34rem" loading="eager" fetchpriority="high" />
+          <Image src={retrato} alt={textos.foto} widths={[360, 600]} sizes="(max-width: 900px) 60vw, 34rem" loading="eager" fetchpriority="high" />
         </div>
         <div class="capa capa--balon" data-capa="balon">
-          <canvas data-balon aria-label="3D football I designed — drag to spin" role="img"></canvas>
+          <canvas data-balon aria-label={textos.balon} role="img"></canvas>
         </div>
         <div class="capa capa--app" data-capa="app">
           <HeroApp />

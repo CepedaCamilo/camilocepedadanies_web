@@ -1,0 +1,59 @@
+---
+// Selector de idioma EN · DE · ES (junto al interruptor sol/luna).
+// Lleva a la MISMA página en el otro idioma (y a la misma sección, si hay #ancla en la dirección).
+// Recuerda la elección en este navegador; la primera visita a la portada usa el idioma del navegador.
+import { idiomas, etiquetas, nombresLargos, idiomaDe, sinIdioma, enlace } from '../i18n'
+const actual = idiomaDe(Astro.url)
+const camino = sinIdioma(Astro.url)
+---
+
+<nav class="selector-idioma" aria-label="Language" data-selector-idioma>
+  {
+    idiomas.map((i) => (
+      <a
+        href={enlace(i, camino)}
+        hreflang={i}
+        lang={i}
+        data-idioma={i}
+        aria-current={i === actual ? 'true' : undefined}
+        aria-label={nombresLargos[i]}
+        title={nombresLargos[i]}
+      >
+        {etiquetas[i]}
+      </a>
+    ))
+  }
+</nav>
+
+<script>
+  // Al elegir idioma: se recuerda y se conserva la sección (#software, #design…) en la que estabas
+  document.querySelectorAll<HTMLAnchorElement>('[data-selector-idioma] a').forEach((a) =>
+    a.addEventListener('click', (e) => {
+      try { localStorage.setItem('idioma', a.dataset.idioma!) } catch {}
+      if (location.hash) { e.preventDefault(); location.href = a.href.split('#')[0] + location.hash }
+    })
+  )
+</script>
+
+<style>
+  .selector-idioma {
+    display: flex;
+    padding: 3px;
+    border-radius: var(--radio-pildora);
+    background: var(--color-superficie);
+    border: var(--linea-fina) solid var(--color-linea);
+  }
+  a {
+    display: grid; place-items: center;
+    min-width: 34px; height: 34px; padding: 0 var(--espacio-2);
+    border-radius: var(--radio-pildora);
+    font-family: var(--fuente-mono); font-size: var(--texto-xs); text-decoration: none;
+    color: var(--color-texto-suave);
+    transition: background-color 0.2s, color 0.2s;
+  }
+  a:hover { color: var(--color-texto); }
+  a[aria-current='true'] { background: var(--color-invertido); color: var(--color-sobre-invertido); }
+  /* en el móvil, más compacto: cabe en la misma fila que el logo */
+  @media (max-width: 720px) { a { min-width: 30px; height: 30px; padding: 0 6px; } }
+  @media (max-width: 380px) { a { min-width: 28px; height: 28px; padding: 0 4px; } }
+</style>

@@ -1,59 +1,47 @@
 ---
+import { idiomaDe, enlace, t } from '../i18n'
 // Design · Caso 02: BIKE Transalp · TOUR Transalp (campaña integrada, en HAVE A GOOD ONE).
 // Los dispositivos se dibujan en HTML/CSS (nítidos, sin recortes de fondo) y cada uno flota en su propia capa.
 // Con el scroll, el foco pasa de uno a otro y las pantallas cambian de contenido.
 // Las imágenes de dentro de las pantallas salen de `npm run transalp` (scripts/pantallas-transalp.mjs → public/transalp/).
 import TransalpDispositivos from './TransalpDispositivos.astro'
-const pasos = [
-  'Launch trailer · YouTube & web',
-  'Social campaign · countdown & stories',
-  'Route reveal',
-  'Community & event pages',
-]
+const pasos = t(idiomaDe(Astro.url), {
+  en: ["Launch trailer · YouTube & web", "Social campaign · countdown & stories", "Route reveal", "Community & event pages"],
+  de: ["Launch-Trailer · YouTube & Web", "Social-Kampagne · Countdown & Stories", "Routenenthüllung", "Community- & Eventseiten"],
+  es: ["Tráiler de lanzamiento · YouTube y web", "Campaña en redes · cuenta atrás y stories", "Presentación de la ruta", "Comunidad y páginas del evento"],
+})
 import CasoTexto from './CasoTexto.astro'
 // El texto largo del caso (se usa junto a la animación y, en el móvil, debajo de ella)
-const texto = {
-  "entradilla": "Campaign work developed during my time at HAVE A GOOD ONE — shaping the visual communication for two major alpine cycling events across digital and promotional touchpoints.",
-  "suave": "From launch trailers and route reveals to social campaigns and web assets, I worked on communication designed to build anticipation, engage participants and carry each event’s identity consistently throughout the campaign cycle.",
-  "ficha": [
-    [
-      "Role",
-      "Graphic Direction · Campaign Design · Motion"
-    ],
-    [
-      "Context",
-      "HAVE A GOOD ONE · Event campaign communication"
-    ],
-    [
-      "Scope",
-      "Social · Motion · Web · Event Promotion"
-    ]
-  ],
-  "acciones": [
-    {
-      "texto": "Read the case study →",
-      "href": "/integrated-campaign-communication.html",
-      "llena": true
-    },
-    {
-      "texto": "Trailer ↗",
-      "href": "https://www.youtube.com/watch?v=USL3U4n7VhQ",
-      "externo": true
-    },
-    {
-      "texto": "Next project ↓",
-      "href": "#caso-bridge",
-      "siguiente": true
-    }
-  ]
-}
+const idioma = idiomaDe(Astro.url)
+// Kicker, título y nombre accesible del caso
+const cab = t(idioma, {"en": {"kicker": "Case 02 · BIKE Transalp · TOUR Transalp", "titulo": "Integrated campaign design.", "sub": "", "aria": "Case 02 · BIKE Transalp · TOUR Transalp", "live": "● Live"}, "de": {"kicker": "Case 02 · BIKE Transalp · TOUR Transalp", "titulo": "Integriertes Kampagnendesign.", "sub": "", "aria": "Case 02 · BIKE Transalp · TOUR Transalp", "live": "● Live"}, "es": {"kicker": "Caso 02 · BIKE Transalp · TOUR Transalp", "titulo": "Diseño de campañas integradas.", "sub": "", "aria": "Caso 02 · BIKE Transalp · TOUR Transalp", "live": "● En vivo"}})
+const texto = t(idioma, {
+  en: {
+    entradilla: "Campaign work developed during my time at HAVE A GOOD ONE — shaping the visual communication for two major alpine cycling events across digital and promotional touchpoints.",
+    suave: "From launch trailers and route reveals to social campaigns and web assets, I worked on communication designed to build anticipation, engage participants and carry each event’s identity consistently throughout the campaign cycle.",
+    ficha: [["Role", "Graphic Direction · Campaign Design · Motion"], ["Context", "HAVE A GOOD ONE · Event campaign communication"], ["Scope", "Social · Motion · Web · Event Promotion"]],
+    acciones: [{ texto: "Read the case study →", href: enlace(idioma, "/integrated-campaign-communication.html"), llena: true }, { texto: "Trailer ↗", href: "https://www.youtube.com/watch?v=USL3U4n7VhQ", externo: true }, { texto: "Next project ↓", href: "#caso-bridge", siguiente: true }],
+  },
+  de: {
+    entradilla: "Kampagnenarbeit aus meiner Zeit bei HAVE A GOOD ONE — die visuelle Kommunikation für zwei große alpine Radsport-Events, über digitale und werbliche Kanäle hinweg.",
+    suave: "Von Launch-Trailern und Routenenthüllungen bis zu Social-Kampagnen und Web-Assets: Kommunikation, die Vorfreude aufbaut, Teilnehmende einbindet und die Identität jedes Events über den gesamten Kampagnenzyklus hinweg konsistent trägt.",
+    ficha: [["Rolle", "Grafische Leitung · Kampagnendesign · Motion"], ["Kontext", "HAVE A GOOD ONE · Kampagnenkommunikation für Events"], ["Umfang", "Social · Motion · Web · Eventpromotion"]],
+    acciones: [{ texto: "Case Study →", href: enlace(idioma, "/integrated-campaign-communication.html"), llena: true }, { texto: "Trailer ↗", href: "https://www.youtube.com/watch?v=USL3U4n7VhQ", externo: true }, { texto: "Nächstes Projekt ↓", href: "#caso-bridge", siguiente: true }],
+  },
+  es: {
+    entradilla: "Trabajo de campaña desarrollado durante mi etapa en HAVE A GOOD ONE — dando forma a la comunicación visual de dos grandes eventos de ciclismo alpino en canales digitales y promocionales.",
+    suave: "De los tráileres de lanzamiento y la presentación de rutas a las campañas en redes y los recursos web, trabajé en una comunicación pensada para crear expectación, implicar a los participantes y mantener la identidad de cada evento durante todo el ciclo de campaña.",
+    ficha: [["Rol", "Dirección gráfica · Diseño de campaña · Motion"], ["Contexto", "HAVE A GOOD ONE · Comunicación de campaña para eventos"], ["Alcance", "Redes · Motion · Web · Promoción de eventos"]],
+    acciones: [{ texto: "Leer el caso →", href: enlace(idioma, "/integrated-campaign-communication.html"), llena: true }, { texto: "Tráiler ↗", href: "https://www.youtube.com/watch?v=USL3U4n7VhQ", externo: true }, { texto: "Siguiente ↓", href: "#caso-bridge", siguiente: true }],
+  },
+})
 ---
 
-<section class="transalp" id="caso-transalp" data-transalp aria-label="Case 02 · BIKE Transalp · TOUR Transalp">
+<section class="transalp" id="caso-transalp" data-transalp aria-label={cab.aria}>
   <div class="escena contenedor">
     <div class="texto">
-      <p class="etiqueta">Case 02 · BIKE Transalp · TOUR Transalp</p>
-      <h3 class="titulo">Integrated campaign design.</h3>
+      <p class="etiqueta">{cab.kicker}</p>
+      <h3 class="titulo">{cab.titulo}</h3>
       <CasoTexto {...texto} enEscena />
     </div>
 
