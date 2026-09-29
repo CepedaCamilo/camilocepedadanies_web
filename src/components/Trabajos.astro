@@ -164,6 +164,7 @@ const { diseño, software } = Astro.props
     background: transparent; color: var(--color-texto-suave); font: var(--peso-medio) var(--texto-m) / 1 var(--fuente-texto); cursor: pointer;
     transition: background-color 0.25s, color 0.25s;
   }
-  .interruptor button[aria-current='true'] { background: var(--color-invertido); color: var(--color-sobre-invertido); }
+  /* la opción activa en azul (el acento, como el hover de los botones): se distingue del menú de arriba */
+  .interruptor button[aria-current='true'] { background: var(--color-acento); color: var(--color-sobre-acento); }
 
 </style>
