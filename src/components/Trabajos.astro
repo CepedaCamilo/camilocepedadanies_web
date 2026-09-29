@@ -1,7 +1,7 @@
 ---
-// "Selected work" con un interruptor Software | Design (como el de Light/Dark).
-// Empieza en Software: primero el caso Yaku en movimiento, luego el resto de apps.
-// Enlaces: /#software y /#design abren la sección con ese panel ya elegido.
+// "Selected work": un solo recorrido — primero los 3 casos de Software, luego los 3 de Design.
+// El interruptor Software | Design de la barra fija sigue al scroll (cambia solo al pasar de una parte a otra)
+// y, si se pulsa, lleva directamente a esa parte. Enlaces: /#software y /#design.
 import YakuEscaparate from './YakuEscaparate.astro'
 import ChatEscaparate from './ChatEscaparate.astro'
 import ArchivosEscaparate from './ArchivosEscaparate.astro'
@@ -18,26 +18,29 @@ const { diseño, software } = Astro.props
 ---
 
 <section id="work" class="trabajos" data-trabajos>
-  <span id="software" class="ancla"></span><span id="design" class="ancla"></span>
+  <span id="software" class="ancla"></span>
   <header class="cabecera-trabajos contenedor">
     <div class="barra-titulo">
       <p class="etiqueta">Selected work</p>
-      <h2 class="titulo-panel" data-titulo-software>Software I design and build.</h2>
-      <h2 class="titulo-panel" data-titulo-design hidden>Brands, products and campaigns.</h2>
+      <div class="titulos">
+        <h2 class="titulo-panel activo" data-titulo="software">Software I design and build.</h2>
+        <h2 class="titulo-panel" data-titulo="design" aria-hidden="true">Brands, products and campaigns.</h2>
+      </div>
     </div>
-    <div class="interruptor" role="tablist" aria-label="Work type">
-      <button type="button" role="tab" id="pestana-software" aria-controls="panel-software" aria-selected="true" data-panel="software">Software</button>
-      <button type="button" role="tab" id="pestana-design" aria-controls="panel-design" aria-selected="false" data-panel="design">Design</button>
-    </div>
+    <nav class="interruptor" aria-label="Jump to work type">
+      <button type="button" aria-current="true" data-panel="software">Software</button>
+      <button type="button" aria-current="false" data-panel="design">Design</button>
+    </nav>
   </header>
 
-  <div id="panel-software" role="tabpanel" aria-labelledby="pestana-software" data-panel-contenido="software">
+  <div id="panel-software" data-panel-contenido="software">
     <YakuEscaparate />
     <ChatEscaparate />
     <ArchivosEscaparate />
   </div>
 
-  <div id="panel-design" role="tabpanel" aria-labelledby="pestana-design" data-panel-contenido="design" hidden>
+  <div id="panel-design" data-panel-contenido="design">
+    <span id="design" class="ancla-design"></span>
     <LicenciasEscaparate />
     <TransalpEscaparate />
     <BridgeEscaparate />
@@ -49,48 +52,78 @@ const { diseño, software } = Astro.props
 
   const raiz = document.querySelector<HTMLElement>('[data-trabajos]')!
   const botones = raiz.querySelectorAll<HTMLButtonElement>('[data-panel]')
+  const panelDesign = raiz.querySelector<HTMLElement>('#panel-design')!
+  const barra = raiz.querySelector<HTMLElement>('.cabecera-trabajos')!
 
-  function mostrar(panel: string) {
-    botones.forEach((b) => b.setAttribute('aria-selected', String(b.dataset.panel === panel)))
-    raiz.querySelectorAll<HTMLElement>('[data-panel-contenido]').forEach((p) => { p.hidden = p.dataset.panelContenido !== panel })
-    raiz.querySelector<HTMLElement>('[data-titulo-software]')!.hidden = panel !== 'software'
-    raiz.querySelector<HTMLElement>('[data-titulo-design]')!.hidden = panel !== 'design'
-    ScrollTrigger.refresh() // las animaciones de scroll recalculan sus posiciones
+  // Marca qué parte se está viendo: botón activo + título de la barra
+  let activo = 'software'
+  function marcar(panel: string) {
+    if (panel === activo) return
+    activo = panel
+    botones.forEach((b) => b.setAttribute('aria-current', String(b.dataset.panel === panel)))
+    raiz.querySelectorAll<HTMLElement>('[data-titulo]').forEach((t) => {
+      t.classList.toggle('activo', t.dataset.titulo === panel)
+      t.setAttribute('aria-hidden', String(t.dataset.titulo !== panel))
+    })
   }
 
+  // El "vigilante": cuando el Case 01 de Design llega a la mitad de la pantalla, el interruptor pasa a Design (y al revés)
+  ScrollTrigger.create({
+    trigger: panelDesign,
+    start: 'top 55%',
+    onEnter: () => marcar('design'),
+    onLeaveBack: () => marcar('software'),
+  })
+
+  // Dónde empieza cada parte (justo debajo de la cabecera + la barra de trabajos)
+  const alturaBarras = () => document.querySelector<HTMLElement>('.cabecera')!.offsetHeight + barra.offsetHeight
+  const inicio = (panel: string) =>
+    panel === 'design'
+      ? panelDesign.getBoundingClientRect().top + scrollY - alturaBarras()
+      : raiz.getBoundingClientRect().top + scrollY
+
+  // Pulsar Software / Design lleva directamente a esa parte
   botones.forEach((b) => b.addEventListener('click', () => {
-    mostrar(b.dataset.panel!)
     history.replaceState(null, '', `#${b.dataset.panel}`)
-    // Si ya estabas dentro de la sección (p. ej. a mitad de Yaku), vuelve al principio del panel nuevo
-    const inicio = raiz.getBoundingClientRect().top + scrollY
-    if (scrollY > inicio) window.scrollTo({ top: inicio, behavior: 'instant' })
+    window.scrollTo({ top: inicio(b.dataset.panel!), behavior: 'instant' })
   }))
-  // "Next project": baja suavemente hasta los siguientes proyectos del panel (justo bajo las dos barras fijas)
+
+  // "Next project": baja suavemente hasta el siguiente caso (justo bajo las barras fijas)
   raiz.querySelectorAll<HTMLAnchorElement>('[data-siguiente]').forEach((a) => a.addEventListener('click', (e) => {
     e.preventDefault()
-    // "#design": el siguiente proyecto está en la otra pestaña → se cambia de pestaña (y se va a su inicio)
-    if (a.hash === '#design') { raiz.querySelector<HTMLButtonElement>('[data-panel="design"]')!.click(); return }
+    if (a.hash === '#design') { window.scrollTo({ top: inicio('design'), behavior: 'smooth' }); return }
     const destino = document.querySelector<HTMLElement>(a.hash)!
     // dentro de "Selected work" quedan fijas la cabecera + la barra de trabajos; fuera (p. ej. About), solo la cabecera
-    const barras = (raiz.contains(destino) ? raiz.querySelector<HTMLElement>('.cabecera-trabajos')! : document.querySelector<HTMLElement>('.cabecera')!).getBoundingClientRect().bottom
-    window.scrollTo({ top: destino.getBoundingClientRect().top + scrollY - Math.max(barras, 0), behavior: 'smooth' })
+    const barras = raiz.contains(destino) ? alturaBarras() : document.querySelector<HTMLElement>('.cabecera')!.offsetHeight
+    window.scrollTo({ top: destino.getBoundingClientRect().top + scrollY - barras, behavior: 'smooth' })
   }))
-  // Flechas del teclado entre las dos pestañas
-  raiz.querySelector('[role="tablist"]')!.addEventListener('keydown', (e) => {
+
+  // Flechas del teclado entre Software y Design
+  raiz.querySelector('.interruptor')!.addEventListener('keydown', (e) => {
     const k = (e as KeyboardEvent).key
     if (k !== 'ArrowLeft' && k !== 'ArrowRight') return
-    const siguiente = [...botones].find((b) => b.getAttribute('aria-selected') !== 'true')!
-    siguiente.click(); siguiente.focus()
+    const otro = [...botones].find((b) => b.getAttribute('aria-current') !== 'true')!
+    otro.click(); otro.focus()
   })
-  // /#design o /#software desde otros enlaces
-  const segunEnlace = () => { const h = location.hash.slice(1); if (h === 'design' || h === 'software') mostrar(h) }
+
+  // /#design o /#software desde otros enlaces (p. ej. el menú de arriba). Se espera a que las animaciones
+  // hayan calculado su altura; si no, el salto se quedaría corto.
+  const segunEnlace = () => {
+    const h = location.hash.slice(1)
+    if (h !== 'design' && h !== 'software') return
+    ScrollTrigger.refresh()
+    requestAnimationFrame(() => window.scrollTo({ top: inicio(h), behavior: 'instant' }))
+  }
   window.addEventListener('hashchange', segunEnlace)
-  segunEnlace()
+  if (document.readyState === 'complete') segunEnlace()
+  else window.addEventListener('load', segunEnlace, { once: true })
 </script>
 
 <style>
   .trabajos { position: relative; padding-top: var(--espacio-7); }
   .ancla { position: absolute; top: 0; }
+  #panel-design { position: relative; }
+  .ancla-design { position: absolute; top: 0; scroll-margin-top: calc(var(--alto-cabecera) + var(--alto-barra-trabajos)); }
 
   /* Barra fija bajo la cabecera principal mientras se está en "Selected work":
      siempre se ve en qué pestaña estás y se puede cambiar en cualquier momento */
@@ -111,7 +144,14 @@ const { diseño, software } = Astro.props
     background: var(--color-linea); box-shadow: 0 0 0 100vmax var(--color-linea);
   }
   .barra-titulo { display: flex; align-items: baseline; gap: var(--espacio-4); min-width: 0; }
-  .titulo-panel { font-size: var(--titulo-3); font-weight: var(--peso-fino); letter-spacing: -0.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  /* los dos títulos en el mismo sitio: al cambiar de parte, uno se desvanece y entra el otro */
+  .titulos { display: grid; min-width: 0; }
+  .titulo-panel {
+    grid-area: 1 / 1; font-size: var(--titulo-3); font-weight: var(--peso-fino); letter-spacing: -0.02em;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    opacity: 0; transform: translateY(8px); transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+  .titulo-panel.activo { opacity: 1; transform: none; }
   @media (max-width: 720px) {
     .titulo-panel { display: none; }
   }
@@ -123,6 +163,6 @@ const { diseño, software } = Astro.props
     background: transparent; color: var(--color-texto-suave); font: var(--peso-medio) var(--texto-m) / 1 var(--fuente-texto); cursor: pointer;
     transition: background-color 0.25s, color 0.25s;
   }
-  .interruptor button[aria-selected='true'] { background: var(--color-invertido); color: var(--color-sobre-invertido); }
+  .interruptor button[aria-current='true'] { background: var(--color-invertido); color: var(--color-sobre-invertido); }
 
 </style>
