@@ -116,7 +116,15 @@ p { margin: 0; }
 .prosa p:has(> em:only-child) { margin-top: calc(-1 * var(--espacio-1)); } /* el pie de foto respira: ~20 px bajo la imagen */
 .prosa p:has(> img) em { margin-top: var(--espacio-4); }
 /* imágenes recortadas (fondo transparente, p. ej. "…-recorte.png"): sin fondo ni esquinas redondeadas */
-.prosa img[src*="recorte"] { background: none; border-radius: 0; }
+.prosa img[src*="recorte"], .prosa img.sin-fondo, .galeria-balones img { background: none; border-radius: 0; }
+/* galería de balones (fondo transparente): 4 por fila, 2 en móvil */
+.galeria-balones { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--espacio-4); max-width: 52rem; }
+.galeria-balones img { width: 100%; height: auto; }
+@media (max-width: 600px) { .galeria-balones { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.prosa img.sin-fondo { max-width: 32rem; }
+/* nota legal al final de un caso (después de una línea "---") */
+.prosa hr { width: 100%; border: 0; border-top: var(--linea-fina) solid var(--color-linea); margin: var(--espacio-5) 0 0; }
+.prosa hr + p { font-size: var(--texto-xs); color: var(--color-texto-suave); max-width: 40rem; }
 /* Pies de foto: la cursiva que va SOLA en su línea, o bajo una pareja de imágenes. Las cursivas dentro de un texto siguen normales. */
 .prosa p:has(> em:only-child) em, .prosa p:has(> img) em { font-style: normal; font-size: var(--texto-s); color: var(--color-texto-suave); max-width: 40rem; display: block; }
 .prosa h2 { font-size: var(--titulo-3); font-weight: var(--peso-normal); letter-spacing: -0.02em; margin-top: var(--espacio-5); }
