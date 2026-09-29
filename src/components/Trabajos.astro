@@ -4,6 +4,7 @@
 // Enlaces: /#software y /#design abren la sección con ese panel ya elegido.
 import TarjetaProyecto from './TarjetaProyecto.astro'
 import YakuEscaparate from './YakuEscaparate.astro'
+import LicenciasEscaparate from './LicenciasEscaparate.astro'
 import type { CollectionEntry } from 'astro:content'
 
 interface Props {
@@ -12,6 +13,7 @@ interface Props {
 }
 const { diseño, software } = Astro.props
 const otrasApps = software.filter((p) => p.id !== 'app-yaku') // Yaku va arriba, en grande
+const otrosDiseños = diseño.filter((p) => p.id !== 'product-design') // las licencias van arriba, en grande
 ---
 
 <section id="work" class="trabajos" data-trabajos>
@@ -39,9 +41,11 @@ const otrasApps = software.filter((p) => p.id !== 'app-yaku') // Yaku va arriba,
   </div>
 
   <div id="panel-design" role="tabpanel" aria-labelledby="pestana-design" data-panel-contenido="design" hidden>
-    <div class="contenedor">
+    <LicenciasEscaparate />
+    <div class="contenedor mas-apps">
+      <p class="etiqueta">More design work</p>
       <div class="rejilla">
-        {diseño.map((p) => <TarjetaProyecto proyecto={p} />)}
+        {otrosDiseños.map((p) => <TarjetaProyecto proyecto={p} />)}
       </div>
     </div>
   </div>
@@ -114,5 +118,4 @@ const otrasApps = software.filter((p) => p.id !== 'app-yaku') // Yaku va arriba,
   .interruptor button[aria-selected='true'] { background: var(--color-invertido); color: var(--color-sobre-invertido); }
 
   .mas-apps { display: flex; flex-direction: column; gap: var(--espacio-5); padding-block: var(--espacio-7) var(--espacio-8); }
-  #panel-design .contenedor { padding-block: var(--espacio-7) var(--espacio-8); }
 </style>

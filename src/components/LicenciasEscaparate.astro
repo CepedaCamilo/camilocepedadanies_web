@@ -1,0 +1,155 @@
+---
+// Diseño · Caso 01: Licensed product design (FIFA · UEFA · DFB) en Trade Con.
+// Mismo formato que Yaku: textos a la izquierda, balones a la derecha que pasan RODANDO con el scroll.
+// Los balones y su orden salen de `npm run balones` (scripts/balones-licencias.mjs → src/data/balones.json).
+import balones from '../data/balones.json'
+import LicenciasTexto from './LicenciasTexto.astro'
+
+const grupos = [
+  { id: 'fifa', nombre: 'FIFA' },
+  { id: 'dfb', nombre: 'DFB' },
+  { id: 'uefa', nombre: 'UEFA' },
+]
+---
+
+<section class="licencias" data-licencias aria-label="Licensed product design · FIFA, UEFA, DFB">
+  <div class="escena contenedor">
+    <div class="texto">
+      <p class="etiqueta">FIFA · UEFA · DFB</p>
+      <h3 class="titulo">Licensed product design.</h3>
+      <div class="detalle"><LicenciasTexto /></div>
+    </div>
+
+    <div class="escenario" aria-hidden="true">
+      <div class="pista">
+        {balones.map((b, i) => (
+          <img src={b.src} alt="" class="balon" data-balon={i} width="900" height="900"
+            loading={i < 2 ? 'eager' : 'lazy'} decoding="async" />
+        ))}
+      </div>
+      <div class="pie">
+        <div class="nombres">
+          {balones.map((b, i) => <p class="etiqueta nombre" data-nombre={i}>{b.nombre}</p>)}
+        </div>
+        <p class="etiqueta contador"><span data-contador>01</span> / {String(balones.length).padStart(2, '0')}</p>
+      </div>
+      <div class="grupos">
+        {grupos.map((g) => <span class="grupo" data-grupo={g.id}>{g.nombre}</span>)}
+      </div>
+    </div>
+  </div>
+</section>
+<!-- En móvil la escena fija solo tiene sitio para el título y los balones: el resto del texto va aquí debajo -->
+<div class="texto detalle-movil contenedor"><LicenciasTexto /></div>
+
+<script define:vars={{ balones }}>
+  window.__balones = balones
+</script>
+
+<script>
+  import { gsap } from 'gsap'
+  import { ScrollTrigger } from 'gsap/ScrollTrigger'
+  gsap.registerPlugin(ScrollTrigger)
+
+  const raiz = document.querySelector<HTMLElement>('[data-licencias]')!
+  const bolas = raiz.querySelectorAll<HTMLElement>('[data-balon]')
+  const nombres = raiz.querySelectorAll<HTMLElement>('[data-nombre]')
+  const contador = raiz.querySelector<HTMLElement>('[data-contador]')!
+  const datos = (window as any).__balones as { grupo: string }[]
+  const grupos = raiz.querySelectorAll<HTMLElement>('[data-grupo]')
+
+  // Marca el grupo (FIFA / DFB / UEFA) y el número del balón que está en el centro
+  let actual = -1
+  const marcar = (i: number) => {
+    if (i === actual) return
+    actual = i
+    contador.textContent = String(i + 1).padStart(2, '0')
+    grupos.forEach((g) => g.classList.toggle('grupo--activo', g.dataset.grupo === datos[i].grupo))
+  }
+
+  const mm = gsap.matchMedia()
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    raiz.classList.add('licencias--animado')
+    // Todos esperan fuera, a la derecha; el primero ya está en el centro
+    gsap.set(bolas, { xPercent: 55, rotate: 160, scale: 0.5, autoAlpha: 0 })
+    gsap.set(bolas[0], { xPercent: 0, rotate: 0, scale: 1, autoAlpha: 1 })
+    gsap.set(nombres, { autoAlpha: 0, y: 10 })
+    gsap.set(nombres[0], { autoAlpha: 1, y: 0 })
+    marcar(0)
+
+    const tl = gsap.timeline({
+      defaults: { ease: 'power3.inOut' },
+      scrollTrigger: {
+        trigger: raiz, start: 'top top', end: 'bottom bottom', scrub: 0.9,
+        onUpdate: (st) => marcar(Math.min(bolas.length - 1, Math.round(st.progress * (bolas.length - 1)))),
+      },
+    })
+    tl.to({}, { duration: 0.3 }) // el primero se deja ver un momento
+    for (let i = 1; i < bolas.length; i++) {
+      const t = 0.3 + (i - 1)
+      // sale rodando hacia la izquierda…
+      tl.to(bolas[i - 1], { xPercent: -55, rotate: -160, scale: 0.5, duration: 1 }, t)
+        .to(bolas[i - 1], { autoAlpha: 0, duration: 0.45, ease: 'power1.in' }, t + 0.3)
+        .to(nombres[i - 1], { autoAlpha: 0, y: -10, duration: 0.3 }, t + 0.2)
+      // …mientras el siguiente entra rodando desde la derecha
+        .to(bolas[i], { xPercent: 0, rotate: 0, scale: 1, duration: 1 }, t)
+        .to(bolas[i], { autoAlpha: 1, duration: 0.45, ease: 'power1.out' }, t + 0.25)
+        .to(nombres[i], { autoAlpha: 1, y: 0, duration: 0.3 }, t + 0.55)
+    }
+    tl.to({}, { duration: 0.4 })
+    return () => raiz.classList.remove('licencias--animado')
+  })
+</script>
+
+<style>
+  .escena {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    align-items: center;
+    column-gap: var(--espacio-7);
+    padding-block: var(--espacio-7);
+  }
+  /* Con animación: el recorrido es largo para que pasen los 16 balones, pero rápido y suave */
+  .licencias--animado { height: calc(520svh - var(--alto-cabecera) - var(--alto-barra-trabajos)); }
+  .licencias--animado .escena {
+    position: sticky; top: calc(var(--alto-cabecera) + var(--alto-barra-trabajos));
+    height: calc(100svh - var(--alto-cabecera) - var(--alto-barra-trabajos));
+    align-content: center; padding-block: var(--espacio-5);
+  }
+
+  .texto, .detalle { display: flex; flex-direction: column; gap: var(--espacio-4); }
+  .detalle-movil { display: none; padding-block: var(--espacio-6) var(--espacio-2); }
+  .titulo { font-size: var(--titulo-2); font-weight: var(--peso-fino); letter-spacing: var(--tracking-titulo); line-height: 1.02; }
+
+  /* ---------- Los balones ---------- */
+  .escenario { clip-path: inset(-20% 0 -20% 0); display: flex; flex-direction: column; align-items: center; gap: var(--espacio-4); min-width: 0; }
+  .pista { position: relative; width: min(100%, 62svh, 36rem); aspect-ratio: 1; overflow: visible; }
+  .balon {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
+    filter: drop-shadow(0 40px 40px rgb(0 0 0 / 0.28)); will-change: transform, opacity;
+  }
+  .licencias:not(.licencias--animado) .balon:not(:first-child) { display: none; }
+
+  .pie { width: min(100%, 28rem); display: flex; justify-content: space-between; align-items: baseline; gap: var(--espacio-4); }
+  .nombres { display: grid; }
+  .nombre { grid-area: 1 / 1; margin: 0; color: var(--color-texto); }
+  .licencias:not(.licencias--animado) .nombre:not(:first-child) { display: none; }
+  .contador { margin: 0; white-space: nowrap; }
+  .contador span { color: var(--color-acento); }
+
+  .grupos { display: flex; gap: var(--espacio-2); }
+  .grupo {
+    min-width: 4.5rem; padding: var(--espacio-1) var(--espacio-3); border-radius: var(--radio-pildora); text-align: center;
+    border: var(--linea-fina) solid var(--color-linea); font-family: var(--fuente-mono); font-size: var(--texto-xs); color: var(--color-texto-suave);
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  }
+  .grupo--activo { background: var(--color-invertido); border-color: var(--color-invertido); color: var(--color-sobre-invertido); }
+
+  @media (max-width: 900px) {
+    .escena { grid-template-columns: minmax(0, 1fr); row-gap: var(--espacio-5); }
+    .licencias--animado .escena { align-content: start; overflow: hidden; }
+    .licencias--animado .detalle { display: none; }
+    .licencias--animado + .detalle-movil { display: flex; }
+    .pista { width: min(78vw, 42svh); }
+  }
+</style>
