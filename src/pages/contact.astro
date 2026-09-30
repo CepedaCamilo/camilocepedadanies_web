@@ -1,0 +1,11 @@
+---
+// Formulario de contacto (el idioma sale de la dirección: /contact = EN, /de/contact = DE, /es/contact = ES). Todo en components/FormularioContacto.astro
+import Base from '../layouts/Base.astro'
+import FormularioContacto from '../components/FormularioContacto.astro'
+import { idiomaDe, t } from '../i18n'
+const titulo = t(idiomaDe(Astro.url), { en: 'Contact', de: 'Kontakt', es: 'Contacto' })
+---
+
+<Base titulo={titulo}>
+  <FormularioContacto />
+</Base>

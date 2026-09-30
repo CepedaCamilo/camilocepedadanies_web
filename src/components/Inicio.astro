@@ -7,7 +7,7 @@ import Trabajos from './Trabajos.astro'
 import Hero from './Hero.astro'
 import Cine from './Cine.astro'
 import { sitio } from '../sitio'
-import { idiomaDe, t } from '../i18n'
+import { idiomaDe, enlace, t } from '../i18n'
 import escaladores from '../assets/marca/escaladores.png'
 
 const idioma = idiomaDe(Astro.url)
@@ -70,9 +70,9 @@ const practica = t(idioma, {
   },
 })
 const contacto = t(idioma, {
-  en: { kicker: 'Contact', titulo: 'Something meaningful?', boton: "Let's connect ↗" },
-  de: { kicker: 'Kontakt', titulo: 'Etwas mit Bedeutung?', boton: 'Lass uns sprechen ↗' },
-  es: { kicker: 'Contacto', titulo: '¿Algo con sentido?', boton: 'Hablemos ↗' },
+  en: { kicker: 'Contact', titulo: 'Something meaningful?', boton: "Let's connect →" },
+  de: { kicker: 'Kontakt', titulo: 'Etwas mit Bedeutung?', boton: 'Lass uns sprechen →' },
+  es: { kicker: 'Contacto', titulo: '¿Algo con sentido?', boton: 'Hablemos →' },
 })
 ---
 
@@ -116,8 +116,9 @@ const contacto = t(idioma, {
     <div class="contacto-texto">
       <p class="etiqueta">{contacto.kicker}</p>
       <h2>{contacto.titulo}</h2>
-      <a class="pildora pildora--llena pildora--grande" href={`mailto:${sitio.email}`}>{contacto.boton}</a>
-      <p class="etiqueta">{sitio.email}</p>
+      <!-- el botón lleva al formulario (/contact); el email sigue a mano debajo -->
+      <a class="pildora pildora--llena pildora--grande" href={enlace(idioma, '/contact')}>{contacto.boton}</a>
+      <a class="etiqueta" href={`mailto:${sitio.email}`}>{sitio.email}</a>
     </div>
     <!-- los montañistas, subiendo juntos hacia "Let's connect": abajo del todo, siempre enteros -->
     <Image class="ilustracion" src={escaladores} alt="" widths={[700, 1200]} sizes="(max-width: 900px) 92vw, 620px" />

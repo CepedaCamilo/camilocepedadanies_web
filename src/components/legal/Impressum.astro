@@ -1,11 +1,14 @@
 ---
 // Impressum en 3 idiomas. La versión alemana (/de/impressum.html) es la que vale legalmente;
 // inglés (/impressum.html) y español (/es/impressum.html) son traducciones de cortesía.
+// Sin teléfono: la segunda vía de contacto es el formulario (/contact), además del email (§ 5 DDG; TJUE C-298/07).
+// Si cambias algo aquí, cámbialo en los 3 idiomas.
 import { sitio } from '../../sitio'
 import { idiomaDe, enlace } from '../../i18n'
 import AvisoTraduccion from './AvisoTraduccion.astro'
 const idioma = idiomaDe(Astro.url)
 const mailto = `mailto:${sitio.email}`
+const formulario = enlace(idioma, '/contact')
 const pais = idioma === 'de' ? 'Deutschland' : idioma === 'es' ? 'Alemania' : 'Germany'
 ---
 
@@ -14,22 +17,34 @@ const pais = idioma === 'de' ? 'Deutschland' : idioma === 'es' ? 'Alemania' : 'G
     <>
       <h1>Impressum</h1>
 
-      <h2>Angaben gemäß § 5 DDG</h2>
+      <h2>Angaben gemäß § 5 DDG und § 18 Abs. 1 MStV</h2>
       <p>Camilo Cepeda Danies<br />Thadenstraße 22<br />22767 Hamburg<br />{pais}</p>
 
       <h2>Kontakt</h2>
-      <p>E-Mail: <a href={mailto}>{sitio.email}</a><br />Telefon: +49 177 5898083</p>
-
-      <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
-      <p>Camilo Cepeda Danies, Anschrift wie oben</p>
-
-      <h2>Marken und Rechte Dritter</h2>
       <p>
-        Gezeigte Marken, Logos und Produktabbildungen dienen ausschließlich der Darstellung eigener Arbeiten
-        im Portfolio. Alle Rechte liegen bei den jeweiligen Inhabern. Die Fußball-Designs (u. a. der Ball im
-        Header dieser Seite) entstanden im Rahmen meiner Tätigkeit bei der Trade Con GmbH; die Rechte an den
-        Designs liegen bei der Trade Con GmbH. UEFA, UEFA Champions League, FIFA, DFB sowie alle zugehörigen
-        Namen, Logos und Marken sind Eigentum der jeweiligen Rechteinhaber.
+        E-Mail: <a href={mailto}>{sitio.email}</a><br />
+        Kontaktformular: <a href={formulario}>camilocepedadanies.com/contact</a>
+      </p>
+
+      <h2>Portfolioarbeiten, Marken und Rechte Dritter</h2>
+      <p>
+        Die auf dieser Website gezeigten Marken, Logos, Produktabbildungen und sonstigen Arbeiten dienen ausschließlich
+        der Dokumentation meiner eigenen beruflichen Tätigkeit und meines Portfolios. Das gilt auch für Arbeiten, die für
+        weitere Unternehmen, Marken oder Kunden entstanden sind.
+      </p>
+      <p>
+        Arbeiten, die im Rahmen meiner Tätigkeit bei der Trade Con GmbH entstanden sind, werden ausschließlich zur
+        Darstellung meiner damaligen beruflichen Mitwirkung gezeigt. Etwaige Nutzungs- und Verwertungsrechte liegen bei
+        der Trade Con GmbH und/oder den jeweiligen Rechteinhabern.
+      </p>
+      <p>
+        FIFA, UEFA, UEFA Champions League und DFB sowie alle zugehörigen Namen, Logos, Marken und lizenzierten Inhalte
+        sind Eigentum der jeweiligen Rechteinhaber. Das gilt ebenso für alle übrigen auf dieser Website gezeigten Marken,
+        Logos und sonstigen geschützten Inhalte.
+      </p>
+      <p>
+        Durch die Darstellung dieser Arbeiten wird keine aktuelle geschäftliche Verbindung, Partnerschaft, Beauftragung
+        oder Empfehlung durch FIFA, UEFA, DFB oder andere genannte Rechteinhaber behauptet.
       </p>
     </>
   )}
@@ -40,22 +55,32 @@ const pais = idioma === 'de' ? 'Deutschland' : idioma === 'es' ? 'Alemania' : 'G
       <h1>Legal notice</h1>
       <AvisoTraduccion enlaceAleman={enlace('de', '/impressum.html')} />
 
-      <h2>Information pursuant to § 5 DDG (German Digital Services Act)</h2>
+      <h2>Information pursuant to § 5 DDG (German Digital Services Act) and § 18 (1) MStV (German Interstate Media Treaty)</h2>
       <p>Camilo Cepeda Danies<br />Thadenstraße 22<br />22767 Hamburg<br />{pais}</p>
 
       <h2>Contact</h2>
-      <p>Email: <a href={mailto}>{sitio.email}</a><br />Phone: +49 177 5898083</p>
-
-      <h2>Responsible for the content pursuant to § 18 (2) MStV (German Interstate Media Treaty)</h2>
-      <p>Camilo Cepeda Danies, address as above</p>
-
-      <h2>Trademarks and third-party rights</h2>
       <p>
-        Trademarks, logos and product images are shown solely to present my own work in this portfolio.
-        All rights remain with their respective owners. The football designs (including the ball in the
-        header of this page) were created as part of my work at Trade Con GmbH; the rights to these designs
-        belong to Trade Con GmbH. UEFA, UEFA Champions League, FIFA, DFB and all related names, logos and
-        trademarks are the property of their respective owners.
+        Email: <a href={mailto}>{sitio.email}</a><br />
+        Contact form: <a href={formulario}>camilocepedadanies.com/contact</a>
+      </p>
+
+      <h2>Portfolio work, trademarks and third-party rights</h2>
+      <p>
+        The trademarks, logos, product images and other work shown on this website serve solely to document my own
+        professional activity and portfolio. This also applies to work created for other companies, brands or clients.
+      </p>
+      <p>
+        Work created as part of my employment at Trade Con GmbH is shown solely to present my professional contribution
+        at the time. Any rights of use and exploitation lie with Trade Con GmbH and/or the respective rights holders.
+      </p>
+      <p>
+        FIFA, UEFA, UEFA Champions League and DFB, as well as all related names, logos, trademarks and licensed content,
+        are the property of their respective owners. The same applies to all other trademarks, logos and protected
+        content shown on this website.
+      </p>
+      <p>
+        Showing this work does not claim any current business relationship, partnership, commission or endorsement by
+        FIFA, UEFA, DFB or any other rights holder mentioned.
       </p>
     </>
   )}
@@ -66,22 +91,34 @@ const pais = idioma === 'de' ? 'Deutschland' : idioma === 'es' ? 'Alemania' : 'G
       <h1>Aviso legal</h1>
       <AvisoTraduccion enlaceAleman={enlace('de', '/impressum.html')} />
 
-      <h2>Datos según el § 5 DDG (ley alemana de servicios digitales)</h2>
+      <h2>Datos según el § 5 DDG (ley alemana de servicios digitales) y el § 18, apdo. 1 MStV (tratado interestatal alemán de medios)</h2>
       <p>Camilo Cepeda Danies<br />Thadenstraße 22<br />22767 Hamburg<br />{pais}</p>
 
       <h2>Contacto</h2>
-      <p>Correo electrónico: <a href={mailto}>{sitio.email}</a><br />Teléfono: +49 177 5898083</p>
-
-      <h2>Responsable del contenido según el § 18, apdo. 2 MStV (tratado interestatal alemán de medios)</h2>
-      <p>Camilo Cepeda Danies, dirección indicada arriba</p>
-
-      <h2>Marcas y derechos de terceros</h2>
       <p>
-        Las marcas, logotipos e imágenes de productos se muestran únicamente para presentar mi propio trabajo
-        en este portfolio. Todos los derechos pertenecen a sus respectivos titulares. Los diseños de balones
-        (entre ellos el balón de la cabecera de esta página) se crearon en el marco de mi trabajo en Trade Con
-        GmbH; los derechos sobre esos diseños pertenecen a Trade Con GmbH. UEFA, UEFA Champions League, FIFA,
-        DFB y todos los nombres, logotipos y marcas relacionados son propiedad de sus respectivos titulares.
+        Correo electrónico: <a href={mailto}>{sitio.email}</a><br />
+        Formulario de contacto: <a href={formulario}>camilocepedadanies.com/contact</a>
+      </p>
+
+      <h2>Trabajos del portfolio, marcas y derechos de terceros</h2>
+      <p>
+        Las marcas, logotipos, imágenes de productos y demás trabajos que se muestran en esta web sirven únicamente para
+        documentar mi propia actividad profesional y mi portfolio. Lo mismo se aplica a los trabajos realizados para otras
+        empresas, marcas o clientes.
+      </p>
+      <p>
+        Los trabajos realizados en el marco de mi actividad en Trade Con GmbH se muestran únicamente para presentar mi
+        participación profesional en aquel momento. Los posibles derechos de uso y explotación corresponden a Trade Con
+        GmbH y/o a los respectivos titulares.
+      </p>
+      <p>
+        FIFA, UEFA, UEFA Champions League y DFB, así como todos los nombres, logotipos, marcas y contenidos con licencia
+        relacionados, son propiedad de sus respectivos titulares. Lo mismo se aplica a todas las demás marcas, logotipos y
+        contenidos protegidos que se muestran en esta web.
+      </p>
+      <p>
+        La presentación de estos trabajos no afirma ninguna relación comercial, colaboración, encargo o recomendación actual
+        por parte de FIFA, UEFA, DFB ni de ningún otro titular de derechos mencionado.
       </p>
     </>
   )}

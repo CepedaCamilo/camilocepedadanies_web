@@ -1,0 +1,172 @@
+---
+// Formulario de contacto (/contact, /de/contact, /es/contact). Sustituye al teléfono en el Impressum:
+// la ley pide email + una segunda vía rápida y directa, y un formulario que funciona sirve (TJUE C-298/07).
+// El mensaje va a la Edge Function "contacto" (supabase-functions/contacto), que lo reenvía por email y NO lo guarda.
+// Anti-robots: campo trampa invisible ("web") + tiempo mínimo de relleno (lo comprueba el servidor).
+// Tono: du / tú, como el resto de la web (las páginas legales van de Sie / usted).
+import { sitio } from '../sitio'
+import { idiomaDe, enlace, t } from '../i18n'
+const idioma = idiomaDe(Astro.url)
+const x = t(idioma, {
+  en: {
+    kicker: 'Contact', titulo: "I'd love to hear from you.",
+    intro: "Whether it's about a project, a collaboration or simply something you'd like to talk about.",
+    nombre: 'Name', nombreP: 'Your name', email: 'Email', emailP: 'Your email address',
+    asunto: 'Subject', asuntoP: 'What is it about?', mensaje: 'Message', mensajeP: 'Your message',
+    enviar: 'Send message', enviando: 'Sending…',
+    aviso: 'The data you enter is processed solely to handle your request. More information in the ', avisoEnlace: 'privacy policy', avisoFin: '.',
+    exitoKicker: 'Sent successfully', exitoTitulo: 'Thank you for your message.', exitoTexto: "I'll get back to you as soon as possible.",
+    errorKicker: 'Error', errorTexto: 'Unfortunately, your message could not be sent.', errorLimite: 'Too many messages were sent in a short time.',
+    errorAlternativa: 'Please try again or write to me directly at:',
+  },
+  de: {
+    kicker: 'Kontakt', titulo: 'Schreib mir gerne.',
+    intro: 'Ob zu einem Projekt, einer Zusammenarbeit oder einfach, weil du etwas besprechen möchtest.',
+    nombre: 'Name', nombreP: 'Dein Name', email: 'E-Mail', emailP: 'Deine E-Mail-Adresse',
+    asunto: 'Betreff', asuntoP: 'Worum geht es?', mensaje: 'Nachricht', mensajeP: 'Deine Nachricht',
+    enviar: 'Nachricht senden', enviando: 'Wird gesendet …',
+    aviso: 'Mit dem Absenden des Formulars werden die von dir eingegebenen Daten ausschließlich zur Bearbeitung deiner Anfrage verarbeitet. Weitere Informationen findest du in der ', avisoEnlace: 'Datenschutzerklärung', avisoFin: '.',
+    exitoKicker: 'Erfolgreich gesendet', exitoTitulo: 'Danke für deine Nachricht.', exitoTexto: 'Ich melde mich so bald wie möglich bei dir.',
+    errorKicker: 'Fehler', errorTexto: 'Die Nachricht konnte leider nicht gesendet werden.', errorLimite: 'Es wurden in kurzer Zeit zu viele Nachrichten gesendet.',
+    errorAlternativa: 'Bitte versuche es erneut oder schreib mir direkt an:',
+  },
+  es: {
+    kicker: 'Contacto', titulo: 'Escríbeme cuando quieras.',
+    intro: 'Ya sea por un proyecto, una colaboración o simplemente porque quieres comentar algo.',
+    nombre: 'Nombre', nombreP: 'Tu nombre', email: 'Correo electrónico', emailP: 'Tu correo electrónico',
+    asunto: 'Asunto', asuntoP: '¿De qué se trata?', mensaje: 'Mensaje', mensajeP: 'Tu mensaje',
+    enviar: 'Enviar mensaje', enviando: 'Enviando…',
+    aviso: 'Los datos que introduces se tratan únicamente para gestionar tu consulta. Más información en la ', avisoEnlace: 'política de privacidad', avisoFin: '.',
+    exitoKicker: 'Enviado correctamente', exitoTitulo: 'Gracias por tu mensaje.', exitoTexto: 'Te respondo lo antes posible.',
+    errorKicker: 'Error', errorTexto: 'Lo siento, el mensaje no se pudo enviar.', errorLimite: 'Se han enviado demasiados mensajes en poco tiempo.',
+    errorAlternativa: 'Vuelve a intentarlo o escríbeme directamente a:',
+  },
+})
+---
+
+<section class="contenedor seccion contacto-pagina" data-contacto data-api={sitio.contacto.api} data-clave={sitio.contacto.clave} data-idioma={idioma}>
+  <div class="cabeza">
+    <p class="etiqueta">{x.kicker}</p>
+    <h1>{x.titulo}</h1>
+    <p class="entradilla">{x.intro}</p>
+  </div>
+
+  <form class="formulario" data-formulario>
+    <div class="fila">
+      <label class="campo">
+        <span class="etiqueta">{x.nombre}</span>
+        <input name="nombre" type="text" required maxlength="100" autocomplete="name" placeholder={x.nombreP} />
+      </label>
+      <label class="campo">
+        <span class="etiqueta">{x.email}</span>
+        <input name="email" type="email" required maxlength="254" autocomplete="email" placeholder={x.emailP} />
+      </label>
+    </div>
+    <label class="campo">
+      <span class="etiqueta">{x.asunto}</span>
+      <input name="asunto" type="text" required maxlength="150" placeholder={x.asuntoP} />
+    </label>
+    <label class="campo">
+      <span class="etiqueta">{x.mensaje}</span>
+      <textarea name="mensaje" required maxlength="5000" rows="7" placeholder={x.mensajeP}></textarea>
+    </label>
+    <!-- Trampa para robots: invisible para las personas (y para los lectores de pantalla); si se rellena, el servidor no envía nada -->
+    <div class="trampa" aria-hidden="true">
+      <label>Website <input name="web" type="text" tabindex="-1" autocomplete="off" /></label>
+    </div>
+
+    <div class="enviar">
+      <button class="pildora pildora--llena pildora--grande" type="submit" data-boton data-enviando={x.enviando}>{x.enviar}</button>
+      <p class="aviso etiqueta">{x.aviso}<a href={enlace(idioma, '/datenschutz.html') + '#kontaktformular'}>{x.avisoEnlace}</a>{x.avisoFin}</p>
+    </div>
+  </form>
+
+  <div class="resultado" data-exito hidden tabindex="-1" role="status">
+    <p class="etiqueta">{x.exitoKicker}</p>
+    <h2>{x.exitoTitulo}</h2>
+    <p>{x.exitoTexto}</p>
+  </div>
+
+  <div class="resultado resultado--error" data-error hidden tabindex="-1" role="alert">
+    <p class="etiqueta">{x.errorKicker}</p>
+    <p>{x.errorTexto} <span data-error-limite hidden>{x.errorLimite}</span></p>
+    <p>{x.errorAlternativa} <a href={`mailto:${sitio.email}`}>{sitio.email}</a></p>
+  </div>
+</section>
+
+<script>
+  const raiz = document.querySelector<HTMLElement>('[data-contacto]')!
+  const form = raiz.querySelector<HTMLFormElement>('[data-formulario]')!
+  const boton = raiz.querySelector<HTMLButtonElement>('[data-boton]')!
+  const exito = raiz.querySelector<HTMLElement>('[data-exito]')!
+  const error = raiz.querySelector<HTMLElement>('[data-error]')!
+  const limite = raiz.querySelector<HTMLElement>('[data-error-limite]')!
+  const abierto = Date.now() // el servidor rechaza en silencio los envíos "instantáneos" (robots)
+  const textoBoton = boton.textContent
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    if (!form.reportValidity()) return
+    const datos = Object.fromEntries(new FormData(form)) as Record<string, string>
+    boton.disabled = true
+    boton.textContent = boton.dataset.enviando!
+    error.hidden = true
+    let r: Response | null = null
+    try {
+      r = await fetch(raiz.dataset.api!, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: raiz.dataset.clave!, Authorization: `Bearer ${raiz.dataset.clave}` },
+        body: JSON.stringify({ ...datos, idioma: raiz.dataset.idioma, segundos: Math.round((Date.now() - abierto) / 1000) }),
+      })
+    } catch {}
+    if (r?.ok) {
+      form.hidden = true
+      exito.hidden = false
+      exito.focus()
+      return
+    }
+    limite.hidden = r?.status !== 429
+    error.hidden = false
+    error.focus()
+    boton.disabled = false
+    boton.textContent = textoBoton
+  })
+</script>
+
+<style>
+  .contacto-pagina { display: flex; flex-direction: column; gap: var(--espacio-7); max-width: 46rem; }
+  .cabeza { display: flex; flex-direction: column; gap: var(--espacio-4); }
+
+  .formulario { display: flex; flex-direction: column; gap: var(--espacio-5); }
+  .fila { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--espacio-5); }
+  @media (max-width: 600px) { .fila { grid-template-columns: minmax(0, 1fr); } }
+
+  .campo { display: flex; flex-direction: column; gap: var(--espacio-2); }
+  .campo input, .campo textarea {
+    width: 100%;
+    font: inherit;
+    font-size: max(16px, var(--texto-m)); /* ≥16 px: el iPhone no hace zoom al tocar el campo */
+    color: var(--color-texto);
+    background: var(--color-superficie);
+    border: var(--linea-fina) solid var(--color-linea);
+    border-radius: var(--radio-m);
+    padding: var(--espacio-3) var(--espacio-4);
+  }
+  .campo textarea { resize: vertical; min-height: 10rem; line-height: 1.5; }
+  .campo input::placeholder, .campo textarea::placeholder { color: var(--color-texto-suave); opacity: 0.7; }
+  .campo input:focus-visible, .campo textarea:focus-visible { outline: none; border-color: var(--color-acento); box-shadow: 0 0 0 1px var(--color-acento); }
+
+  .enviar { display: flex; flex-direction: column; align-items: flex-start; gap: var(--espacio-4); }
+  .enviar button:disabled { opacity: 0.6; cursor: progress; }
+  .aviso { margin: 0; line-height: 1.6; max-width: 38rem; }
+
+  /* la trampa: fuera de la pantalla (no display:none, que algunos robots saltan) */
+  .trampa { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+
+  /* "hidden" tiene que ganar a display:flex (si no, se verían siempre los mensajes de éxito y error) */
+  .formulario[hidden], .resultado[hidden] { display: none; }
+  .resultado { display: flex; flex-direction: column; gap: var(--espacio-3); }
+  .resultado:focus { outline: none; }
+  .resultado p { margin: 0; }
+  .resultado--error { padding: var(--espacio-5); border: var(--linea-fina) solid var(--color-linea); border-radius: var(--radio-l); }
+</style>

@@ -10,6 +10,11 @@ export const sitio = {
     api: 'https://supabase.danies.trade/functions/v1/demo-codigo',
     clave: 'sb_publishable_ghOYo_9qOmecLIxCFrry8S_wpvLySp4',
   },
+  // Formulario de contacto (/contact): la ventanilla que reenvía el mensaje por email (no lo guarda). Misma clave publishable.
+  contacto: {
+    api: 'https://supabase.danies.trade/functions/v1/contacto',
+    clave: 'sb_publishable_ghOYo_9qOmecLIxCFrry8S_wpvLySp4',
+  },
   // La frase que sale en Google y al compartir, en los tres idiomas
   descripcion: {
     en: 'Product and brand designer in Hamburg, now building software: from the interface to the server.',
