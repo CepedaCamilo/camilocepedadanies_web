@@ -1,0 +1,348 @@
+---
+import { idiomaDe, t } from '../i18n'
+// Design · Caso 04: "Type that moves" — tipografía cinética hecha en código (GSAP), guiada por el scroll.
+// La frase del hero se rompe en palabras y cada una tiene su comportamiento: PESO (Geist variable 100→900),
+// REPETICIÓN, MÁSCARA (la foto de un balón a través de las letras), CÓDIGO (letras que se descifran) y
+// PROFUNDIDAD (giro 3D). Debajo, un editor de animación: capas con fotogramas clave, cabezal, código de tiempo
+// y la CURVA de aceleración de cada momento (calculada con las mismas curvas de GSAP al compilar).
+// La pieza (la frase) va siempre en inglés, como las notas de THE BRIDGE; la leyenda se traduce.
+import { gsap } from 'gsap'
+import CasoTexto from './CasoTexto.astro'
+
+// Momentos de la pieza: [inicio, fin] en "segundos" de la línea de tiempo, y su curva de aceleración
+const DURACION = 7.2
+const momentos = [
+  { capa: 'Designing', inicio: 0, fin: 1.2, ease: 'power4.inOut' },
+  { capa: 'brands', inicio: 1.25, fin: 2.4, ease: 'expo.out' },
+  { capa: 'products', inicio: 2.45, fin: 3.6, ease: 'power2.out' },
+  { capa: 'software', inicio: 3.65, fin: 5.0, ease: 'steps(12)' },
+  { capa: 'behind them.', inicio: 5.05, fin: 6.15, ease: 'back.out(1.7)' },
+  { capa: 'sentence', inicio: 6.2, fin: 7.0, ease: 'power3.out' },
+]
+// Cada curva como un trazo SVG (x = tiempo, y = valor; 100×64 con margen para el "rebote" de back.out)
+const curva = (ease: string) => {
+  const f = gsap.parseEase(ease)
+  return Array.from({ length: 41 }, (_, i) => {
+    const x = i / 40
+    return `${i ? 'L' : 'M'}${(x * 100).toFixed(1)},${(56 - f(x) * 46).toFixed(1)}`
+  }).join(' ')
+}
+const curvas = momentos.map((m) => ({ ...m, d: curva(m.ease) }))
+const BRANDS = 7 // filas de "brands" que se apilan
+
+const idioma = idiomaDe(Astro.url)
+const pasos = t(idioma, {
+  en: ['Weight — Designing', 'Repetition — brands', 'Mask — products', 'Code — software', 'Depth — behind them.', 'The sentence, together'],
+  de: ['Gewicht — Designing', 'Wiederholung — brands', 'Maske — products', 'Code — software', 'Tiefe — behind them.', 'Der ganze Satz'],
+  es: ['Peso — Designing', 'Repetición — brands', 'Máscara — products', 'Código — software', 'Profundidad — behind them.', 'La frase, entera'],
+})
+const cab = t(idioma, {
+  en: { kicker: 'Case 04 · Motion design', titulo: 'Type that moves', sub: 'One sentence, six ways to move.', aria: 'Case 04 · Type that moves' },
+  de: { kicker: 'Case 04 · Motion Design', titulo: 'Type that moves', sub: 'Ein Satz, sechs Arten von Bewegung.', aria: 'Case 04 · Type that moves' },
+  es: { kicker: 'Caso 04 · Motion design', titulo: 'Type that moves', sub: 'Una frase, seis formas de moverse.', aria: 'Caso 04 · Type that moves' },
+})
+const texto = t(idioma, {
+  en: {
+    entradilla: 'A kinetic typography piece built entirely in code. My own line — “Designing brands, products and the software behind them.” — broken into words, each with its own behaviour, timing and easing.',
+    suave: 'Weight, repetition, masking, code and depth: every move is designed on a timeline with real easing curves, the way I would design a brand’s motion system. Here, the scroll is the playhead.',
+    ficha: [['Role', 'Motion design · Typography · Creative coding'], ['Context', 'Self-initiated · Designed and coded by me'], ['Scope', 'Kinetic type · Easing · Motion system']],
+    acciones: [{ texto: 'About me ↓', href: '#about', siguiente: true }],
+  },
+  de: {
+    entradilla: 'Ein Stück kinetischer Typografie, komplett in Code gebaut. Mein eigener Satz — „Designing brands, products and the software behind them.“ — in Wörter zerlegt, jedes mit eigenem Verhalten, Timing und Easing.',
+    suave: 'Gewicht, Wiederholung, Maske, Code und Tiefe: Jede Bewegung ist auf einer Timeline mit echten Easing-Kurven gestaltet — so, wie ich das Motion-System einer Marke gestalten würde. Hier ist das Scrollen der Abspielkopf.',
+    ficha: [['Rolle', 'Motion Design · Typografie · Creative Coding'], ['Kontext', 'Eigenes Projekt · Von mir gestaltet und programmiert'], ['Umfang', 'Kinetische Typografie · Easing · Motion-System']],
+    acciones: [{ texto: 'Über mich ↓', href: '#about', siguiente: true }],
+  },
+  es: {
+    entradilla: 'Una pieza de tipografía cinética hecha íntegramente en código. Mi propia frase — “Designing brands, products and the software behind them.” — rota en palabras, cada una con su comportamiento, su ritmo y su curva.',
+    suave: 'Peso, repetición, máscara, código y profundidad: cada movimiento está diseñado sobre una línea de tiempo con curvas de aceleración reales, como diseñaría el sistema de movimiento de una marca. Aquí, el scroll es el cabezal.',
+    ficha: [['Rol', 'Motion design · Tipografía · Código creativo'], ['Contexto', 'Proyecto propio · Diseñado y programado por mí'], ['Alcance', 'Tipografía cinética · Curvas · Sistema de movimiento']],
+    acciones: [{ texto: 'Sobre mí ↓', href: '#about', siguiente: true }],
+  },
+})
+---
+
+<section class="kinetico" id="caso-motion" data-kinetico aria-label={cab.aria}>
+  <div class="escena contenedor">
+    <div class="texto">
+      <p class="etiqueta">{cab.kicker}</p>
+      <h3 class="titulo">{cab.titulo}<span class="titulo-2">{cab.sub}</span></h3>
+      <CasoTexto {...texto} enEscena />
+    </div>
+
+    <div class="estudio" aria-hidden="true">
+      <!-- La composición -->
+      <div class="comp" data-comp>
+        <div class="capa" data-capa="designing"><span class="palabra peso" data-designing>Designing</span></div>
+        <div class="capa capa--brands" data-capa="brands">
+          {Array.from({ length: BRANDS }, (_, i) => <span class="palabra fila-brands" data-brands={i}>brands</span>)}
+        </div>
+        <div class="capa" data-capa="products"><span class="palabra foto" data-products>products</span></div>
+        <div class="capa" data-capa="software">
+          <span class="conector" data-and>and the</span>
+          <span class="palabra mono" data-software>software</span>
+        </div>
+        <div class="capa capa--3d" data-capa="behind">
+          <span class="palabra profundo">{[...'behind them'].map((l) => <span class="letra" data-letra>{l === ' ' ? ' ' : l}</span>)}<span class="letra punto" data-punto>.</span></span>
+        </div>
+        <div class="capa" data-capa="final">
+          <p class="frase" data-frase>
+            <span class="f-peso">Designing</span><span class="f-brands">brands,</span><span class="f-foto">products</span><span>and the</span><span class="f-mono">software</span><span class="f-profundo">behind them.</span>
+          </p>
+        </div>
+        <span class="comp-info">1920 × 1080 · 25 fps</span>
+        <span class="comp-tiempo" data-tiempo>00:00:00:00</span>
+      </div>
+
+      <!-- El editor: capas con fotogramas clave + la curva del momento -->
+      <div class="editor">
+        <div class="pistas">
+          {curvas.map((m) => (
+            <div class="pista">
+              <span class="pista-nombre">{m.capa}</span>
+              <span class="pista-barra">
+                <i class="tramo" style={`left:${(m.inicio / DURACION) * 100}%;width:${((m.fin - m.inicio) / DURACION) * 100}%`}></i>
+                <i class="clave" style={`left:${(m.inicio / DURACION) * 100}%`}></i>
+                <i class="clave" style={`left:${(m.fin / DURACION) * 100}%`}></i>
+              </span>
+            </div>
+          ))}
+          <span class="cabezal-zona"><span class="cabezal" data-cabezal></span></span>
+        </div>
+        <div class="grafica">
+          <svg viewBox="0 0 100 64" preserveAspectRatio="none">
+            <line x1="0" y1="56" x2="100" y2="56" class="eje" /><line x1="0" y1="10" x2="100" y2="10" class="eje" />
+            {curvas.map((m, i) => <path d={m.d} class="curva" data-curva={i} pathLength="1" />)}
+          </svg>
+          <div class="ease">{curvas.map((m, i) => <span data-ease={i}>{m.ease}</span>)}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="leyenda">
+      <div class="leyenda-pasos">
+        {pasos.map((p, i) => <p class="etiqueta paso" data-paso={i}><span>{String(i + 1).padStart(2, '0')}</span> {p}</p>)}
+      </div>
+      <div class="progreso"><span data-progreso></span></div>
+    </div>
+  </div>
+</section>
+<!-- En el móvil, el texto completo del caso va aquí, justo debajo de la animación -->
+<div class="contenedor detalle-movil"><CasoTexto {...texto} /></div>
+
+<script define:vars={{ momentos, DURACION }}>
+  window.__kinetico = { momentos, DURACION }
+</script>
+
+<script>
+  import { gsap } from 'gsap'
+  import { ScrollTrigger } from 'gsap/ScrollTrigger'
+  gsap.registerPlugin(ScrollTrigger)
+
+  const k = document.querySelector<HTMLElement>('[data-kinetico]')!
+  const { momentos, DURACION } = (window as any).__kinetico as { momentos: { inicio: number; fin: number; ease: string }[]; DURACION: number }
+  const $ = (s: string) => k.querySelector<HTMLElement>(s)!
+  const $$ = (s: string) => k.querySelectorAll<HTMLElement>(s)
+  const capa = (id: string) => $(`[data-capa="${id}"]`)
+  const COLOR = { hueso: '#ece6dc', tinta: '#121110', cobalto: '#2e46f0', naranja: '#ff5a1f' }
+
+  // "software": las letras se descifran desde símbolos de código. Depende SOLO del progreso → igual hacia delante y hacia atrás.
+  const software = $('[data-software]')
+  const PALABRA = 'software'
+  const SIMBOLOS = '{}<>/_;=01[]#*'
+  const descifrar = (p: number) => {
+    software.textContent = [...PALABRA].map((letra, i) => {
+      const umbral = 0.25 + (i / PALABRA.length) * 0.65 // cada letra se fija un poco después que la anterior
+      return p >= umbral ? letra : SIMBOLOS[(Math.floor(p * 48) + i * 5) % SIMBOLOS.length]
+    }).join('')
+  }
+
+  const mm = gsap.matchMedia()
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    k.classList.add('kinetico--animado')
+    const comp = $('[data-comp]')
+    gsap.set($$('[data-capa]'), { autoAlpha: 0 })
+    gsap.set(capa('designing'), { autoAlpha: 1 })
+    gsap.set(comp, { backgroundColor: COLOR.hueso, color: COLOR.tinta })
+    gsap.set($('[data-designing]'), { '--peso': 100, scaleX: 0.82 })
+    gsap.set($$('[data-brands]'), { xPercent: (i: number) => (i % 2 ? 120 : -120) })
+    gsap.set($('[data-products]'), { scale: 3.2, backgroundPosition: '30% 20%', clipPath: 'inset(0 100% 0 0)' })
+    gsap.set($('[data-and]'), { autoAlpha: 0, y: 20 })
+    gsap.set($$('[data-letra]'), { rotateX: -95, autoAlpha: 0, transformOrigin: '50% 100%' })
+    gsap.set($('[data-punto]'), { y: '-160%' })
+    gsap.set($$('[data-frase] > span, [data-frase]'), { autoAlpha: 0, y: 14 })
+    gsap.set($$('[data-curva]'), { autoAlpha: 0, strokeDasharray: 1, strokeDashoffset: 1 })
+    gsap.set($$('[data-ease]'), { autoAlpha: 0 })
+    gsap.set($$('[data-paso]'), { autoAlpha: 0, y: 10 }); gsap.set($$('[data-paso]')[0], { autoAlpha: 1, y: 0 })
+    descifrar(0)
+
+    const tl = gsap.timeline({
+      defaults: { duration: 0.5, ease: 'power2.inOut' },
+      scrollTrigger: { trigger: k, start: 'top top', end: 'bottom bottom', scrub: 0.6 },
+      onUpdate() {
+        // Código de tiempo como en un editor: HH:MM:SS:FF a 25 fps
+        const fotogramas = Math.round(tl.time() * 25)
+        const ff = String(fotogramas % 25).padStart(2, '0')
+        const ss = String(Math.floor(fotogramas / 25)).padStart(2, '0')
+        $('[data-tiempo]').textContent = `00:00:${ss}:${ff}`
+      },
+    })
+    const paso = (i: number, t: number) => {
+      if (i > 0) tl.to($$('[data-paso]')[i - 1], { autoAlpha: 0, y: -10, duration: 0.15 }, t)
+      tl.to($$('[data-paso]')[i], { autoAlpha: 1, y: 0, duration: 0.15 }, t + 0.1)
+    }
+    // La curva del momento: se dibuja mientras dura y se apaga al acabar
+    const curvaDe = (i: number) => {
+      const { inicio, fin } = momentos[i]
+      tl.to($$('[data-curva]')[i], { autoAlpha: 1, duration: 0.05 }, inicio)
+        .to($$('[data-ease]')[i], { autoAlpha: 1, duration: 0.05 }, inicio)
+        .to($$('[data-curva]')[i], { strokeDashoffset: 0, duration: fin - inicio, ease: 'none' }, inicio)
+      if (i < momentos.length - 1) {
+        tl.to([$$('[data-curva]')[i], $$('[data-ease]')[i]], { autoAlpha: 0, duration: 0.05 }, fin + 0.02)
+      }
+    }
+    momentos.forEach((_, i) => curvaDe(i))
+    const fondo = (color: string, texto: string, t: number) => tl.to(comp, { backgroundColor: color, color: texto, duration: 0.15 }, t)
+
+    // 01 · PESO: Designing pasa de finísima a muy gruesa y se ensancha
+    tl.to($('[data-designing]'), { '--peso': 900, scaleX: 1.12, duration: 0.9, ease: 'power4.inOut' }, 0.05)
+      .to(capa('designing'), { yPercent: -110, duration: 0.25, ease: 'power3.in' }, 1.0)
+      .to(capa('designing'), { autoAlpha: 0, duration: 0.01 }, 1.25)
+    // 02 · REPETICIÓN: 7 filas de "brands" entran alternando lados y se funden en una
+    paso(1, 1.25); fondo(COLOR.cobalto, '#ffffff', 1.2)
+    tl.set(capa('brands'), { autoAlpha: 1 }, 1.25)
+      .to($$('[data-brands]'), { xPercent: 0, duration: 0.55, ease: 'expo.out', stagger: 0.05 }, 1.25)
+      .to($$('[data-brands]'), { y: (i: number) => `${(3 - i) * 100}%`, duration: 0.45, ease: 'power3.inOut' }, 1.9)
+      .to($$('[data-brands]:not([data-brands="3"])'), { autoAlpha: 0, duration: 0.2 }, 2.15)
+      .to(capa('brands'), { autoAlpha: 0, duration: 0.01 }, 2.45)
+    // 03 · MÁSCARA: la foto de un balón se ve a través de "products"; la cámara se aleja de dentro de la letra
+    paso(2, 2.45); fondo(COLOR.tinta, COLOR.hueso, 2.4)
+    tl.set(capa('products'), { autoAlpha: 1 }, 2.45)
+      .to($('[data-products]'), { clipPath: 'inset(0 0% 0 0)', duration: 0.35, ease: 'power2.out' }, 2.45)
+      .to($('[data-products]'), { scale: 1, backgroundPosition: '50% 50%', duration: 1.0, ease: 'power2.out' }, 2.55)
+      .to(capa('products'), { autoAlpha: 0, duration: 0.01 }, 3.65)
+    // 04 · CÓDIGO: "and the" entra, y "software" se descifra desde símbolos
+    paso(3, 3.65)
+    const proxy = { p: 0 }
+    tl.set(capa('software'), { autoAlpha: 1 }, 3.65)
+      .to($('[data-and]'), { autoAlpha: 1, y: 0, duration: 0.2, ease: 'power2.out' }, 3.65)
+      .to(proxy, { p: 1, duration: 1.2, ease: 'steps(12)', onUpdate: () => descifrar(proxy.p) }, 3.75)
+      .to(capa('software'), { autoAlpha: 0, duration: 0.01 }, 5.05)
+    // 05 · PROFUNDIDAD: las letras se levantan en 3D y el punto cae rebotando
+    paso(4, 5.05); fondo(COLOR.naranja, COLOR.tinta, 5.0)
+    tl.set(capa('behind'), { autoAlpha: 1 }, 5.05)
+      .to($$('[data-letra]'), { rotateX: 0, autoAlpha: 1, duration: 0.5, ease: 'back.out(1.7)', stagger: 0.04 }, 5.05)
+      .to($('[data-punto]'), { y: '0%', duration: 0.45, ease: 'bounce.out' }, 5.6)
+      .to(capa('behind'), { autoAlpha: 0, duration: 0.01 }, 6.2)
+    // 06 · LA FRASE: todo junto, cada palabra con un guiño a su comportamiento
+    paso(5, 6.2); fondo(COLOR.hueso, COLOR.tinta, 6.15)
+    tl.set(capa('final'), { autoAlpha: 1 }, 6.2)
+      .to($('[data-frase]'), { autoAlpha: 1, y: 0, duration: 0.2 }, 6.2)
+      .to($$('[data-frase] > span'), { autoAlpha: 1, y: 0, duration: 0.3, stagger: 0.08, ease: 'power3.out' }, 6.25)
+    tl.to({}, { duration: Math.max(0.01, DURACION - tl.duration()) })
+    // El cabezal recorre la línea de tiempo y la barra de progreso de la leyenda
+    tl.fromTo($('[data-cabezal]'), { left: '0%' }, { left: '100%', ease: 'none', duration: tl.duration() }, 0)
+    tl.fromTo($('[data-progreso]'), { scaleX: 0 }, { scaleX: 1, ease: 'none', duration: tl.duration() }, 0)
+
+    return () => { k.classList.remove('kinetico--animado'); software.textContent = PALABRA }
+  })
+</script>
+
+<style>
+  .escena {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    grid-template-areas: 'texto estudio' 'leyenda estudio';
+    align-items: center;
+    column-gap: var(--espacio-7);
+    padding-block: var(--espacio-7);
+  }
+  .kinetico--animado { height: calc(520svh - var(--alto-cabecera)); }
+  .kinetico--animado .escena {
+    position: sticky; top: calc(var(--alto-cabecera) + var(--alto-barra-trabajos));
+    height: calc(100svh - var(--alto-cabecera) - var(--alto-barra-trabajos));
+    align-content: center; padding-block: var(--espacio-5);
+  }
+  .texto { grid-area: texto; display: flex; flex-direction: column; gap: var(--espacio-4); }
+  .titulo-2 { display: block; color: var(--color-texto-suave); }
+  .titulo { font-size: var(--titulo-2); font-weight: var(--peso-fino); letter-spacing: var(--tracking-titulo); line-height: 1.02; }
+
+  /* ---------- El estudio: composición + editor ---------- */
+  .estudio { grid-area: estudio; display: flex; flex-direction: column; gap: 10px; width: 100%; max-height: 76svh; justify-self: center; }
+  .comp {
+    position: relative; aspect-ratio: 16 / 9; width: 100%; overflow: hidden; border-radius: 14px;
+    background: #ece6dc; color: #121110; container-type: inline-size; font-family: var(--fuente-texto);
+    box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.45);
+  }
+  .capa { position: absolute; inset: 0; display: grid; place-items: center; }
+  .palabra { display: block; font-size: 15cqw; line-height: 0.9; letter-spacing: -0.03em; white-space: nowrap; }
+  .peso { --peso: 900; font-variation-settings: 'wght' var(--peso); font-weight: normal; transform-origin: 50% 50%; }
+  .capa--brands { display: block; overflow: hidden; }
+  .fila-brands {
+    position: absolute; left: 0; right: 0; top: 50%; margin-top: -6.5cqw; text-align: center; font-size: 13cqw; font-weight: 800;
+    line-height: 1;
+  }
+  .fila-brands:nth-child(1) { translate: 0 -300%; } .fila-brands:nth-child(2) { translate: 0 -200%; }
+  .fila-brands:nth-child(3) { translate: 0 -100%; } .fila-brands:nth-child(5) { translate: 0 100%; }
+  .fila-brands:nth-child(6) { translate: 0 200%; } .fila-brands:nth-child(7) { translate: 0 300%; }
+  .fila-brands:nth-child(even) { -webkit-text-stroke: 0.22cqw #ffffff; color: transparent; } /* filas pares: solo contorno (blanco: currentColor sería transparente) */
+  .foto {
+    font-weight: 900; font-size: 17cqw; color: transparent; -webkit-background-clip: text; background-clip: text;
+    background-image: url('/licencias/01.webp'); background-size: 70% auto; background-repeat: no-repeat; background-color: #2e46f0;
+  }
+  .conector { position: absolute; top: 22%; font-family: var(--fuente-mono); font-size: 3.4cqw; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.7; }
+  .mono { font-family: var(--fuente-mono); font-size: 13cqw; font-weight: 500; color: #8b97ff; letter-spacing: -0.02em; }
+  .capa--3d { perspective: 60cqw; }
+  .profundo { display: flex; font-size: 13cqw; font-weight: 800; transform-style: preserve-3d; }
+  .letra { display: inline-block; backface-visibility: hidden; }
+  .frase { margin: 0; padding: 0 8cqw; font-size: 5.6cqw; line-height: 1.12; font-weight: 300; text-align: center; letter-spacing: -0.02em; }
+  .frase > span { display: inline-block; margin-inline: 0.13em; } /* cada palabra con su aire (son bloques que se animan) */
+  .f-peso { font-weight: 900; }
+  .f-brands { color: #2e46f0; }
+  .f-foto { font-weight: 800; color: transparent; -webkit-background-clip: text; background-clip: text; background-image: url('/licencias/01.webp'); background-size: cover; background-position: center; background-color: #2e46f0; }
+  .f-mono { font-family: var(--fuente-mono); color: #2e46f0; }
+  .f-profundo { font-weight: 800; color: #ff5a1f; }
+  .comp-info, .comp-tiempo { position: absolute; bottom: 2.4cqw; font-family: var(--fuente-mono); font-size: 1.5cqw; opacity: 0.55; letter-spacing: 0.06em; }
+  .comp-info { left: 2.6cqw; } .comp-tiempo { right: 2.6cqw; }
+
+  .editor {
+    display: grid; grid-template-columns: minmax(0, 1fr) 26%; gap: 10px; padding: 10px; border-radius: 12px;
+    background: #121110; color: #a8a198; font-family: var(--fuente-mono); font-size: 10px; container-type: inline-size;
+  }
+  .pistas { position: relative; display: flex; flex-direction: column; gap: 3px; }
+  .pista { display: grid; grid-template-columns: 26% 1fr; align-items: center; gap: 8px; height: 13px; }
+  .pista-nombre { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #d8d2c8; }
+  .pista-barra { position: relative; height: 100%; border-radius: 3px; background: #1f1c19; }
+  .tramo { position: absolute; top: 2px; bottom: 2px; border-radius: 2px; background: rgb(46 70 240 / 0.55); }
+  .clave { position: absolute; top: 50%; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; background: #f2eee6; transform: rotate(45deg); }
+  /* El cabezal vive en la zona de las barras (a la derecha de los nombres) */
+  .cabezal-zona { position: absolute; top: -4px; bottom: -4px; left: calc(26% + 8px); right: 0; pointer-events: none; }
+  .cabezal { position: absolute; top: 0; bottom: 0; left: 0; width: 2px; margin-left: -1px; background: #ff5a1f; }
+  .grafica { position: relative; display: flex; flex-direction: column; gap: 4px; }
+  .grafica svg { width: 100%; flex: 1; min-height: 60px; background: #1f1c19; border-radius: 6px; overflow: visible; }
+  .eje { stroke: #2e2b27; stroke-width: 0.6; vector-effect: non-scaling-stroke; }
+  .curva { fill: none; stroke: #ff5a1f; stroke-width: 2; vector-effect: non-scaling-stroke; }
+  .ease { display: grid; color: #f2eee6; } .ease span { grid-area: 1 / 1; }
+
+  /* ---------- Leyenda ---------- */
+  .leyenda { grid-area: leyenda; align-self: end; display: flex; flex-direction: column; gap: var(--espacio-3); padding-top: var(--espacio-5); }
+  .leyenda-pasos { display: grid; }
+  .paso { grid-area: 1 / 1; margin: 0; }
+  .paso span { color: var(--color-acento); }
+  .kinetico:not(.kinetico--animado) .paso:not(:last-child) { display: none; }
+  .progreso { height: 2px; border-radius: 2px; background: var(--color-linea); overflow: hidden; max-width: 22rem; }
+  .progreso span { display: block; height: 100%; background: var(--color-acento); transform-origin: left; transform: scaleX(0); }
+
+  /* Sin animación (movimiento reducido): se ve la frase final */
+  .kinetico:not(.kinetico--animado) .capa:not([data-capa='final']) { display: none; }
+  .kinetico:not(.kinetico--animado) .curva:not(:last-of-type), .kinetico:not(.kinetico--animado) .ease span:not(:last-child) { display: none; }
+
+  @media (max-width: 900px) {
+    .escena { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'texto' 'estudio' 'leyenda'; row-gap: var(--espacio-5); }
+    .kinetico--animado .escena { align-content: start; overflow: hidden; }
+    .estudio { max-height: none; }
+    .editor { grid-template-columns: minmax(0, 1fr); }
+    .grafica { display: none; } /* en el móvil, solo las capas y el cabezal */
+  }
+</style>
