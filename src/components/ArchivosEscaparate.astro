@@ -1,6 +1,6 @@
 ---
 import { idiomaDe, enlace, t } from '../i18n'
-// Caso 03 · Secure by default: login verificado + base de datos protegida + archivos según la DSGVO, en una sola historia.
+// Caso 04 · Secure by default: login verificado + base de datos protegida + archivos según la DSGVO, en una sola historia.
 // El "móvil" es el mismo del chat (mismo diseño); la historia avanza con el scroll.
 // "Try it live" abre la demo (/files-live.html).
 const EMAIL = 'you@company.com'
@@ -14,7 +14,7 @@ import CasoTexto from './CasoTexto.astro'
 // El texto largo del caso (se usa junto a la animación y, en el móvil, debajo de ella)
 const idioma = idiomaDe(Astro.url)
 // Kicker, título y nombre accesible del caso
-const cab = t(idioma, {"en": {"kicker": "Case 03 · Design + development · ", "titulo": "Secure by default", "sub": "Login, data and files — protected at every step.", "aria": "Case 03 · Secure by default", "live": "● Live"}, "de": {"kicker": "Case 03 · Design + Entwicklung · ", "titulo": "Sicher von Anfang an", "sub": "Login, Daten und Dateien — in jedem Schritt geschützt.", "aria": "Case 03 · Sicher von Anfang an", "live": "● Live"}, "es": {"kicker": "Caso 03 · Diseño + desarrollo · ", "titulo": "Seguro por defecto", "sub": "Acceso, datos y archivos — protegidos en cada paso.", "aria": "Caso 03 · Seguro por defecto", "live": "● En vivo"}})
+const cab = t(idioma, {"en": {"kicker": "Case 04 · Design + development · ", "titulo": "Secure by default", "sub": "Login, data and files — protected at every step.", "aria": "Case 04 · Secure by default", "live": "● Live"}, "de": {"kicker": "Case 04 · Design + Entwicklung · ", "titulo": "Sicher von Anfang an", "sub": "Login, Daten und Dateien — in jedem Schritt geschützt.", "aria": "Case 04 · Sicher von Anfang an", "live": "● Live"}, "es": {"kicker": "Caso 04 · Diseño + desarrollo · ", "titulo": "Seguro por defecto", "sub": "Acceso, datos y archivos — protegidos en cada paso.", "aria": "Caso 04 · Seguro por defecto", "live": "● En vivo"}})
 const texto = t(idioma, {
   en: {
     entradilla: "In any app, the most valuable thing is the data behind it. This workspace shows how I protect it: every sign-in is verified, every record is guarded by rules inside the database, and every uploaded file is handled according to European data protection law.",
