@@ -2,7 +2,7 @@
 import { idiomaDe, t } from '../i18n'
 // Design · Caso 04: "Type that moves" — tipografía cinética hecha en código (GSAP), guiada por el scroll.
 // La frase del hero se rompe en palabras y cada una tiene su comportamiento: PESO (Geist variable 100→900),
-// REPETICIÓN, MÁSCARA (la foto de un balón a través de las letras), CÓDIGO (letras que se descifran) y
+// REPETICIÓN, MÁSCARA (franjas de color que se mueven DENTRO de las letras; sin fotos, decisión de Camilo), CÓDIGO (letras que se descifran) y
 // PROFUNDIDAD (giro 3D). Debajo, un editor de animación: capas con fotogramas clave, cabezal, código de tiempo
 // y la CURVA de aceleración de cada momento (calculada con las mismas curvas de GSAP al compilar).
 // La pieza (la frase) va siempre en inglés, como las notas de THE BRIDGE; la leyenda se traduce.
@@ -167,7 +167,7 @@ const texto = t(idioma, {
     gsap.set(comp, { backgroundColor: COLOR.hueso, color: COLOR.tinta })
     gsap.set($('[data-designing]'), { '--peso': 100, scaleX: 0.82 })
     gsap.set($$('[data-brands]'), { xPercent: (i: number) => (i % 2 ? 120 : -120) })
-    gsap.set($('[data-products]'), { scale: 3.2, backgroundPosition: '30% 20%', clipPath: 'inset(0 100% 0 0)' })
+    gsap.set($('[data-products]'), { scale: 3.2, backgroundPosition: '0% 0%', clipPath: 'inset(0 100% 0 0)' })
     gsap.set($('[data-and]'), { autoAlpha: 0, y: 20 })
     gsap.set($$('[data-letra]'), { rotateX: -95, autoAlpha: 0, transformOrigin: '50% 100%' })
     gsap.set($('[data-punto]'), { y: '-160%' })
@@ -216,11 +216,11 @@ const texto = t(idioma, {
       .to($$('[data-brands]'), { y: (i: number) => `${(3 - i) * 100}%`, duration: 0.45, ease: 'power3.inOut' }, 1.9)
       .to($$('[data-brands]:not([data-brands="3"])'), { autoAlpha: 0, duration: 0.2 }, 2.15)
       .to(capa('brands'), { autoAlpha: 0, duration: 0.01 }, 2.45)
-    // 03 · MÁSCARA: la foto de un balón se ve a través de "products"; la cámara se aleja de dentro de la letra
+    // 03 · MÁSCARA: franjas de color se mueven dentro de "products"; la cámara se aleja de dentro de la letra
     paso(2, 2.45); fondo(COLOR.tinta, COLOR.hueso, 2.4)
     tl.set(capa('products'), { autoAlpha: 1 }, 2.45)
       .to($('[data-products]'), { clipPath: 'inset(0 0% 0 0)', duration: 0.35, ease: 'power2.out' }, 2.45)
-      .to($('[data-products]'), { scale: 1, backgroundPosition: '50% 50%', duration: 1.0, ease: 'power2.out' }, 2.55)
+      .to($('[data-products]'), { scale: 1, backgroundPosition: '100% 100%', duration: 1.0, ease: 'power2.out' }, 2.55)
       .to(capa('products'), { autoAlpha: 0, duration: 0.01 }, 3.65)
     // 04 · CÓDIGO: "and the" entra, y "software" se descifra desde símbolos
     paso(3, 3.65)
@@ -287,9 +287,11 @@ const texto = t(idioma, {
   .fila-brands:nth-child(3) { translate: 0 -100%; } .fila-brands:nth-child(5) { translate: 0 100%; }
   .fila-brands:nth-child(6) { translate: 0 200%; } .fila-brands:nth-child(7) { translate: 0 300%; }
   .fila-brands:nth-child(even) { -webkit-text-stroke: 0.22cqw #ffffff; color: transparent; } /* filas pares: solo contorno (blanco: currentColor sería transparente) */
+  /* Máscara: las letras dejan ver franjas diagonales de la paleta (cobalto · naranja · hueso) que se desplazan */
   .foto {
     font-weight: 900; font-size: 17cqw; color: transparent; -webkit-background-clip: text; background-clip: text;
-    background-image: url('/licencias/01.webp'); background-size: 70% auto; background-repeat: no-repeat; background-color: #2e46f0;
+    background-image: repeating-linear-gradient(-45deg, #2e46f0 0 2.2cqw, #ff5a1f 2.2cqw 4.4cqw, #ece6dc 4.4cqw 6.6cqw);
+    background-size: 200% 200%;
   }
   .conector { position: absolute; top: 22%; font-family: var(--fuente-mono); font-size: 3.4cqw; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.7; }
   .mono { font-family: var(--fuente-mono); font-size: 13cqw; font-weight: 500; color: #8b97ff; letter-spacing: -0.02em; }
@@ -300,7 +302,7 @@ const texto = t(idioma, {
   .frase > span { display: inline-block; margin-inline: 0.13em; } /* cada palabra con su aire (son bloques que se animan) */
   .f-peso { font-weight: 900; }
   .f-brands { color: #2e46f0; }
-  .f-foto { font-weight: 800; color: transparent; -webkit-background-clip: text; background-clip: text; background-image: url('/licencias/01.webp'); background-size: cover; background-position: center; background-color: #2e46f0; }
+  .f-foto { font-weight: 800; color: transparent; -webkit-background-clip: text; background-clip: text; background-image: repeating-linear-gradient(-45deg, #2e46f0 0 0.9cqw, #ff5a1f 0.9cqw 1.8cqw, #121110 1.8cqw 2.7cqw); }
   .f-mono { font-family: var(--fuente-mono); color: #2e46f0; }
   .f-profundo { font-weight: 800; color: #ff5a1f; }
   .comp-info, .comp-tiempo { position: absolute; bottom: 2.4cqw; font-family: var(--fuente-mono); font-size: 1.5cqw; opacity: 0.55; letter-spacing: 0.06em; }
