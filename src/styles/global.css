@@ -6,6 +6,8 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+/* Al pulsar sol/luna, nada se funde: el color cambia de golpe (ver InterruptorTema.astro) */
+.cambiando-tema, .cambiando-tema *, .cambiando-tema *::before, .cambiando-tema *::after { transition: none !important; }
 
 body {
   margin: 0;

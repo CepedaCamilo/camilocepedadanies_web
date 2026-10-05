@@ -35,7 +35,11 @@
     boton.addEventListener('click', () => {
       const tema = boton.dataset.tema
       if (tema !== 'light' && tema !== 'dark') return
+      // El cambio de tema es instantáneo: sin el fundido de 0,7 s (que es para el "modo cine"), el fondo
+      // pasaba por grises intermedios y a veces parecía más claro. Así siempre cae en el mismo negro.
+      raiz.classList.add('cambiando-tema')
       raiz.dataset.theme = tema
+      requestAnimationFrame(() => requestAnimationFrame(() => raiz.classList.remove('cambiando-tema')))
       try { localStorage.setItem('tema', tema) } catch {}
       marcar()
     })
