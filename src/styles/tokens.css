@@ -13,13 +13,14 @@
   --hueso-400: #d8cec0;
   --tinta-900: #231a15;
   --tinta-600: #5e5249;
-  --cacao-900: #17120f;
-  --cacao-800: #231c18;
-  --cacao-700: #2e2520;
-  --cacao-600: #342a24;
-  --cacao-500: #3a302a;
+  /* "Negro luna" (5 oct, Camilo): ni negro puro ni marrón; casi negro con un punto frío de gris azulado */
+  --luna-900: #111215;
+  --luna-800: #1a1c20;
+  --luna-700: #23252a;
+  --luna-600: #2a2d32;
+  --luna-500: #32353b;
   --crema-100: #f1eae0;
-  --crema-400: #b3a596;
+  --crema-400: #aca79f;
   --cobalto-500: #2e46f0;
   --cobalto-400: #4a5cf5;
   --blanco: #ffffff;
@@ -84,17 +85,17 @@
 /* a) si el sistema está en oscuro y la persona no eligió Light a mano */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --color-fondo: var(--cacao-900);
-    --color-superficie: var(--cacao-800);
-    --color-superficie-2: var(--cacao-600);
-    --color-forma: var(--cacao-700);
+    --color-fondo: var(--luna-900);
+    --color-superficie: var(--luna-800);
+    --color-superficie-2: var(--luna-600);
+    --color-forma: var(--luna-700);
     --color-texto: var(--crema-100);
     --color-texto-suave: var(--crema-400);
-    --color-linea: var(--cacao-500);
+    --color-linea: var(--luna-500);
     --color-acento: var(--cobalto-400);
     --color-sobre-acento: var(--blanco);
     --color-invertido: var(--crema-100);
-    --color-sobre-invertido: var(--cacao-900);
+    --color-sobre-invertido: var(--luna-900);
     --filtro-logos: invert(1) brightness(1.4);
     --filtro-dibujo: invert(1);
     color-scheme: dark;
@@ -105,17 +106,17 @@
    c) "modo cine": mientras se ve el vídeo, toda la página pasa a oscuro (como apple.com) */
 :root[data-theme='dark'],
 :root.cine {
-  --color-fondo: var(--cacao-900);
-  --color-superficie: var(--cacao-800);
-  --color-superficie-2: var(--cacao-600);
-  --color-forma: var(--cacao-700);
+  --color-fondo: var(--luna-900);
+  --color-superficie: var(--luna-800);
+  --color-superficie-2: var(--luna-600);
+  --color-forma: var(--luna-700);
   --color-texto: var(--crema-100);
   --color-texto-suave: var(--crema-400);
-  --color-linea: var(--cacao-500);
+  --color-linea: var(--luna-500);
   --color-acento: var(--cobalto-400);
   --color-sobre-acento: var(--blanco);
   --color-invertido: var(--crema-100);
-  --color-sobre-invertido: var(--cacao-900);
+  --color-sobre-invertido: var(--luna-900);
   --filtro-logos: invert(1) brightness(1.4);
   --filtro-dibujo: invert(1);
   color-scheme: dark;
@@ -124,17 +125,17 @@
 /* d) "modo contraste" (sección Core expertise): la página pasa SIEMPRE al modo contrario.
       En Light → los valores de Dark (arriba, junto a .cine); en Dark → vuelven los de Light. */
 :root.contraste:not([data-theme='dark']) {
-  --color-fondo: var(--cacao-900);
-  --color-superficie: var(--cacao-800);
-  --color-superficie-2: var(--cacao-600);
-  --color-forma: var(--cacao-700);
+  --color-fondo: var(--luna-900);
+  --color-superficie: var(--luna-800);
+  --color-superficie-2: var(--luna-600);
+  --color-forma: var(--luna-700);
   --color-texto: var(--crema-100);
   --color-texto-suave: var(--crema-400);
-  --color-linea: var(--cacao-500);
+  --color-linea: var(--luna-500);
   --color-acento: var(--cobalto-400);
   --color-sobre-acento: var(--blanco);
   --color-invertido: var(--crema-100);
-  --color-sobre-invertido: var(--cacao-900);
+  --color-sobre-invertido: var(--luna-900);
   --filtro-logos: invert(1) brightness(1.4);
   --filtro-dibujo: invert(1);
   color-scheme: dark;
@@ -177,17 +178,17 @@
 /* e) ".invertir" en UN elemento (no en toda la página): ese trozo usa el modo contrario.
       Se usa en la cabecera + barra "Selected work" mientras se recorren los casos (contraste con el contenido). */
 .invertir {
-  --color-fondo: var(--cacao-900);
-  --color-superficie: var(--cacao-800);
-  --color-superficie-2: var(--cacao-600);
-  --color-forma: var(--cacao-700);
+  --color-fondo: var(--luna-900);
+  --color-superficie: var(--luna-800);
+  --color-superficie-2: var(--luna-600);
+  --color-forma: var(--luna-700);
   --color-texto: var(--crema-100);
   --color-texto-suave: var(--crema-400);
-  --color-linea: var(--cacao-500);
+  --color-linea: var(--luna-500);
   --color-acento: var(--cobalto-400);
   --color-sobre-acento: var(--blanco);
   --color-invertido: var(--crema-100);
-  --color-sobre-invertido: var(--cacao-900);
+  --color-sobre-invertido: var(--luna-900);
   --filtro-logos: invert(1) brightness(1.4);
   --filtro-dibujo: invert(1);
   color-scheme: dark;
