@@ -15,9 +15,20 @@ Ich habe Marke und Produkt gestaltet, die API, die zwei Datenbanken, die Kunden-
 ![Entdecken: eine hervorgehobene Überraschung und was in der Nähe ist](../app-otramesa/discover.png) ![Eine Überraschung, bereit zum Reservieren](../app-otramesa/surprise.png)
 *Restaurants bieten gutes Essen, das sie nicht verkauft haben, als „Überraschung des Hauses“ an — für etwa ein Drittel des Preises. Man reserviert und holt noch am selben Tag ab.*
 
-## Inspiriert, nicht kopiert
+## Weniger Verschwendung, ein vollerer Tisch
 
-Das Modell ist bekannt — Too Good To Go hat gezeigt, dass es funktioniert. Die Aufgabe: das Gerüst behalten (stöbern, Karte, reservieren, abholen) und alles andere neu gestalten — Name, Logo, Farbe, Tonalität und die „Überraschung des Hauses“ selbst. Eine funktionierende Demo mit erfundenen Restaurants und Großhändlern in Barranquilla, Kolumbien.
+Jeden Abend landet gutes Essen im Müll — aus einem einzigen Grund: Der Tag ist vorbei. Otra Mesa gibt ihm einen zweiten Tisch: für etwa ein Drittel des Preises für Menschen in der Nähe und mit einem fairen Ertrag für das Restaurant statt eines Verlusts.
+
+### Weniger Verschwendung
+Essen, das noch gut ist, wird gegessen statt weggeworfen.
+
+### Eine stärkere lokale Wirtschaft
+Restaurants holen einen Teil ihrer Kosten zurück und gewinnen neue Gäste aus der Nachbarschaft; Menschen entdecken Orte, die sie sonst nie ausprobiert hätten.
+
+### Restaurants, die Gutes tun
+Essen zu retten ist eine sichtbare, großzügige Geste — ein Grund mitzumachen, der über die Zahlen hinausgeht.
+
+Eine funktionierende Demo mit erfundenen Restaurants und Großhändlern in Barranquilla, Kolumbien.
 
 ## Was ich gebaut habe
 

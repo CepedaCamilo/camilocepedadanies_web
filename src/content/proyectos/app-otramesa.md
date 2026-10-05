@@ -15,9 +15,20 @@ I designed the brand and the product, built the API, the two databases, the cust
 ![Discover: a featured surprise and what's near you](./app-otramesa/discover.png) ![A surprise, ready to reserve](./app-otramesa/surprise.png)
 *Restaurants offer the good food they didn't sell as "house surprises", at about a third of the price. You reserve one and pick it up today.*
 
-## Inspired, not copied
+## Less waste, a fuller table
 
-The model is well known — Too Good To Go proved it works. The challenge was to keep the skeleton (browse, map, reserve, pick up) and design everything else from scratch: name, logo, colour, voice and the "house surprise" itself. A working demo with made-up restaurants and wholesalers in Barranquilla, Colombia.
+Every evening, good food is thrown away for one reason only: the day is over. Otra Mesa gives it a second table — at around a third of the price for people nearby, and a fair return for the restaurant instead of a loss.
+
+### Less waste
+Food that is still good is eaten, not discarded.
+
+### A stronger local economy
+Restaurants recover part of their costs and meet new neighbours; people discover places they would never have tried.
+
+### Restaurants that do good
+Saving food is a visible, generous gesture — a reason to take part that goes beyond the numbers.
+
+A working demo with made-up restaurants and wholesalers in Barranquilla, Colombia.
 
 ## What I built
 

@@ -15,9 +15,20 @@ Diseñé la marca y el producto, desarrollé la API, las dos bases de datos, la 
 ![Descubrir: una sorpresa destacada y lo que hay cerca](../app-otramesa/discover.png) ![Una sorpresa, lista para reservar](../app-otramesa/surprise.png)
 *Los restaurantes ofrecen la comida buena que no vendieron como "sorpresas de la casa", a un tercio del precio. Usted reserva una y la recoge hoy mismo.*
 
-## Inspirada, no copiada
+## Menos desperdicio, una mesa más llena
 
-El modelo es conocido — Too Good To Go demostró que funciona. El reto fue mantener el esqueleto (mirar, mapa, reservar, recoger) y diseñar todo lo demás desde cero: nombre, logo, color, tono y la propia "sorpresa de la casa". Una demo que funciona, con restaurantes y mayoristas inventados en Barranquilla, Colombia.
+Cada noche se tira comida buena por una sola razón: el día ha terminado. Otra Mesa le da una segunda mesa — a un tercio del precio para la gente que vive cerca, y con un retorno justo para el restaurante en lugar de una pérdida.
+
+### Menos desperdicio
+La comida que sigue siendo buena se come, no se tira.
+
+### Una economía local más fuerte
+Los restaurantes recuperan parte de sus costes y conocen a nuevos vecinos; la gente descubre lugares que nunca habría probado.
+
+### Restaurantes que hacen el bien
+Salvar comida es un gesto visible y generoso — una razón para participar que va más allá de los números.
+
+Una demo que funciona, con restaurantes y mayoristas inventados en Barranquilla, Colombia.
 
 ## Lo que construí
 
