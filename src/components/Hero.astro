@@ -12,6 +12,8 @@ import { idiomaDe, t } from '../i18n'
 const textos = t(idiomaDe(Astro.url), {
   en: {
     titular: 'Designing brands, products and the software behind them.',
+    // El titular, cortado a mano por sentido (decisión de Camilo): una idea por línea
+    lineas: ['Designing brands,', 'products', 'and the software', 'behind them.'],
     intro: '8+ years of brand, product and campaign design — and now my own web apps, from the interface to the server.',
     software: 'See software', design: 'See design work',
     foto: 'Portrait of Camilo Cepeda Danies', balon: '3D football I designed — drag to spin',
@@ -23,6 +25,7 @@ const textos = t(idiomaDe(Astro.url), {
   },
   de: {
     titular: 'Ich gestalte Marken, Produkte und die Software dahinter.',
+    lineas: ['Ich gestalte Marken,', 'Produkte', 'und die Software', 'dahinter.'],
     intro: 'Über 8 Jahre Marken-, Produkt- und Kampagnendesign — und heute meine eigenen Web-Apps, vom Interface bis zum Server.',
     software: 'Software ansehen', design: 'Designarbeiten ansehen',
     foto: 'Porträt von Camilo Cepeda Danies', balon: 'Von mir gestalteter 3D-Fußball — zum Drehen ziehen',
@@ -34,6 +37,7 @@ const textos = t(idiomaDe(Astro.url), {
   },
   es: {
     titular: 'Diseño marcas, productos y el software que hay detrás.',
+    lineas: ['Diseño marcas,', 'productos', 'y el software', 'que hay detrás.'],
     intro: 'Más de 8 años diseñando marca, producto y campañas — y ahora mis propias apps web, de la interfaz al servidor.',
     software: 'Ver software', design: 'Ver diseño',
     foto: 'Retrato de Camilo Cepeda Danies', balon: 'Balón 3D diseñado por mí — arrástralo para girarlo',
@@ -51,7 +55,7 @@ const pasos = textos.pasos
   <div class="escena contenedor">
     <div class="texto">
       <p class="etiqueta">~/camilo · {sitio.ciudad}</p>
-      <h1>{textos.titular}</h1>
+      <h1 aria-label={textos.titular}>{textos.lineas.map((l) => <span class="linea-titular" aria-hidden="true">{l}</span>)}</h1>
       <p class="entradilla">{textos.intro}</p>
       <div class="acciones">
         <a class="pildora pildora--llena" href="#software">{textos.software}</a>
@@ -168,6 +172,7 @@ const pasos = textos.pasos
 
   .texto { display: flex; flex-direction: column; gap: var(--espacio-5); }
   h1 { font-size: clamp(2.5rem, 1.5rem + 3.6vw, 4.25rem); text-wrap: balance; }
+  .linea-titular { display: block; } /* una idea por línea; si una no cabe, se reparte equilibrada (balance) */
   .acciones { display: flex; flex-wrap: wrap; gap: var(--espacio-3); padding-top: var(--espacio-2); }
 
   .escenario { display: flex; flex-direction: column; align-items: center; gap: var(--espacio-5); }

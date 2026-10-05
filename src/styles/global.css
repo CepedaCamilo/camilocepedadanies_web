@@ -38,6 +38,15 @@ h3 { font-size: var(--titulo-3); font-weight: var(--peso-normal); letter-spacing
 
 p { margin: 0; }
 
+/* Cortes de línea con sentido (5 oct, petición de Camilo: "no quiero frases cortadas de mala manera").
+   · balance: títulos y textos cortos reparten las palabras en líneas parecidas ("Good food deserves / another table.")
+   · pretty: los párrafos largos evitan dejar una palabra sola en la última línea y buscan cortes más naturales.
+   (Navegadores sin soporte: cortan como siempre, nada se rompe.) */
+h1, h2, h3, h4, dt, dd, figcaption, blockquote, li,
+.titulo, .titulo-2, .subtitulo, .entradilla, .texto-suave, .etiqueta, .aviso-legal { text-wrap: balance; }
+p { text-wrap: pretty; }
+p:has(> em:only-child), p:has(> img) + p > em { text-wrap: balance; } /* pies de foto de los casos de estudio */
+
 /* --- Contenedor de página --- */
 .contenedor {
   width: 100%;
