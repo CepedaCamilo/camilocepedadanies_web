@@ -41,11 +41,11 @@ p { margin: 0; }
 /* Cortes de línea con sentido (5 oct, petición de Camilo: "no quiero frases cortadas de mala manera").
    · balance: títulos y textos cortos reparten las palabras en líneas parecidas ("Good food deserves / another table.")
    · pretty: los párrafos largos evitan dejar una palabra sola en la última línea y buscan cortes más naturales.
+   · Además, al compilar, el "pegamento" de astro.config.mjs une las palabras cortas (de, y, the, und…) a la siguiente
+     y la última palabra de cada texto a la anterior.
    (Navegadores sin soporte: cortan como siempre, nada se rompe.) */
-h1, h2, h3, h4, dt, dd, figcaption, blockquote, li,
-.titulo, .titulo-2, .subtitulo, .entradilla, .texto-suave, .etiqueta, .aviso-legal { text-wrap: balance; }
-p { text-wrap: pretty; }
-p:has(> em:only-child), p:has(> img) + p > em { text-wrap: balance; } /* pies de foto de los casos de estudio */
+h1, h2, h3, h4, dt, figcaption, .titulo, .titulo-2, .subtitulo, .etiqueta { text-wrap: balance; }
+p, li, dd, blockquote, .entradilla, .texto-suave, .aviso-legal { text-wrap: pretty; }
 
 /* --- Contenedor de página --- */
 .contenedor {
