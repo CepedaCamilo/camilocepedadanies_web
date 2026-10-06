@@ -205,13 +205,21 @@ const texto = t(idioma, {
 
     const tl = gsap.timeline({
       defaults: { ease: 'power2.inOut', duration: 0.5 },
-      scrollTrigger: { trigger: om, start: 'top top', end: 'bottom bottom', scrub: 0.6 },
+      scrollTrigger: { trigger: om, start: 'top top', end: 'bottom bottom', scrub: 0.6, invalidateOnRefresh: true },
     })
     const paso = (i: number, t: number) => {
       tl.to(pasos[i - 1], { autoAlpha: 0, y: -10, duration: 0.2 }, t).to(pasos[i], { autoAlpha: 1, y: 0, duration: 0.2 }, t + 0.15)
     }
-    const tocar = (x: number, y: number, t: number) => {
-      tl.set(toque, { left: `${x}%`, top: `${y}%` }, t)
+    // El dedo apunta al centro REAL de lo que toca (medido, no a ojo): si cambian fotos o tamaños, no se descoloca.
+    // offsetLeft/offsetTop ignoran los movimientos de GSAP, así que la medida vale en cualquier momento del scroll.
+    const centro = (el: HTMLElement) => {
+      const app = el.closest<HTMLElement>('.app')!
+      let x = el.offsetWidth / 2, y = el.offsetHeight / 2, n: HTMLElement | null = el
+      while (n && n !== app) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent as HTMLElement | null }
+      return { x: (x / app.clientWidth) * 100, y: (y / app.clientHeight) * 100 }
+    }
+    const tocar = (el: HTMLElement, t: number) => {
+      tl.set(toque, { left: () => `${centro(el).x}%`, top: () => `${centro(el).y}%` }, t)
         .to(toque, { autoAlpha: 1, scale: 1, duration: 0.12, ease: 'power1.out' }, t)
         .to(toque, { autoAlpha: 0, scale: 1.6, duration: 0.25 }, t + 0.14)
     }
@@ -220,12 +228,12 @@ const texto = t(idioma, {
     tl.to(om.querySelectorAll('[data-pin]'), { autoAlpha: 1, scale: 1, duration: 0.25, stagger: 0.1, ease: 'back.out(2)' }, 0.05)
       .to(om.querySelectorAll('[data-tarjeta]'), { autoAlpha: 1, y: 0, duration: 0.3, stagger: 0.12 }, 0.2)
       .to(om.querySelector('.pin--elegido'), { scale: 1.18, duration: 0.15, yoyo: true, repeat: 1 }, 0.8)
-    // 02 · toque en la pepperoni → se abre su ficha desde abajo
-    paso(1, 1.0); tocar(50, 66, 1.1)
+    // 02 · toque en la hamburguesa elegida (Bunker Burgers) → se abre su ficha desde abajo
+    paso(1, 1.0); tocar(om.querySelector<HTMLElement>('[data-tarjeta="1"]')!, 1.1)
     tl.set(capa('ficha'), { autoAlpha: 1, yPercent: 100 }, 1.25).to(capa('ficha'), { yPercent: 0, duration: 0.45 }, 1.25)
       .to(capa('lista'), { autoAlpha: 0, duration: 0.01 }, 1.7)
     // 03 · toque en "Reserve" → "Reserving…"
-    paso(2, 2.0); tocar(50, 93, 2.1)
+    paso(2, 2.0); tocar(om.querySelector<HTMLElement>('[data-reservar]')!, 2.1)
     tl.to(om.querySelector('.r-1'), { autoAlpha: 0, duration: 0.1 }, 2.22).to(om.querySelector('.r-2'), { autoAlpha: 1, duration: 0.1 }, 2.24)
       .to(om.querySelector('[data-reservar]'), { scale: 0.97, duration: 0.1, yoyo: true, repeat: 1 }, 2.22)
     // 04 · reservada: código y QR
