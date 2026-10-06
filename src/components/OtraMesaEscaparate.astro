@@ -1,16 +1,17 @@
 ---
 import { idiomaDe, enlace, t } from '../i18n'
-// Caso 03 · Otra Mesa: salvar una pizza, guiado por el scroll (pariente de Yaku, pero no igual).
-// A la derecha, el móvil con la app dibujada en HTML (siempre en INGLÉS, modo claro): tres pizzas → abrir una →
+// Caso 03 · Otra Mesa: salvar una hamburguesa, guiado por el scroll (pariente de Yaku, pero no igual).
+// A la derecha, el móvil con la app dibujada en HTML (siempre en INGLÉS, modo claro): tres hamburguesas → abrir una →
 // "Reserve" → código + QR ("Show this at the restaurant"). A la izquierda, un PORTÁTIL con el back office
 // (modo oscuro) donde la reserva nueva entra en la tabla en ese mismo momento.
 // Fotos: Unsplash (licencia libre) — margarita: Aurélien Lemasson-Théobald · pepperoni: Alan Hardman · queso y cherry: Ivan Torres.
 import { Image } from 'astro:assets'
 import QRCode from 'qrcode'
 import CasoTexto from './CasoTexto.astro'
-import pizzaMargarita from '../assets/otramesa/pizza-margarita.jpg'
-import pizzaPepperoni from '../assets/otramesa/pizza-pepperoni.jpg'
-import pizzaQueso from '../assets/otramesa/pizza-queso.jpg'
+// Fotos: Unsplash (licencia libre) — doble: Eiliv Aceron · bunker: la de hamburguesas de la app · clásica: Ilya Mashkov
+import burgerDoble from '../assets/otramesa/burger-doble.jpg'
+import burgerBunker from '../assets/otramesa/burger-bunker.jpg'
+import burgerClasica from '../assets/otramesa/burger-clasica.jpg'
 import logo from '../assets/otramesa/logo-otramesa.svg'
 import logoOscuro from '../assets/otramesa/logo-otramesa-oscuro.svg'
 
@@ -18,18 +19,18 @@ const CODIGO = 'K7MQ'
 // Un QR de verdad (se puede escanear: dice OTRAMESA-K7MQ), generado al compilar la web
 const qr = await QRCode.toString(`OTRAMESA-${CODIGO}`, { type: 'svg', margin: 0, color: { dark: '#1f2e26', light: '#ffffff' } })
 
-const pizzas = [
-  { foto: pizzaMargarita, nombre: 'Pizza Alto Prado', distancia: '120 m', antes: '$41.000', ahora: '$13.500', quedan: '2 left', pin: { x: 30, y: 58 } },
-  { foto: pizzaPepperoni, nombre: 'La Pizza de Melissa', distancia: '240 m', antes: '$38.000', ahora: '$12.500', quedan: '3 left', pin: { x: 64, y: 34 } },
-  { foto: pizzaQueso, nombre: 'Pizzería Ortiz', distancia: '410 m', antes: '$35.000', ahora: '$11.500', quedan: '1 left', pin: { x: 78, y: 70 } },
+const burgers = [
+  { foto: burgerDoble, nombre: 'Smash Club', distancia: '120 m', antes: '$45.000', ahora: '$14.500', quedan: '2 left', pin: { x: 30, y: 58 } },
+  { foto: burgerBunker, nombre: 'Bunker Burgers', distancia: '240 m', antes: '$42.000', ahora: '$12.500', quedan: '3 left', pin: { x: 64, y: 34 } },
+  { foto: burgerClasica, nombre: 'Kilo Grill', distancia: '410 m', antes: '$36.000', ahora: '$11.500', quedan: '1 left', pin: { x: 78, y: 70 } },
 ]
-const elegida = pizzas[1]
+const elegida = burgers[1]
 
 const idioma = idiomaDe(Astro.url)
 const pasos = t(idioma, {
-  en: ['Find a pizza to save nearby', 'Open the surprise', 'Reserve it — no payment needed', 'Get your QR — show it at the restaurant', 'The booking lands in the back office — live'],
-  de: ['Eine Pizza in der Nähe retten', 'Die Überraschung öffnen', 'Reservieren — ohne zu bezahlen', 'QR-Code erhalten — im Restaurant zeigen', 'Die Reservierung kommt im Back-Office an — live'],
-  es: ['Buscar una pizza que salvar cerca', 'Abrir la sorpresa', 'Reservarla — sin pagar', 'Recibir el QR — enseñarlo en el restaurante', 'La reserva entra en el back office — en vivo'],
+  en: ['Find a burger to save nearby', 'Open the surprise', 'Reserve it — no payment needed', 'Get your QR — show it at the restaurant', 'The booking lands in the back office — live'],
+  de: ['Einen Burger in der Nähe retten', 'Die Überraschung öffnen', 'Reservieren — ohne zu bezahlen', 'QR-Code erhalten — im Restaurant zeigen', 'Die Reservierung kommt im Back-Office an — live'],
+  es: ['Buscar una hamburguesa que salvar cerca', 'Abrir la sorpresa', 'Reservarla — sin pagar', 'Recibir el QR — enseñarlo en el restaurante', 'La reserva entra en el back office — en vivo'],
 })
 const cab = t(idioma, {
   en: { kicker: 'Case 03 · Design + full-stack · ', titulo: 'Otra Mesa', sub: 'good food deserves another table.', aria: 'Case 03 · Otra Mesa', live: '● Live' },
@@ -92,8 +93,8 @@ const texto = t(idioma, {
                 <div class="bo-tabla">
                   <div class="fila fila--cab"><span>Code</span><span>Status</span><span>Restaurant · surprise</span></div>
                   <div class="fila fila--nueva" data-fila-nueva><span class="cod">{CODIGO}</span><span><em class="est est--reservada">Reserved</em></span><span>{elegida.nombre}<small>Lunch surprise · {elegida.ahora} · 14:00–15:00</small></span></div>
-                  <div class="fila"><span class="cod">Q9HW</span><span><em class="est est--reservada">Reserved</em></span><span>Panadería Ortiz<small>Bakery surprise · $6.000 · 19:00–19:30</small></span></div>
-                  <div class="fila"><span class="cod">M3TR</span><span><em class="est est--recogida">Picked up</em></span><span>Tinto Barlovento<small>Sweet surprise · $5.500 · 17:00–18:00</small></span></div>
+                  <div class="fila"><span class="cod">Q9HW</span><span><em class="est est--reservada">Reserved</em></span><span>Crumb Bakery<small>Bakery surprise · $6.000 · 19:00–19:30</small></span></div>
+                  <div class="fila"><span class="cod">M3TR</span><span><em class="est est--recogida">Picked up</em></span><span>Nuna Coffee<small>Sweet surprise · $5.500 · 17:00–18:00</small></span></div>
                 </div>
               </div>
             </div>
@@ -105,17 +106,17 @@ const texto = t(idioma, {
       <!-- Móvil con la app (en inglés, modo claro) -->
       <div class="telefono">
         <div class="app">
-          <!-- 1 · Pizzas cerca -->
+          <!-- 1 · Hamburguesas cerca -->
           <div class="capa" data-pantalla="lista">
             <div class="app-cab"><Image src={logo} alt="" class="app-logo" /><span class="app-ubic">⌖ Alto Prado, Barranquilla</span></div>
             <div class="mapa">
               <span class="calle c1"></span><span class="calle c2"></span><span class="calle c3"></span><span class="rio"></span>
               <span class="yo" style="left:48%;top:52%"></span>
-              {pizzas.map((p, i) => <span class={`pin ${i === 1 ? 'pin--elegido' : ''}`} data-pin style={`left:${p.pin.x}%;top:${p.pin.y}%`}>{p.ahora}</span>)}
+              {burgers.map((p, i) => <span class={`pin ${i === 1 ? 'pin--elegido' : ''}`} data-pin style={`left:${p.pin.x}%;top:${p.pin.y}%`}>{p.ahora}</span>)}
             </div>
-            <p class="app-h">Pizza near you</p>
+            <p class="app-h">Burgers near you</p>
             <div class="lista">
-              {pizzas.map((p, i) => (
+              {burgers.map((p, i) => (
                 <div class="tarjeta" data-tarjeta={i}>
                   <Image src={p.foto} alt="" widths={[160, 320]} sizes="90px" class="tarjeta-foto" />
                   <div class="tarjeta-texto">
@@ -131,15 +132,15 @@ const texto = t(idioma, {
             <div class="app-nav"><span class="activa">Discover</span><span>Explore</span><span>Favourites</span><span>Bookings</span></div>
           </div>
 
-          <!-- 2 · La ficha de la pizza elegida -->
+          <!-- 2 · La ficha de la hamburguesa elegida -->
           <div class="capa ficha" data-pantalla="ficha">
             <Image src={elegida.foto} alt="" widths={[390, 780]} sizes="300px" class="ficha-foto" />
             <div class="ficha-hoja">
-              <p class="ficha-kicker">Lunch surprise · Pizza <span>{elegida.antes} <strong>{elegida.ahora}</strong></span></p>
+              <p class="ficha-kicker">Lunch surprise · Burgers <span>{elegida.antes} <strong>{elegida.ahora}</strong></span></p>
               <p class="ficha-titulo">{elegida.nombre}</p>
-              <p class="ficha-chips"><em>{elegida.quedan}</em> You save $25.500</p>
+              <p class="ficha-chips"><em>{elegida.quedan}</em> You save $29.500</p>
               <ul>
-                <li>🛍 Today’s slices or whole pizzas.</li>
+                <li>🛍 Today’s burgers, freshly made.</li>
                 <li>🕑 Pick-up: Today 14:00–15:00</li>
                 <li>⌖ {elegida.distancia} <u>Directions</u></li>
               </ul>
@@ -215,7 +216,7 @@ const texto = t(idioma, {
         .to(toque, { autoAlpha: 0, scale: 1.6, duration: 0.25 }, t + 0.14)
     }
 
-    // 01 · aparecen los precios en el mapa y las tres pizzas
+    // 01 · aparecen los precios en el mapa y las tres hamburguesas
     tl.to(om.querySelectorAll('[data-pin]'), { autoAlpha: 1, scale: 1, duration: 0.25, stagger: 0.1, ease: 'back.out(2)' }, 0.05)
       .to(om.querySelectorAll('[data-tarjeta]'), { autoAlpha: 1, y: 0, duration: 0.3, stagger: 0.12 }, 0.2)
       .to(om.querySelector('.pin--elegido'), { scale: 1.18, duration: 0.15, yoyo: true, repeat: 1 }, 0.8)
