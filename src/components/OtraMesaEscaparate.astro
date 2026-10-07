@@ -1,36 +1,61 @@
 ---
 import { idiomaDe, enlace, t } from '../i18n'
-// Caso 03 · Otra Mesa: salvar una hamburguesa, guiado por el scroll (pariente de Yaku, pero no igual).
-// A la derecha, el móvil con la app dibujada en HTML (siempre en INGLÉS, modo claro): tres hamburguesas → abrir una →
-// "Reserve" → código + QR ("Show this at the restaurant"). A la izquierda, un PORTÁTIL con el back office
-// (modo oscuro) donde la reserva nueva entra en la tabla en ese mismo momento.
-// Fotos: Unsplash (licencia libre) — margarita: Aurélien Lemasson-Théobald · pepperoni: Alan Hardman · queso y cherry: Ivan Torres.
+// Caso 03 · Otra Mesa: salvar una hamburguesa, guiado por el scroll. Dibujado con el DISEÑO LIMPIO de la app (7 oct 2026):
+// fondo blanco, textos de un color, letra Figtree, botones verdes y el terracota solo en detalles.
+// A la derecha, el móvil con la app en HTML (siempre en INGLÉS): Sorpresas destacadas que se deslizan → abrir Bunker Burgers →
+// "Reserve" → pagar con la tarjeta de prueba → código + QR. A la izquierda, un PORTÁTIL con el back office (Gestión, también blanco)
+// donde la reserva nueva entra en la tabla en ese mismo momento.
 import { Image } from 'astro:assets'
 import QRCode from 'qrcode'
+import '@fontsource-variable/figtree/wght.css'
 import CasoTexto from './CasoTexto.astro'
 // Fotos: Unsplash (licencia libre) — doble: Eiliv Aceron · bunker: la de hamburguesas de la app · clásica: Ilya Mashkov
+// · pizza: Aurélien Lemasson-Théobald · panadería: Mae Mu (las dos, fotos de la app)
 import burgerDoble from '../assets/otramesa/burger-doble.jpg'
 import burgerBunker from '../assets/otramesa/burger-bunker.jpg'
 import burgerClasica from '../assets/otramesa/burger-clasica.jpg'
-import logo from '../assets/otramesa/logo-otramesa.svg'
-import logoOscuro from '../assets/otramesa/logo-otramesa-oscuro.svg'
+import fotoPizza from '../assets/otramesa/pizza.jpg'
+import fotoPan from '../assets/otramesa/panaderia.jpg'
+import logoOm from '../assets/otramesa/logo-om.svg'
 
 const CODIGO = 'K7MQ'
 // Un QR de verdad (se puede escanear: dice OTRAMESA-K7MQ), generado al compilar la web
 const qr = await QRCode.toString(`OTRAMESA-${CODIGO}`, { type: 'svg', margin: 0, color: { dark: '#1f2e26', light: '#ffffff' } })
 
-const burgers = [
-  { foto: burgerDoble, nombre: 'Smash Club', distancia: '120 m', antes: '$45.000', ahora: '$14.500', quedan: '2 left', pin: { x: 30, y: 58 } },
-  { foto: burgerBunker, nombre: 'Bunker Burgers', distancia: '240 m', antes: '$42.000', ahora: '$12.500', quedan: '3 left', pin: { x: 64, y: 34 } },
-  { foto: burgerClasica, nombre: 'Kilo Grill', distancia: '410 m', antes: '$36.000', ahora: '$11.500', quedan: '1 left', pin: { x: 78, y: 70 } },
+// Iconos (trazos de lucide, los mismos que usa la app)
+const TRAZOS: Record<string, string> = {
+  bolsa: '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>',
+  estrella: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
+  reloj: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+  pin: '<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',
+  brujula: '<circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>',
+  mapa: '<polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" x2="9" y1="3" y2="18"/><line x1="15" x2="15" y1="6" y2="21"/>',
+  corazon: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>',
+  ticket: '<path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>',
+  atras: '<path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>',
+  check: '<polyline points="20 6 9 17 4 12"/>',
+  abajo: '<path d="m6 9 6 6 6-6"/>',
+}
+const icono = (n: string) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${TRAZOS[n]}</svg>`
+
+const FRANJA = 'Today 2:00–3:00 PM'
+const destacadas = [
+  { foto: burgerDoble, nombre: 'Smash Club', tipo: 'Lunch surprise', nota: '4.6', distancia: '120 m', antes: '$45.000', ahora: '$14.500', quedan: '2 left' },
+  { foto: burgerBunker, nombre: 'Bunker Burgers', tipo: 'Lunch surprise', nota: '4.7', distancia: '240 m', antes: '$42.000', ahora: '$12.500', quedan: '3 left' },
+  { foto: burgerClasica, nombre: 'Kilo Grill', tipo: 'Lunch surprise', nota: '4.5', distancia: '410 m', antes: '$36.000', ahora: '$11.500', quedan: '1 left' },
 ]
-const elegida = burgers[1]
+const cerca = [
+  { foto: fotoPan, nombre: 'Crumb Bakery', tipo: 'Bakery surprise', nota: '4.8', franja: 'Today 7:00–7:30 PM', antes: '$18.000', ahora: '$6.000', quedan: '2 left' },
+  { foto: fotoPizza, nombre: 'Forno 41', tipo: 'Evening surprise', nota: '4.4', franja: 'Today 9:15–10:00 PM', antes: '$54.000', ahora: '$17.500', quedan: '3 left' },
+]
+const elegida = destacadas[1]
+const reparto = [[5, 92], [4, 26], [3, 7], [2, 2], [1, 1]] // estrellas → cuántas valoraciones (128 en total, nota 4.7)
 
 const idioma = idiomaDe(Astro.url)
 const pasos = t(idioma, {
-  en: ['Find a burger to save nearby', 'Open the surprise', 'Reserve it — no payment needed', 'Get your QR — show it at the restaurant', 'The booking lands in the back office — live'],
-  de: ['Einen Burger in der Nähe retten', 'Die Überraschung öffnen', 'Reservieren — ohne zu bezahlen', 'QR-Code erhalten — im Restaurant zeigen', 'Die Reservierung kommt im Back-Office an — live'],
-  es: ['Buscar una hamburguesa que salvar cerca', 'Abrir la sorpresa', 'Reservarla — sin pagar', 'Recibir el QR — enseñarlo en el restaurante', 'La reserva entra en el back office — en vivo'],
+  en: ['Swipe through the featured surprises', 'Open the one you like', 'Reserve it', 'Pay with a test card — no real money', 'Get your QR — show it at the restaurant', 'The booking lands in the back office — live'],
+  de: ['Durch die empfohlenen Überraschungen wischen', 'Die passende öffnen', 'Reservieren', 'Mit einer Testkarte bezahlen — ohne echtes Geld', 'QR-Code erhalten — im Restaurant zeigen', 'Die Reservierung kommt im Back-Office an — live'],
+  es: ['Deslizar las sorpresas destacadas', 'Abrir la que más apetece', 'Reservarla', 'Pagar con una tarjeta de prueba — sin dinero real', 'Recibir el QR — enseñarlo en el restaurante', 'La reserva entra en el back office — en vivo'],
 })
 const cab = t(idioma, {
   en: { kicker: 'Case 03 · Design + full-stack · ', titulo: 'Otra Mesa', sub: 'good food deserves another table.', aria: 'Case 03 · Otra Mesa', live: '● Live' },
@@ -39,21 +64,21 @@ const cab = t(idioma, {
 })
 const texto = t(idioma, {
   en: {
-    entradilla: 'Restaurants and wholesalers in Barranquilla offer the good food they didn’t sell as “house surprises”, at about a third of the price. People nearby reserve one, get a QR code and pick it up. My first fully own stack — designed, built and hosted by me.',
-    suave: 'Less food wasted, more life for local restaurants. A working demo with made-up restaurants — real reservations, no money.',
-    ficha: [['Role', 'Product design · Brand · Full-stack'], ['Stack', 'React · Node/Express · Postgres · MongoDB geo · Leaflet/OSM'], ['Scope', 'Customer app · Back office · API · Passwordless login']],
+    entradilla: 'Restaurants and wholesalers in Barranquilla offer the good food they didn’t sell as “house surprises”, at about a third of the price. People nearby reserve one, pay, get a QR code and pick it up. Three apps — for customers, for the businesses and for the admin — on a stack I designed, built and host myself.',
+    suave: 'Less food wasted, more life for local restaurants. A near-real product: everything works for real except the money — payments are simulated with test cards.',
+    ficha: [['Role', 'Product design · Brand · Full-stack'], ['Stack', 'React · Node/Express · Postgres · MongoDB geo · Web Push · Leaflet/OSM'], ['Scope', 'Customer app · Business portal · Back office · API']],
     acciones: [{ texto: 'Read the case study →', href: enlace(idioma, '/app-otramesa.html'), llena: true }, { texto: 'Try it live ↗', href: 'https://otramesa.danies.trade', externo: true }, { texto: 'Next project ↓', href: '#caso-archivos', siguiente: true }],
   },
   de: {
-    entradilla: 'Restaurants und Großhändler in Barranquilla bieten gutes Essen, das sie nicht verkauft haben, als „Überraschung des Hauses“ an — für etwa ein Drittel des Preises. Menschen in der Nähe reservieren, erhalten einen QR-Code und holen ab. Mein erster komplett eigener Stack — von mir gestaltet, entwickelt und gehostet.',
-    suave: 'Weniger Lebensmittelverschwendung, mehr Leben für lokale Restaurants. Eine funktionierende Demo mit erfundenen Restaurants — echte Reservierungen, ohne Geld.',
-    ficha: [['Rolle', 'Produktdesign · Marke · Full-Stack'], ['Stack', 'React · Node/Express · Postgres · MongoDB Geo · Leaflet/OSM'], ['Umfang', 'Kunden-App · Back-Office · API · Login ohne Passwort']],
+    entradilla: 'Restaurants und Großhändler in Barranquilla bieten gutes Essen, das sie nicht verkauft haben, als „Überraschung des Hauses“ an — für etwa ein Drittel des Preises. Menschen in der Nähe reservieren, bezahlen, erhalten einen QR-Code und holen ab. Drei Apps — für Kundschaft, Betriebe und Verwaltung — auf einem Stack, den ich selbst gestaltet, entwickelt und gehostet habe.',
+    suave: 'Weniger Lebensmittelverschwendung, mehr Leben für lokale Restaurants. Ein fast echtes Produkt: Alles funktioniert wirklich, außer dem Geld — Zahlungen werden mit Testkarten simuliert.',
+    ficha: [['Rolle', 'Produktdesign · Marke · Full-Stack'], ['Stack', 'React · Node/Express · Postgres · MongoDB Geo · Web Push · Leaflet/OSM'], ['Umfang', 'Kunden-App · Portal für Betriebe · Back-Office · API']],
     acciones: [{ texto: 'Case Study →', href: enlace(idioma, '/app-otramesa.html'), llena: true }, { texto: 'Live testen ↗', href: 'https://otramesa.danies.trade', externo: true }, { texto: 'Nächstes Projekt ↓', href: '#caso-archivos', siguiente: true }],
   },
   es: {
-    entradilla: 'Restaurantes y mayoristas de Barranquilla ofrecen la comida buena que no vendieron como “sorpresas de la casa”, a un tercio del precio. La gente cercana reserva una, recibe un código QR y la recoge. Mi primer stack completamente propio — diseñado, desarrollado y alojado por mí.',
-    suave: 'Menos comida desperdiciada, más vida para los restaurantes del barrio. Una demo que funciona, con restaurantes inventados — reservas reales, sin dinero.',
-    ficha: [['Rol', 'Diseño de producto · Marca · Full-stack'], ['Stack', 'React · Node/Express · Postgres · MongoDB geo · Leaflet/OSM'], ['Alcance', 'App de clientes · Back office · API · Login sin contraseña']],
+    entradilla: 'Restaurantes y mayoristas de Barranquilla ofrecen la comida buena que no vendieron como “sorpresas de la casa”, a un tercio del precio. La gente cercana reserva una, paga, recibe un código QR y la recoge. Tres apps — para clientes, para los negocios y para la administración — sobre un stack que diseñé, desarrollé y alojo yo mismo.',
+    suave: 'Menos comida desperdiciada, más vida para los restaurantes del barrio. Un producto casi real: todo funciona de verdad menos el dinero — los pagos se simulan con tarjetas de prueba.',
+    ficha: [['Rol', 'Diseño de producto · Marca · Full-stack'], ['Stack', 'React · Node/Express · Postgres · MongoDB geo · Web Push · Leaflet/OSM'], ['Alcance', 'App de clientes · Portal de negocios · Back office · API']],
     acciones: [{ texto: 'Leer el caso →', href: enlace(idioma, '/app-otramesa.html'), llena: true }, { texto: 'Probar en vivo ↗', href: 'https://otramesa.danies.trade', externo: true }, { texto: 'Siguiente ↓', href: '#caso-archivos', siguiente: true }],
   },
 })
@@ -68,17 +93,17 @@ const texto = t(idioma, {
     </div>
 
     <div class="dispositivos" aria-hidden="true">
-      <!-- Portátil con el back office (modo oscuro, como el de verdad) -->
+      <!-- Portátil con el back office (Gestión: blanco y limpio, como el de verdad) -->
       <div class="portatil">
         <div class="portatil-pantalla">
           <div class="navegador"><span class="puntos"><i></i><i></i><i></i></span><span class="url">otramesa.danies.trade/gestion</span></div>
           <div class="bo">
             <div class="bo-cab">
-              <Image src={logoOscuro} alt="" class="bo-logo" />
+              <Image src={logoOm} alt="" class="bo-logo" />
               <span class="bo-pildora">Back office</span>
-              <span class="bo-tab">Restaurants</span><span class="bo-tab bo-tab--activa">Bookings</span>
               <span class="bo-quien">Camilo · admin</span>
             </div>
+            <div class="bo-tabs"><span>Summary</span><span>Restaurants</span><span class="activa">Bookings</span><span>Requests</span><span>Payments</span></div>
             <div class="bo-cuerpo">
               <div class="bo-entregar">
                 <p class="bo-h">Hand over</p>
@@ -92,9 +117,9 @@ const texto = t(idioma, {
                 </p>
                 <div class="bo-tabla">
                   <div class="fila fila--cab"><span>Code</span><span>Status</span><span>Restaurant · surprise</span></div>
-                  <div class="fila fila--nueva" data-fila-nueva><span class="cod">{CODIGO}</span><span><em class="est est--reservada">Reserved</em></span><span>{elegida.nombre}<small>Lunch surprise · {elegida.ahora} · 14:00–15:00</small></span></div>
-                  <div class="fila"><span class="cod">Q9HW</span><span><em class="est est--reservada">Reserved</em></span><span>Crumb Bakery<small>Bakery surprise · $6.000 · 19:00–19:30</small></span></div>
-                  <div class="fila"><span class="cod">M3TR</span><span><em class="est est--recogida">Picked up</em></span><span>Nuna Coffee<small>Sweet surprise · $5.500 · 17:00–18:00</small></span></div>
+                  <div class="fila fila--nueva" data-fila-nueva><span class="cod">{CODIGO}</span><span><em class="est est--reservada">Reserved</em></span><span>{elegida.nombre}<small>Lunch surprise · {elegida.ahora} paid · 2:00–3:00 PM</small></span></div>
+                  <div class="fila"><span class="cod">Q9HW</span><span><em class="est est--reservada">Reserved</em></span><span>Crumb Bakery<small>Bakery surprise · $6.000 paid · 7:00–7:30 PM</small></span></div>
+                  <div class="fila"><span class="cod">M3TR</span><span><em class="est est--recogida">Picked up</em></span><span>Nuna Coffee<small>Sweet surprise · $5.500 · 5:00–6:00 PM</small></span></div>
                 </div>
               </div>
             </div>
@@ -103,54 +128,95 @@ const texto = t(idioma, {
         <div class="portatil-base"></div>
       </div>
 
-      <!-- Móvil con la app (en inglés, modo claro) -->
+      <!-- Móvil con la app (en inglés) -->
       <div class="telefono">
         <div class="app">
-          <!-- 1 · Hamburguesas cerca -->
-          <div class="capa" data-pantalla="lista">
-            <div class="app-cab"><Image src={logo} alt="" class="app-logo" /><span class="app-ubic">⌖ Alto Prado, Barranquilla</span></div>
-            <div class="mapa">
-              <span class="calle c1"></span><span class="calle c2"></span><span class="calle c3"></span><span class="rio"></span>
-              <span class="yo" style="left:48%;top:52%"></span>
-              {burgers.map((p, i) => <span class={`pin ${i === 1 ? 'pin--elegido' : ''}`} data-pin style={`left:${p.pin.x}%;top:${p.pin.y}%`}>{p.ahora}</span>)}
+          <!-- 1 · Descubrir: Sorpresas destacadas que se deslizan + Near you -->
+          <div class="capa descubrir" data-pantalla="lista">
+            <div class="app-cab">
+              <Image src={logoOm} alt="" class="app-logo" />
+              <span class="app-ubic"><i class="ico ico--verde" set:html={icono('pin')} /> Alto Prado, Barranquilla <i class="ico" set:html={icono('abajo')} /></span>
+              <span class="app-idioma"><span>ES</span><span class="activo">EN</span></span>
             </div>
-            <p class="app-h">Burgers near you</p>
-            <div class="lista">
-              {burgers.map((p, i) => (
-                <div class="tarjeta" data-tarjeta={i}>
-                  <Image src={p.foto} alt="" widths={[160, 320]} sizes="90px" class="tarjeta-foto" />
-                  <div class="tarjeta-texto">
-                    <b>{p.nombre}</b>
-                    <span>Lunch surprise · {p.distancia}</span>
-                    <span>Today 14:00–15:00</span>
-                    <span class="precio"><s>{p.antes}</s> <strong>{p.ahora}</strong></span>
+            <p class="app-h">Featured surprises</p>
+            <div class="carrusel"><div class="pista" data-pista>
+              {destacadas.map((s, i) => (
+                <div class="tarjeta tarjeta--grande" data-destacada={i}>
+                  <div class="tarjeta-foto"><Image src={s.foto} alt="" widths={[320, 640]} sizes="260px" /><span class="quedan">{s.quedan}</span><span class="redondo" set:html={icono('corazon')} /></div>
+                  <div class="tarjeta-cuerpo">
+                    <b>{s.nombre}</b>
+                    <span>{s.tipo} · <em class="nota"><i set:html={icono('estrella')} /> {s.nota}</em></span>
+                    <span class="pie"><span>{FRANJA} · {s.distancia}</span><span class="precio"><s>{s.antes}</s> <strong>{s.ahora}</strong></span></span>
                   </div>
-                  <span class="quedan">{p.quedan}</span>
                 </div>
               ))}
+            </div></div>
+            <div class="pestanas"><span class="activa">All</span><span>Meals</span><span>Bakery</span><span>Groceries</span><span>Sweets</span></div>
+            <p class="app-h app-h--fila">Near you <u>See all</u></p>
+            <div class="carrusel"><div class="pista">
+              {cerca.map((s) => (
+                <div class="tarjeta">
+                  <div class="tarjeta-foto"><Image src={s.foto} alt="" widths={[240, 480]} sizes="180px" /><span class="quedan">{s.quedan}</span></div>
+                  <div class="tarjeta-cuerpo">
+                    <b>{s.nombre}</b>
+                    <span>{s.tipo} · <em class="nota"><i set:html={icono('estrella')} /> {s.nota}</em></span>
+                    <span>{s.franja}</span>
+                    <span class="precio precio--derecha"><s>{s.antes}</s> <strong>{s.ahora}</strong></span>
+                  </div>
+                </div>
+              ))}
+            </div></div>
+            <div class="app-nav">
+              <span class="activa"><i set:html={icono('brujula')} />Discover</span><span><i set:html={icono('mapa')} />Explore</span>
+              <span><i set:html={icono('corazon')} />Favourites</span><span><i set:html={icono('ticket')} />Bookings</span>
             </div>
-            <div class="app-nav"><span class="activa">Discover</span><span>Explore</span><span>Favourites</span><span>Bookings</span></div>
           </div>
 
-          <!-- 2 · La ficha de la hamburguesa elegida -->
+          <!-- 2 · La ficha: la foto manda, filas cortas, "How people rate it" y la barra Reserve -->
           <div class="capa ficha" data-pantalla="ficha">
-            <Image src={elegida.foto} alt="" widths={[390, 780]} sizes="300px" class="ficha-foto" />
-            <div class="ficha-hoja">
-              <p class="ficha-kicker">Lunch surprise · Burgers <span>{elegida.antes} <strong>{elegida.ahora}</strong></span></p>
-              <p class="ficha-titulo">{elegida.nombre}</p>
-              <p class="ficha-chips"><em>{elegida.quedan}</em> You save $29.500</p>
-              <ul>
-                <li>🛍 Today’s burgers, freshly made.</li>
-                <li>🕑 Pick-up: Today 14:00–15:00</li>
-                <li>⌖ {elegida.distancia} <u>Directions</u></li>
-              </ul>
+            <div class="ficha-portada">
+              <Image src={elegida.foto} alt="" widths={[390, 780]} sizes="300px" class="ficha-foto" />
+              <span class="redondo redondo--izq" set:html={icono('atras')} /><span class="redondo redondo--der" set:html={icono('corazon')} />
+              <div class="ficha-pie"><span class="quedan">{elegida.quedan}</span><p class="ficha-titulo">{elegida.nombre}</p></div>
             </div>
-            <div class="reservar" data-reservar><span class="r-1">Reserve · {elegida.ahora}</span><span class="r-2">Reserving…</span></div>
+            <div class="ficha-cuerpo">
+              <ul class="ficha-datos">
+                <li><i set:html={icono('bolsa')} /> Lunch surprise · Burgers</li>
+                <li><i set:html={icono('estrella')} /> <b>4.7</b>&nbsp;<span class="suave">· 128 ratings</span></li>
+                <li><i set:html={icono('reloj')} /> Pick-up: {FRANJA}</li>
+                <li><i set:html={icono('pin')} /> {elegida.distancia} <u>Directions</u></li>
+              </ul>
+              <p class="ficha-h">What it may include</p>
+              <p class="ficha-texto">Today’s burgers, freshly made — beef or chicken, with fries.</p>
+              <p class="ficha-ahorro">You save $29.500</p>
+              <div class="valoradas">
+                <div class="valoradas-cab"><div><p class="ficha-h">How people rate it</p><p class="suave">Based on 128 ratings</p></div><p class="valoradas-nota"><i set:html={icono('estrella')} /> 4.7</p></div>
+                {reparto.map(([n, c]) => <p class="barra-fila"><span>{n} <i set:html={icono('estrella')} /></span><span class="barra"><span style={`width:${(c / 92) * 100}%`}></span></span><span class="suave">{c}</span></p>)}
+              </div>
+            </div>
+            <div class="ficha-barra">
+              <p class="ficha-precio"><s>{elegida.antes}</s><strong>{elegida.ahora}</strong></p>
+              <span class="boton" data-reservar>Reserve</span>
+            </div>
           </div>
 
-          <!-- 3 · Reservada: código + QR -->
+          <!-- 3 · Pagar con la tarjeta de prueba (hoja que sube encima de la ficha) -->
+          <div class="capa pago" data-pantalla="pago">
+            <div class="velo"></div>
+            <div class="hoja" data-hoja>
+              <p class="hoja-titulo">Pay for your booking</p>
+              <div class="pago-resumen"><Image src={elegida.foto} alt="" widths={[120]} sizes="40px" /><span><b>{elegida.nombre}</b><small>Lunch surprise · {FRANJA}</small></span><strong>{elegida.ahora}</strong></div>
+              <p class="pago-aviso">Demo: only test cards work — no real money moves.</p>
+              <p class="campo-etiqueta">Card number</p>
+              <p class="campo">4242 4242 4242 4242</p>
+              <div class="campos-2"><div><p class="campo-etiqueta">Expiry</p><p class="campo">12/28</p></div><div><p class="campo-etiqueta">CVC</p><p class="campo">123</p></div></div>
+              <span class="boton boton--ancho" data-pagar><span class="b-1">Pay {elegida.ahora}</span><span class="b-2">Paying…</span></span>
+            </div>
+          </div>
+
+          <!-- 4 · Reservada y pagada: código + QR -->
           <div class="capa confirmacion" data-pantalla="confirmacion">
-            <span class="check">✓</span>
+            <span class="check" set:html={icono('check')} />
             <p class="conf-titulo">Reserved!</p>
             <p class="conf-sub">Lunch surprise · {elegida.nombre}</p>
             <div class="conf-tarjeta">
@@ -159,7 +225,8 @@ const texto = t(idioma, {
               <div class="qr" data-qr set:html={qr} />
               <p class="conf-mostrar">Show this at the restaurant.</p>
             </div>
-            <p class="conf-linea">Today 14:00–15:00 · {elegida.ahora} · Pay at pick-up</p>
+            <p class="conf-linea">Paid {elegida.ahora} · ···· 4242 · Ref. OM-4X7KQ2</p>
+            <p class="conf-linea">{FRANJA}</p>
             <span class="conf-boton">See my bookings</span>
           </div>
           <span class="toque" data-toque></span>
@@ -188,6 +255,8 @@ const texto = t(idioma, {
   const toque = om.querySelector('[data-toque]')
   const pasos = om.querySelectorAll('[data-paso]')
   const filaNueva = om.querySelector<HTMLElement>('[data-fila-nueva]')!
+  const pista = om.querySelector<HTMLElement>('[data-pista]')!
+  const destacadas = om.querySelectorAll<HTMLElement>('[data-destacada]')
 
   const mm = gsap.matchMedia()
   mm.add('(prefers-reduced-motion: no-preference)', () => {
@@ -195,11 +264,9 @@ const texto = t(idioma, {
     gsap.set(om.querySelectorAll('[data-pantalla]'), { autoAlpha: 0 })
     gsap.set(capa('lista'), { autoAlpha: 1 })
     gsap.set(pasos, { autoAlpha: 0, y: 10 }); gsap.set(pasos[0], { autoAlpha: 1, y: 0 })
-    gsap.set(om.querySelectorAll('[data-pin]'), { autoAlpha: 0, scale: 0.6 })
-    gsap.set(om.querySelectorAll('[data-tarjeta]'), { autoAlpha: 0, y: 24 })
     gsap.set(filaNueva, { autoAlpha: 0, y: -14 })
     gsap.set(om.querySelector('[data-nuevo]'), { autoAlpha: 0 })
-    gsap.set(om.querySelector('.r-2'), { autoAlpha: 0 })
+    gsap.set(om.querySelector('.b-2'), { autoAlpha: 0 })
     gsap.set(om.querySelector('[data-qr]'), { autoAlpha: 0, scale: 0.85 })
     gsap.set(toque, { autoAlpha: 0, scale: 0.4 })
 
@@ -223,30 +290,39 @@ const texto = t(idioma, {
         .to(toque, { autoAlpha: 1, scale: 1, duration: 0.12, ease: 'power1.out' }, t)
         .to(toque, { autoAlpha: 0, scale: 1.6, duration: 0.25 }, t + 0.14)
     }
+    // Lo que se desliza: la tarjeta de Bunker Burgers (la 2.ª) queda justo donde estaba la 1.ª
+    const deslizar = () => -(destacadas[1].offsetLeft - destacadas[0].offsetLeft)
 
-    // 01 · aparecen los precios en el mapa y las tres hamburguesas
-    tl.to(om.querySelectorAll('[data-pin]'), { autoAlpha: 1, scale: 1, duration: 0.25, stagger: 0.1, ease: 'back.out(2)' }, 0.05)
-      .to(om.querySelectorAll('[data-tarjeta]'), { autoAlpha: 1, y: 0, duration: 0.3, stagger: 0.12 }, 0.2)
-      .to(om.querySelector('.pin--elegido'), { scale: 1.18, duration: 0.15, yoyo: true, repeat: 1 }, 0.8)
-    // 02 · toque en la hamburguesa elegida (Bunker Burgers) → se abre su ficha desde abajo
-    paso(1, 1.0); tocar(om.querySelector<HTMLElement>('[data-tarjeta="1"]')!, 1.1)
+    // 01 · el dedo arrastra las destacadas hacia la izquierda: aparece Bunker Burgers
+    tl.set(toque, { left: () => `${centro(destacadas[0]).x + 22}%`, top: () => `${centro(destacadas[0]).y}%` }, 0.25)
+      .to(toque, { autoAlpha: 1, scale: 1, duration: 0.1 }, 0.25)
+      .to(toque, { left: () => `${centro(destacadas[0]).x - 22}%`, duration: 0.45, ease: 'power1.inOut' }, 0.35)
+      .to(pista, { x: deslizar, duration: 0.5, ease: 'power2.out' }, 0.35)
+      .to(toque, { autoAlpha: 0, scale: 0.6, duration: 0.15 }, 0.8)
+    // 02 · toque en Bunker Burgers (está ahora en el sitio de la primera) → se abre su ficha desde abajo
+    paso(1, 1.0); tocar(destacadas[0], 1.1)
     tl.set(capa('ficha'), { autoAlpha: 1, yPercent: 100 }, 1.25).to(capa('ficha'), { yPercent: 0, duration: 0.45 }, 1.25)
       .to(capa('lista'), { autoAlpha: 0, duration: 0.01 }, 1.7)
-    // 03 · toque en "Reserve" → "Reserving…"
+    // 03 · toque en "Reserve" → sube la hoja de pago
     paso(2, 2.0); tocar(om.querySelector<HTMLElement>('[data-reservar]')!, 2.1)
-    tl.to(om.querySelector('.r-1'), { autoAlpha: 0, duration: 0.1 }, 2.22).to(om.querySelector('.r-2'), { autoAlpha: 1, duration: 0.1 }, 2.24)
-      .to(om.querySelector('[data-reservar]'), { scale: 0.97, duration: 0.1, yoyo: true, repeat: 1 }, 2.22)
-    // 04 · reservada: código y QR
-    paso(3, 2.6)
-    tl.to(capa('confirmacion'), { autoAlpha: 1, duration: 0.35 }, 2.6)
-      .to(om.querySelector('[data-qr]'), { autoAlpha: 1, scale: 1, duration: 0.35, ease: 'back.out(1.6)' }, 2.8)
-      .to(capa('ficha'), { autoAlpha: 0, duration: 0.01 }, 3.0)
-    // 05 · en ese momento, la reserva entra en el back office
-    paso(4, 3.3)
-    tl.to(filaNueva, { autoAlpha: 1, y: 0, duration: 0.35, ease: 'back.out(1.6)' }, 3.35)
-      .to(om.querySelector('[data-viejo]'), { autoAlpha: 0, duration: 0.15 }, 3.35)
-      .to(om.querySelector('[data-nuevo]'), { autoAlpha: 1, duration: 0.15 }, 3.4)
-      .fromTo(filaNueva, { boxShadow: 'inset 0 0 0 0 rgb(224 122 60 / 0)' }, { boxShadow: 'inset 0 0 0 2px rgb(224 122 60 / 1)', duration: 0.25, yoyo: true, repeat: 1 }, 3.7)
+    tl.set(capa('pago'), { autoAlpha: 1 }, 2.25)
+      .fromTo(om.querySelector('.velo'), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.25 }, 2.25)
+      .fromTo(om.querySelector('[data-hoja]'), { yPercent: 100 }, { yPercent: 0, duration: 0.4, ease: 'power3.out' }, 2.25)
+    // 04 · pagar con la tarjeta de prueba → "Paying…"
+    paso(3, 2.8); tocar(om.querySelector<HTMLElement>('[data-pagar]')!, 2.95)
+    tl.to(om.querySelector('.b-1'), { autoAlpha: 0, duration: 0.1 }, 3.07).to(om.querySelector('.b-2'), { autoAlpha: 1, duration: 0.1 }, 3.09)
+      .to(om.querySelector('[data-pagar]'), { scale: 0.97, duration: 0.1, yoyo: true, repeat: 1 }, 3.07)
+    // 05 · reservada y pagada: código y QR
+    paso(4, 3.5)
+    tl.to(capa('confirmacion'), { autoAlpha: 1, duration: 0.35 }, 3.5)
+      .to(om.querySelector('[data-qr]'), { autoAlpha: 1, scale: 1, duration: 0.35, ease: 'back.out(1.6)' }, 3.7)
+      .to([capa('ficha'), capa('pago')], { autoAlpha: 0, duration: 0.01 }, 3.9)
+    // 06 · en ese momento, la reserva entra en el back office
+    paso(5, 4.2)
+    tl.to(filaNueva, { autoAlpha: 1, y: 0, duration: 0.35, ease: 'back.out(1.6)' }, 4.25)
+      .to(om.querySelector('[data-viejo]'), { autoAlpha: 0, duration: 0.15 }, 4.25)
+      .to(om.querySelector('[data-nuevo]'), { autoAlpha: 1, duration: 0.15 }, 4.3)
+      .fromTo(filaNueva, { boxShadow: 'inset 0 0 0 0 rgb(210 110 40 / 0)' }, { boxShadow: 'inset 0 0 0 2px rgb(210 110 40 / 1)', duration: 0.25, yoyo: true, repeat: 1 }, 4.6)
     tl.to({}, { duration: 0.7 })
     tl.fromTo(om.querySelector('[data-progreso]'), { scaleX: 0 }, { scaleX: 1, ease: 'none', duration: tl.duration() }, 0)
 
@@ -263,7 +339,7 @@ const texto = t(idioma, {
     column-gap: var(--espacio-7);
     padding-block: var(--espacio-7);
   }
-  .otramesa--animado { height: calc(420svh - var(--alto-cabecera)); }
+  .otramesa--animado { height: calc(480svh - var(--alto-cabecera)); }
   .otramesa--animado .escena {
     position: sticky; top: calc(var(--alto-cabecera) + var(--alto-barra-trabajos));
     height: calc(100svh - var(--alto-cabecera) - var(--alto-barra-trabajos));
@@ -275,7 +351,16 @@ const texto = t(idioma, {
   .titulo { font-size: var(--titulo-2); font-weight: var(--peso-fino); letter-spacing: var(--tracking-titulo); line-height: 1.02; }
 
   /* ---------- Dispositivos ---------- */
-  .dispositivos { grid-area: dispositivos; position: relative; aspect-ratio: 1.15; width: 100%; max-height: 74svh; justify-self: center; }
+  .dispositivos {
+    grid-area: dispositivos; position: relative; aspect-ratio: 1.15; width: 100%; max-height: 74svh; justify-self: center;
+    /* Los colores de Otra Mesa (diseño limpio, 7 oct), aparte de los del portfolio */
+    --om-texto: #1f2e26; --om-suave: #5b635f; --om-linea: #e6e8e5; --om-gris: #f3f4f2; --om-verde: #2f6b4a; --om-terracota: #d26e28;
+    --om-terracota-texto: #a4521b; --om-melocoton: #f8dcc6; --om-sobre-melocoton: #8a4416;
+    --om-sombra: 0 2px 12px rgb(31 46 38 / 0.09), 0 1px 2px rgb(31 46 38 / 0.06);
+    --om-letra: 'Figtree Variable', system-ui, sans-serif;
+  }
+  .ico, .dispositivos i { display: inline-flex; font-style: normal; }
+  .dispositivos :global(svg) { width: 1em; height: 1em; flex-shrink: 0; }
 
   /* Portátil (izquierda) con el back office */
   .portatil { position: absolute; left: 0; top: 10%; width: 84%; }
@@ -284,39 +369,40 @@ const texto = t(idioma, {
     box-shadow: 0 40px 80px -40px rgb(0 0 0 / 0.5), inset 0 0 0 1px rgb(255 255 255 / 0.08); display: flex; flex-direction: column;
   }
   .portatil-base { height: 0; padding-bottom: 3.2%; margin: 0 -4%; border-radius: 0 0 18% 18% / 0 0 100% 100%; background: linear-gradient(#cfcac2, #9d978e); }
-  .navegador { display: flex; align-items: center; gap: 2.4cqw; padding: 1.2cqw 2cqw; background: #1c1a18; border-radius: 1cqw 1cqw 0 0; container-type: inline-size; }
+  .navegador { display: flex; align-items: center; gap: 2.4cqw; padding: 1.2cqw 2cqw; background: #e9eae7; border-radius: 1cqw 1cqw 0 0; }
   .navegador, .bo { container-type: inline-size; }
-  .puntos { display: flex; gap: 0.8cqw; } .puntos i { width: 1.1cqw; aspect-ratio: 1; border-radius: 50%; background: #3a3530; }
-  .url { flex: 1; padding: 0.5cqw 2cqw; border-radius: 99px; background: #121110; color: #a8a198; font-size: 1.5cqw; }
-  .bo { flex: 1; overflow: hidden; background: #121110; color: #f2eee6; font-family: Poppins, var(--fuente-texto, system-ui), sans-serif; display: flex; flex-direction: column; }
-  .bo-cab { display: flex; align-items: center; gap: 1.8cqw; padding: 1.8cqw 3cqw; border-bottom: 1px solid #2e2b27; font-size: 1.6cqw; }
-  .bo-logo { height: 4.2cqw; width: auto; }
-  .bo-pildora { padding: 0.3cqw 1.2cqw; border-radius: 99px; background: #2f6b4a; font-weight: 600; font-size: 1.3cqw; }
-  .bo-tab { color: #a8a198; padding: 0.6cqw 1.4cqw; border-radius: 99px; }
-  .bo-tab--activa { background: #262320; color: #f2eee6; }
-  .bo-quien { margin-left: auto; color: #a8a198; }
+  .puntos { display: flex; gap: 0.8cqw; } .puntos i { width: 1.1cqw; aspect-ratio: 1; border-radius: 50%; background: #c4c6c2; }
+  .url { flex: 1; padding: 0.5cqw 2cqw; border-radius: 99px; background: #fff; color: #5b635f; font-size: 1.5cqw; }
+  .bo { flex: 1; overflow: hidden; background: #fff; color: var(--om-texto); font-family: var(--om-letra); display: flex; flex-direction: column; }
+  .bo-cab { display: flex; align-items: center; gap: 1.8cqw; padding: 1.6cqw 3cqw; font-size: 1.6cqw; }
+  .bo-logo { height: 3.2cqw; width: auto; }
+  .bo-pildora { padding: 0.3cqw 1.2cqw; border-radius: 99px; background: var(--om-verde); color: #fff; font-weight: 600; font-size: 1.3cqw; }
+  .bo-quien { margin-left: auto; color: var(--om-suave); }
+  .bo-tabs { display: flex; gap: 0.6cqw; padding: 0 3cqw 1.2cqw; border-bottom: 1px solid var(--om-linea); font-size: 1.5cqw; color: var(--om-suave); }
+  .bo-tabs span { padding: 0.6cqw 1.4cqw; border-radius: 99px; }
+  .bo-tabs .activa { background: var(--om-gris); color: var(--om-texto); font-weight: 600; }
   /* El móvil tapa el último cuarto del portátil: todo lo importante cabe en los primeros ~75 % */
-  .bo-cuerpo { flex: 1; display: grid; grid-template-columns: 24% 50%; gap: 2.4cqw; padding: 2.6cqw 3cqw; }
-  .bo-entregar { align-self: start; display: flex; flex-direction: column; gap: 1cqw; padding: 2cqw; border-radius: 2cqw; background: #1c1a18; }
-  .bo-h { margin: 0; font-weight: 700; text-transform: uppercase; font-size: 2.1cqw; }
-  .bo-suave { margin: 0; color: #a8a198; font-size: 1.35cqw; }
+  .bo-cuerpo { flex: 1; display: grid; grid-template-columns: 22% 52%; gap: 2.4cqw; padding: 2.4cqw 3cqw; }
+  .bo-entregar { align-self: start; display: flex; flex-direction: column; gap: 1cqw; padding: 2cqw; border-radius: 1.6cqw; background: #fff; box-shadow: var(--om-sombra); }
+  .bo-h { margin: 0; font-weight: 750; font-size: 2.2cqw; }
+  .bo-suave { margin: 0; color: var(--om-suave); font-size: 1.35cqw; }
   .bo-codigo { display: flex; flex-direction: column; gap: 0.8cqw; }
-  .bo-codigo span { padding: 0.9cqw 1.2cqw; border-radius: 1cqw; border: 1px solid #2e2b27; color: #6f6a64; letter-spacing: 0.4cqw; font-weight: 700; font-size: 1.9cqw; }
-  .bo-codigo b { padding: 0.9cqw; border-radius: 99px; background: #bd6227; text-align: center; font-size: 1.4cqw; }
+  .bo-codigo span { padding: 0.9cqw 1.2cqw; border-radius: 1cqw; border: 1px solid var(--om-linea); color: #9aa09c; letter-spacing: 0.4cqw; font-weight: 700; font-size: 1.9cqw; }
+  .bo-codigo b { padding: 0.9cqw; border-radius: 99px; background: var(--om-verde); color: #fff; text-align: center; font-size: 1.4cqw; }
   .bo-reservas { display: flex; flex-direction: column; gap: 1.2cqw; min-width: 0; }
   .bo-cuenta { display: flex; gap: 2cqw; }
   .cambia { display: grid; } .cambia > span { grid-area: 1 / 1; }
-  .bo-live { color: #9fd49f; }
-  .bo-tabla { border: 1px solid #2e2b27; border-radius: 1.6cqw; overflow: hidden; font-size: 1.6cqw; }
-  .fila { display: grid; grid-template-columns: 17% 25% 58%; padding: 1.2cqw 1.6cqw; border-bottom: 1px solid #2e2b27; align-items: center; white-space: nowrap; }
-  .fila small { display: block; color: #a8a198; font-size: 1.25cqw; }
+  .bo-live { color: var(--om-verde); font-weight: 600; }
+  .bo-tabla { border: 1px solid var(--om-linea); border-radius: 1.4cqw; overflow: hidden; font-size: 1.6cqw; }
+  .fila { display: grid; grid-template-columns: 17% 25% 58%; padding: 1.2cqw 1.6cqw; border-bottom: 1px solid var(--om-linea); align-items: center; white-space: nowrap; }
+  .fila small { display: block; color: var(--om-suave); font-size: 1.25cqw; }
   .fila > span { overflow: hidden; text-overflow: ellipsis; }
-  .fila--cab { background: #1c1a18; color: #a8a198; font-weight: 600; }
-  .fila--nueva { background: #1f1b17; }
-  .cod { font-weight: 700; letter-spacing: 0.25cqw; }
+  .fila--cab { color: var(--om-suave); font-weight: 600; font-size: 1.4cqw; }
+  .fila--nueva { background: #fbf6f1; }
+  .cod { font-weight: 750; letter-spacing: 0.25cqw; }
   .est { font-style: normal; padding: 0.3cqw 1.1cqw; border-radius: 99px; font-weight: 600; font-size: 1.3cqw; }
-  .est--reservada { background: #2f6b4a; color: #fff; }
-  .est--recogida { background: #bd6227; color: #fff; }
+  .est--reservada { background: var(--om-verde); color: #fff; }
+  .est--recogida { background: var(--om-melocoton); color: var(--om-sobre-melocoton); }
 
   /* Móvil (derecha) con la app — proporción 390×844 y todo medido en cqw (1cqw = 1 % del ancho de la pantalla) */
   .telefono {
@@ -324,71 +410,124 @@ const texto = t(idioma, {
     padding: 7px; border-radius: 44px; background: #0b0a09; box-shadow: 0 40px 70px -30px rgb(0 0 0 / 0.55), inset 0 0 0 1px rgb(255 255 255 / 0.1);
   }
   .app {
-    position: relative; width: 100%; height: 100%; border-radius: 37px; overflow: hidden; clip-path: inset(0 round 37px); background: #0b0a09; color: #1f2e26;
+    position: relative; width: 100%; height: 100%; border-radius: 37px; overflow: hidden; clip-path: inset(0 round 37px); background: #0b0a09; color: var(--om-texto);
     /* Safari: las capas que se mueven (GSAP) se pintan aparte y a veces se saltan el recorte redondo; la máscara lo fuerza */
     -webkit-mask-image: -webkit-radial-gradient(white, black); isolation: isolate;
-    container-type: inline-size; font-family: Poppins, var(--fuente-texto, system-ui), sans-serif; font-size: 3.5cqw; line-height: 1.35;
+    container-type: inline-size; font-family: var(--om-letra); font-size: 3.5cqw; line-height: 1.35;
   }
+  .app p { margin: 0; }
   .capa { position: absolute; inset: 0; overflow: hidden; background: #fff; border-radius: inherit; } /* redondeadas ellas mismas: si Safari se salta el recorte, no asoman esquinas cuadradas */
   /* Las capas blancas de debajo asomaban en el borde suavizado de las esquinas curvas (píxeles blancos sobre la foto):
      un anillo finísimo del color del marco, por encima de todo, tapa ese borde. */
   .app::after { content: ''; position: absolute; inset: 0; z-index: 20; border-radius: inherit; box-shadow: inset 0 0 0 1.5px #0b0a09; pointer-events: none; }
-  .app-cab { display: flex; align-items: center; justify-content: space-between; padding: 9cqw 5cqw 2cqw; }
-  .app-logo { height: 11cqw; width: auto; }
-  .app-ubic { padding: 1.6cqw 3cqw; border-radius: 99px; background: #f5f6f3; border: 1px solid #e1e4de; font-size: 3cqw; font-weight: 600; }
-  .mapa { position: relative; margin: 2cqw 4cqw; height: 34cqw; border-radius: 5cqw; overflow: hidden; background: #eef0ea; }
-  .calle { position: absolute; background: #fff; }
-  .c1 { left: -10%; right: -10%; top: 40%; height: 2.4cqw; transform: rotate(-8deg); }
-  .c2 { top: -10%; bottom: -10%; left: 38%; width: 2cqw; transform: rotate(12deg); }
-  .c3 { left: -10%; right: -10%; top: 78%; height: 1.6cqw; transform: rotate(4deg); }
-  .rio { position: absolute; right: -6%; top: -10%; bottom: -10%; width: 16%; background: #cfe3e8; transform: rotate(10deg); }
-  .yo { position: absolute; width: 4cqw; height: 4cqw; margin: -2cqw 0 0 -2cqw; border-radius: 50%; background: #fff; border: 1.2cqw solid #2f6b4a; box-shadow: 0 0 0 1.6cqw rgb(189 98 39 / 0.35); }
-  .pin {
-    position: absolute; transform: translate(-50%, -100%); padding: 0.8cqw 2cqw; border-radius: 99px; background: #2f6b4a; color: #fff;
-    font-size: 2.8cqw; font-weight: 600; white-space: nowrap; box-shadow: 0 1px 4px rgb(0 0 0 / 0.3);
+  .suave { color: var(--om-suave); }
+  .ico--verde { color: var(--om-verde); }
+
+  /* 1 · Descubrir */
+  .app-cab { display: flex; align-items: center; gap: 2.4cqw; padding: 10cqw 4.2cqw 1cqw; }
+  .app-logo { height: 7.4cqw; width: auto; flex-shrink: 0; }
+  .app-ubic { flex: 1; min-width: 0; display: flex; align-items: center; gap: 1cqw; font-size: 3.4cqw; white-space: nowrap; overflow: hidden; }
+  .app-idioma { display: flex; padding: 0.7cqw; border-radius: 99px; background: var(--om-gris); font-size: 2.8cqw; font-weight: 500; }
+  .app-idioma span { padding: 1cqw 2cqw; border-radius: 99px; }
+  .app-idioma .activo { background: var(--om-verde); color: #fff; }
+  .app-h { padding: 3cqw 4.2cqw 2cqw; font-weight: 750; font-size: 4.9cqw; letter-spacing: -0.01em; }
+  .app-h--fila { display: flex; justify-content: space-between; align-items: baseline; padding-top: 3.4cqw; }
+  .app-h u { font-size: 3.4cqw; font-weight: 500; text-decoration-color: var(--om-terracota); text-decoration-thickness: 0.5cqw; text-underline-offset: 1cqw; }
+  .carrusel { overflow: hidden; padding: 0.6cqw 0 2.6cqw; }
+  .pista { display: flex; gap: 2.6cqw; padding: 0 4.2cqw; }
+  .tarjeta { flex: 0 0 60cqw; border-radius: 3.6cqw; background: #fff; box-shadow: var(--om-sombra); overflow: hidden; }
+  .tarjeta--grande { flex-basis: 82cqw; }
+  .tarjeta-foto { position: relative; }
+  .tarjeta-foto img { display: block; width: 100%; aspect-ratio: 2 / 1; object-fit: cover; }
+  .tarjeta--grande .tarjeta-foto img { aspect-ratio: 2.3 / 1; }
+  .quedan { position: absolute; top: 2cqw; left: 2cqw; padding: 0.5cqw 2.2cqw; border-radius: 99px; background: var(--om-melocoton); color: var(--om-sobre-melocoton); font-size: 2.8cqw; font-weight: 700; }
+  .redondo { position: absolute; top: 1.6cqw; right: 1.6cqw; width: 8cqw; height: 8cqw; border-radius: 50%; display: grid; place-items: center; background: rgb(255 255 255 / 0.94); box-shadow: 0 1px 4px rgb(0 0 0 / 0.12); font-size: 4cqw; }
+  .tarjeta-cuerpo { display: flex; flex-direction: column; padding: 1.8cqw 2.6cqw 2.4cqw; font-size: 3cqw; color: var(--om-suave); line-height: 1.4; }
+  .tarjeta-cuerpo > * { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tarjeta-cuerpo b { color: var(--om-texto); font-weight: 750; font-size: 3.7cqw; }
+  .tarjeta--grande .tarjeta-cuerpo b { font-size: 4cqw; }
+  .nota { font-style: normal; font-weight: 600; color: var(--om-texto); display: inline-flex; align-items: center; gap: 0.6cqw; }
+  .nota i, .ficha-datos li:nth-child(2) i, .valoradas i { color: var(--om-terracota); }
+  .nota :global(svg), .valoradas :global(svg) { fill: currentColor; }
+  .pie { display: flex; justify-content: space-between; gap: 2cqw; }
+  .precio s { color: var(--om-suave); font-size: 2.8cqw; }
+  .precio strong { color: var(--om-texto); font-weight: 750; font-size: 3.8cqw; }
+  .precio--derecha { text-align: right; }
+  .pestanas { display: flex; gap: 4.6cqw; padding: 1.4cqw 4.2cqw 0; border-bottom: 1px solid var(--om-linea); font-size: 3.6cqw; color: var(--om-suave); white-space: nowrap; }
+  .pestanas span { padding-bottom: 2cqw; border-bottom: 0.6cqw solid transparent; }
+  .pestanas .activa { color: var(--om-texto); font-weight: 700; border-color: var(--om-terracota); }
+  .app-nav {
+    position: absolute; left: 0; right: 0; bottom: 0; display: flex; padding: 1.8cqw 2cqw 5.4cqw; background: #fff;
+    box-shadow: 0 -1px 0 var(--om-linea); color: var(--om-suave); font-size: 2.7cqw; font-weight: 500;
   }
-  .pin--elegido { background: #bd6227; }
-  .app-h { margin: 3cqw 5cqw 2cqw; font-weight: 700; text-transform: uppercase; color: #2f6b4a; font-size: 4.6cqw; }
-  .lista { display: flex; flex-direction: column; gap: 2.6cqw; padding: 0 4cqw; }
-  .tarjeta { position: relative; display: grid; grid-template-columns: 23cqw 1fr; gap: 3cqw; padding: 2.2cqw; border-radius: 4.6cqw; background: #f5f6f3; }
-  .tarjeta-foto { width: 23cqw; height: 23cqw; object-fit: cover; border-radius: 3.6cqw; }
-  .tarjeta-texto { display: flex; flex-direction: column; gap: 0.4cqw; font-size: 3cqw; color: #55635b; min-width: 0; }
-  .tarjeta-texto b { color: #1f2e26; text-transform: uppercase; font-size: 3.3cqw; letter-spacing: 0.02em; }
-  .precio s { color: #8a948e; } .precio strong { color: #1f2e26; font-size: 3.8cqw; }
-  .quedan { position: absolute; top: 2.2cqw; right: 2.2cqw; padding: 0.4cqw 2cqw; border-radius: 99px; background: #2f6b4a; color: #fff; font-size: 2.5cqw; font-weight: 600; }
-  .app-nav { position: absolute; left: 4cqw; right: 4cqw; bottom: 4cqw; display: flex; padding: 1.6cqw; border-radius: 99px; background: #2f6b4a; color: #fff; font-size: 2.6cqw; font-weight: 500; }
-  .app-nav span { flex: 1; text-align: center; padding: 2cqw 0; border-radius: 99px; }
-  .app-nav .activa { background: #fff; color: #2f6b4a; font-weight: 700; }
+  .app-nav span { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.6cqw; }
+  .app-nav i { font-size: 4.8cqw; }
+  .app-nav .activa { color: var(--om-verde); font-weight: 700; }
 
-  /* Fondo oscuro detrás de la foto: al deslizarse con el scroll, la ficha queda a veces a medio píxel de su sitio
-     y asomaba una línea del fondo (antes blanco) por encima de la foto y en las esquinas. */
-  .capa.ficha { background: #0b0a09; }
-  .ficha-foto { width: 100%; height: 50%; object-fit: cover; display: block; }
-  .ficha-hoja { position: absolute; left: 0; right: 0; top: 45%; bottom: 0; padding: 6cqw 6cqw; border-radius: 7cqw 7cqw 0 0; background: #fff; display: flex; flex-direction: column; gap: 2.4cqw; }
-  .ficha-kicker { margin: 0; display: flex; justify-content: space-between; color: #9a4c1a; font-size: 2.7cqw; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
-  .ficha-kicker span { text-transform: none; letter-spacing: 0; color: #55635b; font-weight: 400; }
-  .ficha-kicker strong { color: #1f2e26; font-size: 4.4cqw; }
-  .ficha-titulo { margin: 0; font-weight: 700; text-transform: uppercase; color: #2f6b4a; font-size: 7cqw; line-height: 1.05; }
-  .ficha-chips { margin: 0; display: flex; gap: 2cqw; align-items: center; color: #55635b; font-size: 3cqw; }
-  .ficha-chips em { font-style: normal; padding: 0.4cqw 2.4cqw; border-radius: 99px; background: #2f6b4a; color: #fff; font-weight: 600; }
-  .ficha ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid #e1e4de; }
-  .ficha li { padding: 2.4cqw 0; border-bottom: 1px solid #e1e4de; font-size: 3.2cqw; }
-  .ficha u { color: #9a4c1a; margin-left: 2cqw; }
-  .reservar { position: absolute; left: 4cqw; right: 4cqw; bottom: 4cqw; display: grid; padding: 4.2cqw; border-radius: 99px; background: #bd6227; color: #fff; text-align: center; font-weight: 700; font-size: 4.4cqw; box-shadow: 0 3cqw 6cqw -3cqw rgb(0 0 0 / 0.5); }
-  .reservar span { grid-area: 1 / 1; }
+  /* 2 · Ficha */
+  .ficha-portada { position: relative; height: 72cqw; background: #0b0a09; }
+  .ficha-foto { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .redondo--izq { top: 10cqw; left: 3.6cqw; right: auto; width: 9.6cqw; height: 9.6cqw; font-size: 5cqw; }
+  .redondo--der { top: 10cqw; right: 3.6cqw; width: 9.6cqw; height: 9.6cqw; font-size: 4.6cqw; }
+  .ficha-pie { position: absolute; left: 0; right: 0; bottom: 0; padding: 9cqw 4.2cqw 3cqw; background: linear-gradient(to top, rgb(0 0 0 / 0.62), rgb(0 0 0 / 0) 70%); display: flex; flex-direction: column; align-items: flex-start; gap: 1.6cqw; }
+  .ficha-pie .quedan { position: static; }
+  .ficha-titulo { color: #fff; font-weight: 750; font-size: 5.8cqw; line-height: 1.15; }
+  .ficha-cuerpo { padding: 3.4cqw 4.2cqw; display: flex; flex-direction: column; gap: 1.2cqw; }
+  .ficha-datos { list-style: none; margin: 0 0 2.6cqw; padding: 0; display: flex; flex-direction: column; gap: 1.5cqw; font-size: 3.6cqw; }
+  .ficha-datos li { display: flex; align-items: center; gap: 2.4cqw; }
+  .ficha-datos i { color: var(--om-suave); font-size: 4.6cqw; }
+  .ficha-datos u { margin-left: auto; text-decoration-color: var(--om-terracota); text-decoration-thickness: 0.5cqw; text-underline-offset: 1cqw; }
+  .ficha-h { font-weight: 750; font-size: 4.1cqw; }
+  .ficha-texto { font-size: 3.4cqw; }
+  .ficha-ahorro { color: var(--om-terracota-texto); font-weight: 600; font-size: 3.2cqw; margin-bottom: 2.6cqw !important; }
+  .valoradas { display: flex; flex-direction: column; gap: 0.8cqw; }
+  .valoradas-cab { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1cqw; }
+  .valoradas-cab .suave { font-size: 3.1cqw; }
+  .valoradas-nota { display: flex; align-items: center; gap: 1cqw; padding: 1.4cqw 2.8cqw; border-radius: 3cqw; box-shadow: var(--om-sombra); font-weight: 800; font-size: 6.4cqw; line-height: 1; }
+  .barra-fila { display: grid; grid-template-columns: 8cqw 1fr 8cqw; align-items: center; gap: 2.4cqw; font-size: 3.2cqw; font-weight: 600; }
+  .barra-fila > span:first-child { display: inline-flex; align-items: center; gap: 0.6cqw; font-size: 3.2cqw; }
+  .barra-fila > span:last-child { text-align: right; font-weight: 500; }
+  .barra { height: 1.9cqw; border-radius: 99px; background: var(--om-gris); overflow: hidden; }
+  .barra span { display: block; height: 100%; border-radius: 99px; background: var(--om-verde); }
+  .ficha-barra {
+    position: absolute; left: 3cqw; right: 3cqw; bottom: 4cqw; display: flex; align-items: center; justify-content: space-between;
+    padding: 2cqw 2cqw 2cqw 4.6cqw; border-radius: 5cqw; background: #fff; box-shadow: 0 1.6cqw 6cqw rgb(31 46 38 / 0.16);
+  }
+  .ficha-precio { display: flex; flex-direction: column; line-height: 1.1; font-size: 3cqw; color: var(--om-suave); }
+  .ficha-precio strong { color: var(--om-texto); font-weight: 800; font-size: 5.4cqw; }
+  .boton { display: grid; place-items: center; padding: 3.4cqw 9cqw; border-radius: 99px; background: var(--om-verde); color: #fff; font-weight: 700; font-size: 4.2cqw; }
+  .boton > span { grid-area: 1 / 1; }
+  .boton--ancho { margin-top: 2cqw; }
 
-  .confirmacion { display: flex; flex-direction: column; align-items: center; gap: 2cqw; padding: 13cqw 6cqw 0; text-align: center; }
-  .check { width: 15cqw; height: 15cqw; border-radius: 50%; display: grid; place-items: center; background: #2f6b4a; color: #fff; font-size: 7cqw; font-weight: 700; }
-  .conf-titulo { margin: 1cqw 0 0; font-weight: 700; text-transform: uppercase; color: #2f6b4a; font-size: 8cqw; }
-  .conf-sub { margin: 0; color: #55635b; font-size: 3.2cqw; }
-  .conf-tarjeta { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 1.6cqw; padding: 4.4cqw; border-radius: 6cqw; background: #f5f6f3; }
-  .conf-kicker { margin: 0; color: #9a4c1a; font-size: 2.6cqw; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; }
-  .conf-codigo { margin: 0; font-weight: 700; letter-spacing: 2.6cqw; color: #2f6b4a; font-size: 11cqw; line-height: 1; padding-left: 2.6cqw; }
+  /* 3 · Pago (hoja) */
+  .capa.pago { background: transparent; }
+  .velo { position: absolute; inset: 0; background: rgb(31 46 38 / 0.35); }
+  .hoja { position: absolute; left: 0; right: 0; bottom: 0; padding: 5.4cqw 5cqw 7cqw; border-radius: 6.6cqw 6.6cqw 0 0; background: #fff; display: flex; flex-direction: column; gap: 2cqw; }
+  .hoja-titulo { font-weight: 750; font-size: 5.4cqw; margin-bottom: 1cqw !important; }
+  .pago-resumen { display: grid; grid-template-columns: 11cqw minmax(0, 1fr) auto; gap: 2.6cqw; align-items: center; padding: 2.2cqw; border-radius: 3.6cqw; background: var(--om-gris); }
+  .pago-resumen img { width: 11cqw; height: 11cqw; border-radius: 2.4cqw; object-fit: cover; }
+  .pago-resumen span { display: flex; flex-direction: column; min-width: 0; font-size: 3.3cqw; }
+  .pago-resumen small { color: var(--om-suave); font-size: 2.7cqw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pago-resumen strong { font-weight: 800; font-size: 4cqw; }
+  .pago-aviso { padding: 2.2cqw 3cqw; border-radius: 3cqw; background: var(--om-melocoton); color: var(--om-sobre-melocoton); font-size: 2.9cqw; font-weight: 600; }
+  .campo-etiqueta { font-size: 3cqw; font-weight: 600; margin-top: 0.6cqw !important; }
+  .campo { padding: 2.8cqw 3.4cqw; border-radius: 3cqw; border: 1px solid var(--om-linea); font-size: 3.8cqw; letter-spacing: 0.04em; }
+  .campos-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2.6cqw; }
+  .campos-2 > div { display: flex; flex-direction: column; gap: 1cqw; }
+
+  /* 4 · Confirmación */
+  .confirmacion { display: flex; flex-direction: column; align-items: center; gap: 1.8cqw; padding: 13cqw 5cqw 0; text-align: center; }
+  .check { width: 15cqw; height: 15cqw; border-radius: 50%; display: grid; place-items: center; background: var(--om-verde); color: #fff; font-size: 7cqw; }
+  .conf-titulo { margin-top: 1cqw !important; font-weight: 800; font-size: 7.6cqw; }
+  .conf-sub { color: var(--om-suave); font-size: 3.3cqw; }
+  .conf-tarjeta { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 1.6cqw; margin-top: 1.4cqw; padding: 4.4cqw; border-radius: 4.4cqw; background: #fff; box-shadow: var(--om-sombra); }
+  .conf-kicker { color: var(--om-suave); font-size: 3cqw; font-weight: 600; }
+  .conf-codigo { font-weight: 800; letter-spacing: 2.6cqw; font-size: 11cqw; line-height: 1; padding-left: 2.6cqw; }
   .qr { width: 38cqw; aspect-ratio: 1; padding: 2cqw; border-radius: 3cqw; background: #fff; }
   .qr :global(svg) { width: 100%; height: 100%; display: block; }
-  .conf-mostrar { margin: 0; font-weight: 600; font-size: 3.4cqw; }
-  .conf-linea { margin: 1cqw 0 0; color: #55635b; font-size: 2.9cqw; }
-  .conf-boton { margin-top: 2cqw; padding: 3.4cqw 7cqw; border-radius: 99px; background: #bd6227; color: #fff; font-weight: 700; font-size: 3.6cqw; }
+  .conf-mostrar { font-weight: 600; font-size: 3.4cqw; }
+  .conf-linea { color: var(--om-suave); font-size: 3cqw; }
+  .conf-boton { margin-top: 2.4cqw; padding: 3cqw 7cqw; border-radius: 99px; border: 1.5px solid var(--om-verde); color: var(--om-verde); font-weight: 700; font-size: 3.6cqw; }
 
   .toque {
     position: absolute; width: 16%; aspect-ratio: 1; margin: -8% 0 0 -8%; border-radius: 50%; z-index: 3; pointer-events: none;
@@ -407,7 +546,7 @@ const texto = t(idioma, {
   /* Sin animación (movimiento reducido): se ve el final — el QR en el móvil y la reserva nueva en el back office */
   .otramesa:not(.otramesa--animado) [data-pantalla]:not([data-pantalla='confirmacion']) { display: none; }
   .otramesa:not(.otramesa--animado) [data-viejo] { display: none; }
-  .otramesa:not(.otramesa--animado) .r-2 { display: none; }
+  .otramesa:not(.otramesa--animado) .b-2 { display: none; }
 
   @media (max-width: 900px) {
     .escena { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'texto' 'dispositivos' 'leyenda'; row-gap: var(--espacio-5); }
