@@ -18,6 +18,8 @@ const proyectos = defineCollection({
       portada: image().optional(), // sin portada → portada tipográfica automática
       enlace: z.union([z.url(), z.string().startsWith('/')]).optional(), // la web o la app en vivo (o una página de esta web: /chat-live.html)
       textoEnlace: z.string().optional(),
+      enlace2: z.union([z.url(), z.string().startsWith('/')]).optional(), // un segundo enlace, con borde (p. ej. el PDF del sistema de diseño)
+      textoEnlace2: z.string().optional(),
       orden: z.number().default(100), // menor = sale antes
       oculto: z.boolean().default(false),
     }),

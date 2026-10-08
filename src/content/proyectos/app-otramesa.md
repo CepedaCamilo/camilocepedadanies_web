@@ -7,6 +7,8 @@ resumen: A near-real food-rescue product for Barranquilla — three apps, real r
 disciplinas: [Product Design, Brand Identity, Design System, Node.js API, Postgres, MongoDB Geo, Web Push, Back Office, Monorepo]
 enlace: https://otramesa.danies.trade
 textoEnlace: Try the live demo
+enlace2: /pdf/otra-mesa-design-system.pdf
+textoEnlace2: Design system PDF
 orden: 25
 ---
 
@@ -36,6 +38,15 @@ The second version is deliberately quiet: a white background, text in a single c
 
 ![How people rate it: the average and every star, counted](./app-otramesa/surprise-ratings.png) ![Every restaurant on the map, with filters: type, price, vegetarian, open now](./app-otramesa/explore-restaurants.png)
 *Ratings come only from people who actually picked up their surprise. The map shows every restaurant — or only those open right now, in Barranquilla time.*
+
+## The design system
+
+Every colour, size, corner and shadow comes from one shared file of tokens, used by all three apps — nine type sizes, twelve spacing steps, five radii, four shadows. I documented it as a 38-page specimen book: principles, colour with every contrast checked, type, spacing, shadows, grid, icons, and each component with its states. It is also the template for my next design systems.
+
+![The design system: one source for all three apps](./app-otramesa/design-system-cover.png) ![Buttons and their states, with the tokens behind them](./app-otramesa/design-system-buttons.png)
+*The document is written in Spanish, the language of the team it was made for.*
+
+[View the design system (PDF, 38 pages) ↗](/pdf/otra-mesa-design-system.pdf)
 
 ## Three apps, one API
 

@@ -7,6 +7,8 @@ resumen: Un producto casi real para salvar comida en Barranquilla — tres apps,
 disciplinas: [Diseño de producto, Identidad de marca, Sistema de diseño, API en Node.js, Postgres, MongoDB geo, Web Push, Back office, Monorepo]
 enlace: https://otramesa.danies.trade
 textoEnlace: Probar la demo en vivo
+enlace2: /pdf/otra-mesa-design-system.pdf
+textoEnlace2: Sistema de diseño (PDF)
 orden: 25
 ---
 
@@ -36,6 +38,15 @@ La segunda versión es callada a propósito: fondo blanco, textos de un solo col
 
 ![Cómo lo valoran: la nota media y cada estrella, contada](../app-otramesa/surprise-ratings.png) ![Todos los restaurantes en el mapa, con filtros: tipo, precio, vegetariano, abierto ahora](../app-otramesa/explore-restaurants.png)
 *Solo valora quien de verdad recogió su sorpresa. El mapa muestra todos los restaurantes — o solo los abiertos ahora, en hora de Barranquilla.*
+
+## El sistema de diseño
+
+Cada color, tamaño, esquina y sombra sale de un solo archivo de tokens que comparten las tres apps — nueve tamaños de letra, doce pasos de espacio, cinco radios, cuatro sombras. Lo documenté como un libro de especímenes de 38 páginas: principios, color con cada contraste comprobado, tipografía, espacio, sombras, rejilla, iconos y cada componente con sus estados. Es también la plantilla para mis próximos sistemas de diseño.
+
+![El sistema de diseño: una sola fuente para las tres apps](../app-otramesa/design-system-cover.png) ![Los botones y sus estados, con los tokens que los sostienen](../app-otramesa/design-system-buttons.png)
+*El documento está en español, el idioma del equipo para el que se hizo.*
+
+[Ver el sistema de diseño (PDF, 38 páginas) ↗](/pdf/otra-mesa-design-system.pdf)
 
 ## Tres apps, una API
 

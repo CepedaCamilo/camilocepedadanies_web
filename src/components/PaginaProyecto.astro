@@ -39,10 +39,19 @@ const [titulo, subtitulo] = p.titulo.split(' — ')
         {p.disciplinas.length > 0 && <ul class="chips">{p.disciplinas.map((d) => <li>{d}</li>)}</ul>}
       </div>
       {
-        p.enlace && (
-          <a class="pildora pildora--llena" href={p.enlace} rel="noopener">
-            {p.textoEnlace ?? textos.visitar} ↗
-          </a>
+        (p.enlace || p.enlace2) && (
+          <div class="enlaces-proyecto">
+            {p.enlace && (
+              <a class="pildora pildora--llena" href={p.enlace} rel="noopener">
+                {p.textoEnlace ?? textos.visitar} ↗
+              </a>
+            )}
+            {p.enlace2 && (
+              <a class="pildora" href={p.enlace2} target="_blank" rel="noopener">
+                {p.textoEnlace2} ↗
+              </a>
+            )}
+          </div>
         )
       }
     </header>
@@ -75,6 +84,7 @@ const [titulo, subtitulo] = p.titulo.split(' — ')
   .proyecto { display: flex; flex-direction: column; gap: var(--espacio-7); padding-block: var(--espacio-6) var(--espacio-8); }
   .volver { text-decoration: none; }
   .cabecera-proyecto { display: flex; flex-direction: column; align-items: flex-start; gap: var(--espacio-5); max-width: 56rem; }
+  .enlaces-proyecto { display: flex; flex-wrap: wrap; gap: var(--espacio-3); }
   .subtitulo { display: block; color: var(--color-texto-suave); }
   .meta { display: flex; flex-direction: column; gap: var(--espacio-3); }
   /* la imagen de cabecera mide lo mismo que las imágenes y vídeos del caso (60rem); si es un recorte sin fondo, algo menos */
