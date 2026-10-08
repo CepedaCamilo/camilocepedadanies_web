@@ -51,12 +51,12 @@ Yaku hatte bereits eine starke Marke und eine großartige Küche. Vor Jahren hab
 
 ## Das Designsystem
 
-Zwei Modi teilen sich einen Satz Variablen: ein warmes Schwarz, auf dem das Essen leuchtet, und die Leinwand-Textur der Yaku-Website. Ají-Gelb ist der einzige Akzent und bedeutet immer den nächsten Schritt. Dokumentiert habe ich das System als Musterbuch mit 33 Seiten: Prinzipien, Farbe mit geprüften Kontrasten in beiden Modi, die zwei Schriften, Abstände, Tiefe, Raster, Icons und jede Komponente nebeneinander in Hell und Dunkel — von der Gerichtkarte bis zum Küchenzettel.
+Zwei Modi teilen sich einen Satz Variablen: ein warmes Schwarz, auf dem das Essen leuchtet, und die Leinwand-Textur der Yaku-Website. Ají-Gelb ist der einzige Akzent und bedeutet immer den nächsten Schritt. Dokumentiert habe ich das System als Musterbuch mit 32 Seiten: Prinzipien, Farbe mit geprüften Kontrasten in beiden Modi, die zwei Schriften, Abstände, Tiefe, Raster, Icons und jede Komponente nebeneinander in Hell und Dunkel — von der Gerichtkarte bis zum Küchenzettel.
 
 ![Das Designsystem: eine Quelle für die Gäste-App und die Küche](../app-yaku/design-system-cover.png) ![Jede Komponente in beiden Modi: das empfohlene Gericht](../app-yaku/design-system-featured.png)
 *Das Titelblatt und das empfohlene Gericht in Hell und Dunkel. Das Dokument ist auf Englisch.*
 
-[Designsystem ansehen (PDF, Englisch, 33 Seiten) ↗](/pdf/yaku-design-system.pdf)
+[Designsystem ansehen (PDF, Englisch, 32 Seiten) ↗](/pdf/yaku-design-system.pdf)
 
 ## Architektur
 

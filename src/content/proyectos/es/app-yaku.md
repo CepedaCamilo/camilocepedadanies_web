@@ -51,12 +51,12 @@ Yaku ya tenía una marca fuerte y una gran cocina. Hace años diseñé para ello
 
 ## El sistema de diseño
 
-Dos modos comparten un mismo juego de variables: un negro cálido donde la comida brilla y la textura de lienzo de la web de Yaku. El amarillo del ají es el único acento y siempre señala el siguiente paso. Documenté el sistema como un libro de especímenes de 33 páginas: principios, color con cada contraste comprobado en los dos modos, las dos tipografías, espacio, profundidad, rejilla, iconos y cada componente lado a lado en claro y oscuro — de la tarjeta del plato al ticket de cocina.
+Dos modos comparten un mismo juego de variables: un negro cálido donde la comida brilla y la textura de lienzo de la web de Yaku. El amarillo del ají es el único acento y siempre señala el siguiente paso. Documenté el sistema como un libro de especímenes de 32 páginas: principios, color con cada contraste comprobado en los dos modos, las dos tipografías, espacio, profundidad, rejilla, iconos y cada componente lado a lado en claro y oscuro — de la tarjeta del plato al ticket de cocina.
 
 ![El sistema de diseño: una sola fuente para la app de los clientes y la cocina](../app-yaku/design-system-cover.png) ![Cada componente en los dos modos: el plato destacado](../app-yaku/design-system-featured.png)
 *La portada, y el plato destacado en claro y en oscuro. El documento está en inglés.*
 
-[Ver el sistema de diseño (PDF en inglés, 33 páginas) ↗](/pdf/yaku-design-system.pdf)
+[Ver el sistema de diseño (PDF en inglés, 32 páginas) ↗](/pdf/yaku-design-system.pdf)
 
 ## Arquitectura
 

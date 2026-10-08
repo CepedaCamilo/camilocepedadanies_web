@@ -51,12 +51,12 @@ Yaku already had a strong brand and a great kitchen. Years ago I designed a *Mob
 
 ## The design system
 
-Two modes share one set of variables: a warm black where the food glows, and the canvas texture of Yaku's website. Ají yellow is the only accent, and it always means the next step. I documented the system as a 33-page specimen book: principles, colour with every contrast checked in both modes, the two typefaces, spacing, depth, grid, icons, and each component side by side in light and dark — from the dish card to the kitchen ticket.
+Two modes share one set of variables: a warm black where the food glows, and the canvas texture of Yaku's website. Ají yellow is the only accent, and it always means the next step. I documented the system as a 32-page specimen book: principles, colour with every contrast checked in both modes, the two typefaces, spacing, depth, grid, icons, and each component side by side in light and dark — from the dish card to the kitchen ticket.
 
 ![The design system: one source for the guest app and the kitchen](./app-yaku/design-system-cover.png) ![Every component in both modes: the featured dish](./app-yaku/design-system-featured.png)
 *The cover, and the featured dish in light and dark.*
 
-[View the design system (PDF, 33 pages) ↗](/pdf/yaku-design-system.pdf)
+[View the design system (PDF, 32 pages) ↗](/pdf/yaku-design-system.pdf)
 
 ## Architecture
 
