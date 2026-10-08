@@ -44,9 +44,9 @@ Die zweite Version ist bewusst leise: weißer Hintergrund, Text in einer einzige
 Jede Farbe, Größe, Ecke und jeder Schatten kommt aus einer gemeinsamen Datei mit Tokens, die alle drei Apps nutzen — neun Schriftgrößen, zwölf Abstandsstufen, fünf Radien, vier Schatten. Dokumentiert habe ich es als Musterbuch mit 38 Seiten: Prinzipien, Farbe mit geprüften Kontrasten, Schrift, Abstände, Schatten, Raster, Icons und jede Komponente mit ihren Zuständen. Es ist zugleich die Vorlage für meine nächsten Designsysteme.
 
 ![Das Designsystem: eine Quelle für alle drei Apps](../app-otramesa/design-system-cover.png) ![Buttons und ihre Zustände, mit den Tokens dahinter](../app-otramesa/design-system-buttons.png)
-*Das Dokument ist auf Spanisch, der Sprache des Teams, für das es entstand.*
+*Das Titelblatt und die Buttons mit ihren Zuständen und den Tokens dahinter. Das Dokument ist auf Englisch.*
 
-[Designsystem ansehen (PDF, 38 Seiten) ↗](/pdf/otra-mesa-design-system.pdf)
+[Designsystem ansehen (PDF, Englisch, 38 Seiten) ↗](/pdf/otra-mesa-design-system.pdf)
 
 ## Drei Apps, eine API
 

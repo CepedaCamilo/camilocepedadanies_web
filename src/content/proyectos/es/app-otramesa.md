@@ -44,9 +44,9 @@ La segunda versión es callada a propósito: fondo blanco, textos de un solo col
 Cada color, tamaño, esquina y sombra sale de un solo archivo de tokens que comparten las tres apps — nueve tamaños de letra, doce pasos de espacio, cinco radios, cuatro sombras. Lo documenté como un libro de especímenes de 38 páginas: principios, color con cada contraste comprobado, tipografía, espacio, sombras, rejilla, iconos y cada componente con sus estados. Es también la plantilla para mis próximos sistemas de diseño.
 
 ![El sistema de diseño: una sola fuente para las tres apps](../app-otramesa/design-system-cover.png) ![Los botones y sus estados, con los tokens que los sostienen](../app-otramesa/design-system-buttons.png)
-*El documento está en español, el idioma del equipo para el que se hizo.*
+*La portada, y los botones con sus estados y los tokens que los sostienen. El documento está en inglés.*
 
-[Ver el sistema de diseño (PDF, 38 páginas) ↗](/pdf/otra-mesa-design-system.pdf)
+[Ver el sistema de diseño (PDF en inglés, 38 páginas) ↗](/pdf/otra-mesa-design-system.pdf)
 
 ## Tres apps, una API
 

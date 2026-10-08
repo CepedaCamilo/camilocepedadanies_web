@@ -44,7 +44,7 @@ The second version is deliberately quiet: a white background, text in a single c
 Every colour, size, corner and shadow comes from one shared file of tokens, used by all three apps — nine type sizes, twelve spacing steps, five radii, four shadows. I documented it as a 38-page specimen book: principles, colour with every contrast checked, type, spacing, shadows, grid, icons, and each component with its states. It is also the template for my next design systems.
 
 ![The design system: one source for all three apps](./app-otramesa/design-system-cover.png) ![Buttons and their states, with the tokens behind them](./app-otramesa/design-system-buttons.png)
-*The document is written in Spanish, the language of the team it was made for.*
+*The cover, and the buttons with their states and the tokens behind them.*
 
 [View the design system (PDF, 38 pages) ↗](/pdf/otra-mesa-design-system.pdf)
 
