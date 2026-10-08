@@ -15,9 +15,9 @@ interface Props {
 const { proyecto, siguiente } = Astro.props
 const idioma = idiomaDe(Astro.url)
 const textos = t(idioma, {
-  en: { todos: '← All projects', cliente: 'Client', siguiente: 'Next project →', volver: '← Back to the start', traigo: 'What I bring', visitar: 'Visit' },
-  de: { todos: '← Alle Projekte', cliente: 'Kunde', siguiente: 'Nächstes Projekt →', volver: '← Zurück zum Anfang', traigo: 'Was ich mitbringe', visitar: 'Ansehen' },
-  es: { todos: '← Todos los proyectos', cliente: 'Cliente', siguiente: 'Siguiente proyecto →', volver: '← Volver al inicio', traigo: 'Lo que aporto', visitar: 'Visitar' },
+  en: { todos: '← All projects', cliente: 'Client', contexto: 'Context', siguiente: 'Next project →', volver: '← Back to the start', traigo: 'What I bring', visitar: 'Visit' },
+  de: { todos: '← Alle Projekte', cliente: 'Kunde', contexto: 'Kontext', siguiente: 'Nächstes Projekt →', volver: '← Zurück zum Anfang', traigo: 'Was ich mitbringe', visitar: 'Ansehen' },
+  es: { todos: '← Todos los proyectos', cliente: 'Cliente', contexto: 'Contexto', siguiente: 'Siguiente proyecto →', volver: '← Volver al inicio', traigo: 'Lo que aporto', visitar: 'Visitar' },
 })
 const id = sinIdiomaId(proyecto.id)
 const p = proyecto.data
@@ -35,7 +35,7 @@ const [titulo, subtitulo] = p.titulo.split(' — ')
       <h1>{titulo}{subtitulo && <span class="subtitulo">{subtitulo}</span>}</h1>
       <p class="entradilla">{p.resumen}</p>
       <div class="meta">
-        {p.cliente && <p class="etiqueta">{textos.cliente} · {p.cliente}</p>}
+        {p.contexto ? <p class="etiqueta">{textos.contexto} · {p.contexto}</p> : p.cliente && <p class="etiqueta">{textos.cliente} · {p.cliente}</p>}
         {p.disciplinas.length > 0 && <ul class="chips">{p.disciplinas.map((d) => <li>{d}</li>)}</ul>}
       </div>
       {

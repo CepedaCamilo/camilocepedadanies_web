@@ -35,7 +35,7 @@ const dominio = p.enlace ? new URL(p.enlace).host : null
         {p.categoria}{p.año && ` · ${p.año}`}
       </p>
       <h3>{p.titulo}</h3>
-      {p.cliente && <p class="cliente">{p.cliente}</p>}
+      {(p.cliente ?? p.contexto) && <p class="cliente">{p.cliente ?? p.contexto}</p>}
     </div>
   </a>
 </article>

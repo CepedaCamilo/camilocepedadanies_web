@@ -12,6 +12,7 @@ const proyectos = defineCollection({
       tipo: z.enum(['design', 'software']),
       categoria: z.string(), // la etiqueta pequeña en mono, p. ej. "Brand identity systems"
       cliente: z.string().optional(),
+      contexto: z.string().optional(), // en vez de cliente, cuando no lo hubo (p. ej. Trade Con era mi empresa): "Context · …"
       año: z.number().optional(),
       resumen: z.string(), // una o dos frases para la tarjeta y la cabecera
       disciplinas: z.array(z.string()).default([]),

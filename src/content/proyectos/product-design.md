@@ -2,7 +2,7 @@
 titulo: Licensed product design.
 tipo: design
 categoria: FIFA · UEFA · DFB
-cliente: Trade Con GmbH
+contexto: Trade Con GmbH · Officially licensed products
 resumen: Officially licensed football products developed during my time at Trade Con GmbH — spanning product design, packaging and retail execution for major international football properties and European markets.
 disciplinas: [Product Design, Art Direction, Packaging, Footballs, Textiles, Retail Packaging]
 portada: ./product-design/balones-camiseta-recorte.png
