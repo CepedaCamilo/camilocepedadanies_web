@@ -8,6 +8,8 @@ resumen: QR-Bestellung für ein peruanisch-mexikanisches Restaurant in Hamburg �
 disciplinas: [Produktdesign, UI-Design, React, Supabase Realtime, Postgres RLS, DSGVO]
 enlace: https://yaku.danies.trade/?mesa=demo
 textoEnlace: Live-Demo ausprobieren
+enlace2: /pdf/yaku-design-system.pdf
+textoEnlace2: Designsystem (PDF)
 orden: 10
 ---
 
@@ -46,6 +48,15 @@ Yaku hatte bereits eine starke Marke und eine großartige Küche. Vor Jahren hab
 - **Zwei Stimmungen, eine Marke.** Der dunkle Modus nutzt ein warmes Schwarz (`#121110`) statt reinem Schwarz, damit er zum dunklen Holz der Food-Fotos passt. Der helle Modus nutzt die Leinwand-Textur des Restaurants. Die Akzentfarbe ist *Ají amarillo* — die peruanische gelbe Chili aus ihren Gerichten.
 - **Marken-Details.** Die Display-Schrift von Yaku und ihr handgezeichnetes „Y“ als App-Icon.
 - **Ein Küchenbildschirm für volle Hände.** Hoher Kontrast, große Buttons, die Tischnummer groß genug, um sie quer über den Pass zu lesen, und hervorgehobene Gäste-Notizen, damit niemand *„ohne Koriander“* übersieht.
+
+## Das Designsystem
+
+Zwei Modi teilen sich einen Satz Variablen: ein warmes Schwarz, auf dem das Essen leuchtet, und die Leinwand-Textur der Yaku-Website. Ají-Gelb ist der einzige Akzent und bedeutet immer den nächsten Schritt. Dokumentiert habe ich das System als Musterbuch mit 33 Seiten: Prinzipien, Farbe mit geprüften Kontrasten in beiden Modi, die zwei Schriften, Abstände, Tiefe, Raster, Icons und jede Komponente nebeneinander in Hell und Dunkel — von der Gerichtkarte bis zum Küchenzettel.
+
+![Das Designsystem: eine Quelle für die Gäste-App und die Küche](../app-yaku/design-system-cover.png) ![Jede Komponente in beiden Modi: das empfohlene Gericht](../app-yaku/design-system-featured.png)
+*Das Titelblatt und das empfohlene Gericht in Hell und Dunkel. Das Dokument ist auf Englisch.*
+
+[Designsystem ansehen (PDF, Englisch, 33 Seiten) ↗](/pdf/yaku-design-system.pdf)
 
 ## Architektur
 

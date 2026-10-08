@@ -8,6 +8,8 @@ resumen: Pedidos por QR para un restaurante peruano-mexicano en Hamburgo — una
 disciplinas: [Diseño de producto, Diseño UI, React, Supabase Realtime, Postgres RLS, DSGVO]
 enlace: https://yaku.danies.trade/?mesa=demo
 textoEnlace: Probar la demo en vivo
+enlace2: /pdf/yaku-design-system.pdf
+textoEnlace2: Sistema de diseño (PDF)
 orden: 10
 ---
 
@@ -46,6 +48,15 @@ Yaku ya tenía una marca fuerte y una gran cocina. Hace años diseñé para ello
 - **Dos ambientes, una marca.** El modo oscuro usa un negro cálido (`#121110`) en lugar de negro puro, para que case con la madera oscura de las fotos. El modo claro usa la textura de lienzo del propio restaurante. El color de acento es el *ají amarillo*, el chile peruano de sus platos.
 - **Detalles de marca.** La tipografía de Yaku y su "Y" dibujada a mano como icono de la app.
 - **Una pantalla de cocina para manos ocupadas.** Alto contraste, botones grandes, el número de mesa legible desde el otro lado del pase y las notas de los clientes destacadas, para que nadie pase por alto un *"sin cilantro"*.
+
+## El sistema de diseño
+
+Dos modos comparten un mismo juego de variables: un negro cálido donde la comida brilla y la textura de lienzo de la web de Yaku. El amarillo del ají es el único acento y siempre señala el siguiente paso. Documenté el sistema como un libro de especímenes de 33 páginas: principios, color con cada contraste comprobado en los dos modos, las dos tipografías, espacio, profundidad, rejilla, iconos y cada componente lado a lado en claro y oscuro — de la tarjeta del plato al ticket de cocina.
+
+![El sistema de diseño: una sola fuente para la app de los clientes y la cocina](../app-yaku/design-system-cover.png) ![Cada componente en los dos modos: el plato destacado](../app-yaku/design-system-featured.png)
+*La portada, y el plato destacado en claro y en oscuro. El documento está en inglés.*
+
+[Ver el sistema de diseño (PDF en inglés, 33 páginas) ↗](/pdf/yaku-design-system.pdf)
 
 ## Arquitectura
 

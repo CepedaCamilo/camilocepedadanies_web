@@ -8,6 +8,8 @@ resumen: QR ordering for a Peruvian–Mexican restaurant in Hamburg — a photo-
 disciplinas: [Product Design, UI Design, React, Supabase Realtime, Postgres RLS, DSGVO]
 enlace: https://yaku.danies.trade/?mesa=demo
 textoEnlace: Try the live demo
+enlace2: /pdf/yaku-design-system.pdf
+textoEnlace2: Design system PDF
 orden: 10
 ---
 
@@ -46,6 +48,15 @@ Yaku already had a strong brand and a great kitchen. Years ago I designed a *Mob
 - **Two moods, one brand.** Dark mode uses a warm black (`#121110`) instead of pure black, so it sits well with the dark wood in the food photos. Light mode uses the restaurant's own canvas texture. The accent is *ají amarillo* — the Peruvian yellow chili in their dishes.
 - **Brand details.** Yaku's display typeface, and their hand-drawn "Y" as the app icon.
 - **A kitchen screen for busy hands.** High contrast, large buttons, the table number big enough to read from across the pass, and guest notes highlighted so nobody misses *"no coriander"*.
+
+## The design system
+
+Two modes share one set of variables: a warm black where the food glows, and the canvas texture of Yaku's website. Ají yellow is the only accent, and it always means the next step. I documented the system as a 33-page specimen book: principles, colour with every contrast checked in both modes, the two typefaces, spacing, depth, grid, icons, and each component side by side in light and dark — from the dish card to the kitchen ticket.
+
+![The design system: one source for the guest app and the kitchen](./app-yaku/design-system-cover.png) ![Every component in both modes: the featured dish](./app-yaku/design-system-featured.png)
+*The cover, and the featured dish in light and dark.*
+
+[View the design system (PDF, 33 pages) ↗](/pdf/yaku-design-system.pdf)
 
 ## Architecture
 
